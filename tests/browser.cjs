@@ -9,6 +9,11 @@ const assert = require('node:assert/strict');
  await page.locator('#notification').waitFor({state:'visible'});
  assert.equal(await page.locator('#office').evaluate(el=>el.complete && el.naturalWidth>0),true);
  assert.equal(await page.locator('#asset-notice').isVisible(),false);
+ assert.equal(await page.locator('#workstation').evaluate(el=>el.complete && el.naturalWidth===1280 && el.naturalHeight===720),true);
+ assert.equal(await page.locator('#workstation').isVisible(),true);
+ assert.equal(await page.locator('#office').isVisible(),false);
+ assert.equal(await page.locator('#workstation').evaluate(el=>getComputedStyle(el).clipPath.startsWith('path(evenodd,')),true);
+ assert.equal(await page.locator('.laptop-base').isVisible(),false);
  await page.waitForTimeout(650);
  assert.equal(await page.locator('.customer').count(),3);
  assert.equal(await page.evaluate(()=>document.fonts.check('700 25px Montserrat') && document.fonts.check('400 14px Inter')),true);
@@ -24,6 +29,8 @@ const assert = require('node:assert/strict');
   await card.focus(); await page.keyboard.press('Enter');
   if (i === 0) {
    await page.locator('#maya-brief').waitFor();
+   assert.equal(await page.locator('#workstation').isVisible(),false);
+   assert.equal(await page.locator('#office').isVisible(),true);
    assert.equal(await page.locator('#brief-title').evaluate(el=>el===document.activeElement),true);
    assert.equal(await page.locator('#detail-overlay').isVisible(),false);
    assert.equal(await page.locator('#maya-name').textContent(),names[i]);
@@ -47,6 +54,7 @@ const assert = require('node:assert/strict');
    }
    await page.locator('#back-customers').click();
    assert.equal(await page.locator('#maya-brief').isVisible(),false);
+   assert.equal(await page.locator('#workstation').isVisible(),true);
    assert.equal(await page.locator('.customer').count(),3);
    assert.equal(await card.evaluate(el=>el===document.activeElement),true);
    await page.keyboard.press('Enter');

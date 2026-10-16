@@ -25,7 +25,14 @@ locally; no font CDN is used at runtime.
   CSS overflow clipping at x=62, y=86, width=350, height=328. The source image is
   not edited, and its baked text/buttons are never displayed in the live brief.
 
-The actual workstation/laptop background is still needed without the CRM screen
-contents or manager notification. The baked notification obscures the laptop in
-the supplied mockup and cannot serve as an independently animated element.
-Until a clean export is supplied, the existing V1 office background remains.
+## Approved workstation in use
+
+`ritmo-workstation.png` is the unchanged Cinematic Intro (1).png from the user's
+updated ZIP. The baked manager message has been removed in this supplied export.
+The app clips out the flattened screen rectangle (210,77)–(1077,595) and overlays
+real HTML at the same coordinates, leaving only the actual workstation/laptop art
+visible. The manager notification remains an independently animated HTML element.
+
+The V1 office-entrance PNG remains in use only behind Maya's brief. All runtime
+image assets are now available locally. The older flattened CRM export remains
+in references/ for provenance, not as the runtime background.

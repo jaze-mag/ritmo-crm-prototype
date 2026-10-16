@@ -19,7 +19,7 @@ Checked:
 Limitations:
 - The original office PNG is bundled unchanged; its load and 1280 × 720
   composition were checked in Chromium.
-- Laptop casing is an HTML/CSS approximation of the reference laptop.
+- The laptop casing is now the supplied artwork; the live screen is HTML.
 - No Storyline/LMS published package or cross-browser testing has been performed.
 - No live calls, backend, AI services, or player API integration are implemented.
 
@@ -76,8 +76,19 @@ its dimensions, successful loading, and the portrait-only clipping region. The
 1280 × 720 brief screenshot was visually inspected, and both browser suites were
 rerun successfully after adding the portrait. All brief text remains real HTML.
 
-Remaining visual limitation: Cinematic Intro.png is a flattened CRM mockup with
-its notification baked over the workstation/laptop. The clean workstation export
-is still needed; the dashboard retains the V1 office-entrance background. The
-workstation replacement is not complete. Both uploaded PNGs are preserved exactly.
-V1's branch is unchanged.
+## Approved workstation integration
+
+The supplied Cinematic Intro (1).png is bundled unchanged as ritmo-workstation.png.
+Its manager message is absent, allowing the existing HTML notification to animate
+independently. The baked screen region is excluded with an even-odd CSS clip path.
+The HTML screen is aligned to the resulting cutout; the previous CSS laptop/desk
+approximation is hidden.
+
+Both browser suites passed after integration. Additional checks confirm the
+1280 × 720 workstation asset loads, the screen clip path is active, the artificial
+laptop base is hidden, and background visibility switches correctly between the
+CRM and Maya's brief. CRM and handoff screenshots were visually inspected at
+1280 × 720; the notification does not remain baked into the handoff background.
+The source PNG matches the ZIP entry byte for byte. No required artwork is missing.
+V1's branch is unchanged. Native Windows Edge testing remains unavailable here,
+as noted above; classic-script direct-file compatibility is preserved.

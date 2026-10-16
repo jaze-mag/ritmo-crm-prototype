@@ -103,3 +103,14 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 .brief-actions .action { border: 1px solid #829f95; min-width: 238px; height: 49px; font-size: 17px; padding: 10px 20px; }
 .secondary { background: var(--cream); }
 #brief-title:focus, #transition:focus { outline: none; }
+
+/* Original supplied workstation, with its flattened UI excluded from rendering.
+   Real HTML occupies the screen cutout. The whole stage scales together. */
+.workstation { position: absolute; inset: 0; width: 1280px; height: 720px; pointer-events: none; clip-path: path(evenodd, "M 0 0 H 1280 V 720 H 0 Z M 210 77 H 1077 V 595 H 210 Z"); }
+.office { visibility: hidden; }
+.brief-view .office { visibility: visible; }
+.brief-view .workstation { visibility: hidden; }
+.laptop { left: 210px; top: 77px; width: 867px; height: 518px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.screen { width: 867px; height: 518px; border: 0; }
+.camera, .hinge, .laptop-base, .desk { display: none; }
+.dashboard { padding-left: 16px; padding-right: 31px; }

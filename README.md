@@ -12,15 +12,11 @@ conversation with Maya." Reduced motion skips the timed animation. This is a
 local prototype handoff, not a live AI connection. Daniel and Renee retain their
 existing detail panels and Join Call behavior.
 
-**Workstation artwork still pending:** the uploaded ZIPs contain flattened
-mockups with baked text and controls. Maya's original portrait is now displayed
-from its region in the unchanged Pre-Call Brief PNG; all surrounding text remains
-HTML. The CRM still uses V1's office-entrance image. To finish the workstation
-replacement, export the original Figma workstation/laptop artwork with the CRM
-screen contents and manager notification hidden. The notification is baked over
-the laptop in the current export, so using it as a background would leave a
-permanent message behind the animated HTML notification. No substitute artwork
-has been invented.
+The approved workstation and laptop artwork are now bundled from the supplied
+Cinematic Intro (1).zip. The flattened CRM screen is excluded with CSS clipping;
+the interactive HTML screen replaces it. The manager notification remains a
+separate animated HTML element. Maya's portrait is displayed from its region in
+the unchanged Pre-Call Brief PNG. All required runtime artwork is included.
 
 V1 remains unchanged on `prototype/ritmo-crm-v1`.
 
@@ -67,11 +63,16 @@ browser blocks all file URLs. See `docs/validation.md` for the exact coverage.
 
 ## Approved artwork
 
-The original office illustration is bundled unchanged at
-`assets/ritmo-office-background.png`, extracted from the supplied Ritmo Office.zip.
-The composition follows the supplied CRM and style-guide references, using real
-HTML text and locally bundled fonts. The laptop casing is a CSS approximation;
-the office illustration is the original image, not a recreation.
+- `assets/ritmo-workstation.png`: unchanged supplied 1280 × 720 workstation and
+  laptop export, with the manager message removed. The embedded screen rectangle
+  (210, 77)–(1077, 595) is clipped out in CSS; all live screen content is HTML.
+- `assets/ritmo-office-background.png`: original office illustration, retained for
+  Maya's brief background.
+- `assets/references/maya-precall-approved.png`: unchanged supplied brief export;
+  CSS displays only the portrait region. Brief text and buttons remain HTML.
+
+No replacement artwork has been generated. The previous CSS laptop casing and
+keyboard are hidden so the approved illustrated laptop is visible.
 
 ## Demo
 

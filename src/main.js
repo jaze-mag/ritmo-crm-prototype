@@ -76,6 +76,7 @@ function openDetails(customer, button) {
   byId('join-button').focus();
 }
 function showBrief(visible) {
+  stage.classList.toggle('brief-view', visible);
   byId('maya-brief').hidden = !visible;
   for (const selector of ['.laptop', '.laptop-base', '.desk']) document.querySelector(selector).hidden = visible;
   byId('notification').hidden = visible;

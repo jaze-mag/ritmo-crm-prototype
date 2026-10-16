@@ -1,6 +1,8 @@
-import { customers } from './customers.js';
+(() => {
+  'use strict';
+const { customers } = window.Ritmo;
 
-export function createSession(onChange = () => {}) {
+function createSession(onChange = () => {}) {
   let state = Object.freeze({ screen: 'crm', customerId: null });
   function update(next) {
     state = Object.freeze(next);
@@ -20,3 +22,6 @@ export function createSession(onChange = () => {}) {
     returnToCRM() { return update({ screen: 'crm', customerId: null }); },
   });
 }
+
+  window.Ritmo.createSession = createSession;
+})();

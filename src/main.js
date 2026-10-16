@@ -1,5 +1,6 @@
-import { createSession } from './session.js';
-import { customers } from './customers.js';
+(() => {
+  'use strict';
+const { createSession, customers } = window.Ritmo;
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
@@ -7,7 +8,7 @@ const overlay = byId('detail-overlay');
 const screen = document.querySelector('.screen');
 let lastCard = null;
 let joining = false;
-export const session = createSession(state => {
+const session = createSession(state => {
   window.dispatchEvent(new CustomEvent('ritmo:statechange', { detail: state }));
 });
 
@@ -119,3 +120,5 @@ setTimeout(() => {
     byId('announcement').textContent = 'Message from your manager: Three qualified prospects are ready to talk. Choose one and find out what their team needs.';
   }
 }, 900);
+
+})();

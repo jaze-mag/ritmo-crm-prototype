@@ -3,38 +3,45 @@
 HTML, CSS, and JavaScript sales-training prototype with no runtime dependencies,
 backend, authentication, external APIs, or build step.
 
-## Run
+## Preview on Windows (no build or server required)
 
-From this repository:
+1. On GitHub, select `prototype/ritmo-crm-v1`, then choose **Code → Download ZIP**.
+2. Right-click the downloaded ZIP and choose **Extract All**. Do not open the page
+   inside the ZIP preview.
+3. In the extracted project folder, open `index.html` in Microsoft Edge. Keep the
+   `src/` and `assets/` folders beside it.
+4. Select Maya Patel, Daniel Brooks, or Renee Alvarez, then choose **Join Call**.
 
-```sh
-python3 -m http.server 8000 --bind 0.0.0.0
+The scripts now use classic JavaScript loaded in dependency order, so startup
+no longer depends on ES-module loading or a local web server. No Python, Node.js,
+npm, package installation, application rebuild, or internet connection is needed
+for the direct-file preview. Artwork and fonts remain bundled locally.
+
+### Optional local server
+
+If your browser's organization policy prevents local-file pages, or you prefer
+HTTP development, open PowerShell in this project folder and run with Python 3:
+
+```powershell
+py -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open port 8000 in a local browser. Stop with Ctrl+C. Use HTTP rather than opening
-index.html directly: browser ES modules require a server.
+Then open `http://localhost:8000`. If `py` is unavailable but `python --version`
+reports Python 3, use `python -m http.server 8000 --bind 127.0.0.1` instead.
+On macOS/Linux use `python3 -m http.server 8000 --bind 127.0.0.1`.
+Keep the terminal open while previewing; press Ctrl+C to stop the server.
 
-## Preview on Windows (no build required)
+### Why the cards were blank
 
-1. On GitHub, select the prototype branch, then choose **Code → Download ZIP**.
-2. Right-click the downloaded ZIP and choose **Extract All**.
-3. Open the extracted project folder containing `index.html`. In File Explorer's
-   address bar, type `powershell` and press Enter.
-4. With Python 3 installed, run:
+The original page used `<script type="module">`. Direct-file browser security
+blocks that module load, so the JavaScript that creates the cards never executes,
+while the static header, pipeline, and artwork still appear. The existing data,
+state logic, and UI now load as three ordered classic scripts, isolated in function
+scopes and sharing a small `window.Ritmo` namespace. The visual design is unchanged.
 
-   ```powershell
-   py -m http.server 8000 --bind 127.0.0.1
-   ```
-
-   If the Python launcher is unavailable but `python --version` reports Python 3,
-   use `python -m http.server 8000 --bind 127.0.0.1` instead.
-5. Open your browser and enter `http://localhost:8000`.
-6. Keep PowerShell open while previewing; press Ctrl+C to stop the server.
-
-If Python is not installed, install Python 3 for Windows first. No Node.js, npm,
-package installation, or application rebuild is required. Do not double-click
-`index.html`; its JavaScript modules need the local HTTP server. The included
-artwork and fonts load locally, so the running prototype needs no internet access.
+HTTP and opaque-origin startup regression tests pass in Chromium. Native Windows
+Edge `file://` testing is not available in the cloud environment: its managed
+browser blocks all file URLs. See `docs/validation.md` for the exact coverage.
 
 ## Approved artwork
 

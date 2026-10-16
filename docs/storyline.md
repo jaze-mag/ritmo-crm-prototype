@@ -1,9 +1,10 @@
 # Future Storyline Web Object interface
 
 Package index.html, src/, and required assets/ together using relative paths.
-Serve via HTTP for development; ES modules do not support opening via file://.
+Classic scripts support direct-file preview and HTTP development. Preserve the
+script order in index.html: customers.js, session.js, then main.js.
 
-src/session.js exports createSession(onChange):
+src/session.js exposes window.Ritmo.createSession(onChange):
 - getState(): immutable { screen, customerId }.
 - selectCustomer(id): selects a validated ID from customers.js.
 - joinCall(): returns false without selection; otherwise enters handoff.

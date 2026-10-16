@@ -30,7 +30,28 @@ With the app server running on port 8000 and system Chromium installed:
 ```sh
 npm install --prefix /tmp/ritmo-tools --cache /tmp/ritmo-npm playwright --no-audit --no-fund
 NODE_PATH=/tmp/ritmo-tools/node_modules node tests/browser.cjs
+NODE_PATH=/tmp/ritmo-tools/node_modules node tests/startup.cjs
 ```
 
 Screenshots are written under /tmp/ritmo-*.png. This tooling is development-only
 and is not included in the Web Object package.
+
+
+## Direct-file startup fix
+
+Before the fix, an opaque-origin sandboxed frame reproduced the module CORS error:
+main.js was blocked from origin `null`, leaving no customer cards. The original
+application used ES modules, which also require CORS checks when loaded via file://.
+
+After the fix, the same frame loads all three classic scripts and passes customer
+selection, Join Call, and return/reset for every prospect. The regular HTTP suite
+also passes. tests/startup.cjs guards against reintroducing module-only startup.
+Fonts in the HTTP opaque-origin frame are subject to separate CORS restrictions;
+font loading is checked in the normal HTTP suite. The frame test verifies script
+startup and interactions, not native file-font behavior.
+
+Native file:// navigation was attempted, but this cloud browser's administrative
+URL policy blocks file URLs (ERR_BLOCKED_BY_ADMINISTRATOR). That policy was not
+changed or bypassed. Windows Edge direct-file behavior still needs a local check;
+no Windows Edge test is claimed. Extract the ZIP, open index.html, and verify all
+three cards, Join Call, and Return to CRM without a local server.

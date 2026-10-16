@@ -85,8 +85,10 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 .precall { position: absolute; inset: 0; background: #fffdf659; animation: panel-in 260ms ease both; }
 .precall h2 { position: absolute; top: 22px; left: 460px; width: 772px; text-align: center; font-size: 36px; line-height: 1.3; }
 .prospect-profile { position: absolute; left: 24px; top: 46px; width: 426px; height: 616px; border: 2px solid var(--dark-teal); border-radius: 86px; background: #92c4c2f2; text-align: center; padding: 38px 26px; }
-.prospect-portrait { width: 350px; height: 328px; margin: 0 auto 36px; border-radius: 64px; overflow: hidden; }
-.prospect-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.prospect-portrait { position: relative; width: 350px; height: 328px; margin: 0 auto 36px; border-radius: 64px; overflow: hidden; }
+/* Display the actual portrait region from the unchanged, flattened Figma export.
+   The 350 × 328 crop at (62, 86) contains artwork only, with no baked UI text. */
+.prospect-portrait img { position: absolute; display: block; width: 1280px; height: 720px; max-width: none; left: -62px; top: -86px; }
 .prospect-profile h3 { font: 700 29px/1.3 Montserrat, sans-serif; margin: 0 0 7px; }
 .prospect-profile p { font-size: 16px; line-height: 1.5; white-space: nowrap; }
 .challenge { display: inline-block; margin-top: 12px; border-radius: 16px; padding: 8px; background: var(--cream); font-size: 14px; font-weight: 600; }

@@ -71,7 +71,13 @@ The Chromium HTTP and opaque-origin suites were rerun for V2:
 - Existing clock, notification, local fonts, three viewport sizes, and no-external-
   request checks still pass.
 
-Visual limitation: the approved workstation/laptop artwork and Maya portrait
-remain pending as source files. The existing V1 office entrance remains bundled;
-the portrait area is empty. These two artwork requirements are not complete or
-validated. No replacement artwork has been generated. V1's branch is unchanged.
+The uploaded Pre-Call Brief PNG is now bundled unchanged. Browser checks verify
+its dimensions, successful loading, and the portrait-only clipping region. The
+1280 × 720 brief screenshot was visually inspected, and both browser suites were
+rerun successfully after adding the portrait. All brief text remains real HTML.
+
+Remaining visual limitation: Cinematic Intro.png is a flattened CRM mockup with
+its notification baked over the workstation/laptop. The clean workstation export
+is still needed; the dashboard retains the V1 office-entrance background. The
+workstation replacement is not complete. Both uploaded PNGs are preserved exactly.
+V1's branch is unchanged.

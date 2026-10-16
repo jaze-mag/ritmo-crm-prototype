@@ -12,12 +12,15 @@ conversation with Maya." Reduced motion skips the timed animation. This is a
 local prototype handoff, not a live AI connection. Daniel and Renee retain their
 existing detail panels and Join Call behavior.
 
-**Artwork pending:** the inline CRM and Pre-Call Brief references have been
-inspected, but the original workstation image and Maya portrait have not been
-provided as accessible files. The CRM currently retains V1's office-entrance PNG;
-the brief reserves the approved portrait area without inventing a substitute.
-The visual correction is not complete. Supply the actual workstation/laptop
-artwork and Maya portrait as PNG files or in a ZIP to finish this version.
+**Workstation artwork still pending:** the uploaded ZIPs contain flattened
+mockups with baked text and controls. Maya's original portrait is now displayed
+from its region in the unchanged Pre-Call Brief PNG; all surrounding text remains
+HTML. The CRM still uses V1's office-entrance image. To finish the workstation
+replacement, export the original Figma workstation/laptop artwork with the CRM
+screen contents and manager notification hidden. The notification is baked over
+the laptop in the current export, so using it as a background would leave a
+permanent message behind the animated HTML notification. No substitute artwork
+has been invented.
 
 V1 remains unchanged on `prototype/ritmo-crm-v1`.
 

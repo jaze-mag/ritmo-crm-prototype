@@ -27,6 +27,10 @@ const assert = require('node:assert/strict');
    assert.equal(await page.locator('#brief-title').evaluate(el=>el===document.activeElement),true);
    assert.equal(await page.locator('#detail-overlay').isVisible(),false);
    assert.equal(await page.locator('#maya-name').textContent(),names[i]);
+   assert.equal(await page.locator('#maya-portrait img').evaluate(el=>el.complete && el.naturalWidth===1280 && el.naturalHeight===720),true);
+   assert.equal(await page.locator('#maya-portrait').evaluate(el=>getComputedStyle(el).overflow),'hidden');
+   assert.equal(await page.locator('#maya-portrait img').evaluate(el=>getComputedStyle(el).left),'-62px');
+   assert.equal(await page.locator('#maya-portrait img').evaluate(el=>getComputedStyle(el).top),'-86px');
    assert.deepEqual(await page.locator('#maya-brief li').allTextContents(), [
     'Brightside Creative is a growing creative agency.',
     "Maya's team tracks projects across email and spreadsheets.",

@@ -30,8 +30,13 @@ const { resolve } = require('node:path');
     const names = ['Maya Patel', 'Daniel Brooks', 'Renee Alvarez'];
     for (let index = 0; index < names.length; index++) {
       await app.locator('.customer').nth(index).click();
-      assert.equal(await app.locator('#detail-name').textContent(), names[index]);
-      await app.locator('#join-button').click();
+      if (index === 0) {
+        assert.equal(await app.locator('#maya-name').textContent(), names[index]);
+        await app.locator('#call-maya').click();
+      } else {
+        assert.equal(await app.locator('#detail-name').textContent(), names[index]);
+        await app.locator('#join-button').click();
+      }
       await app.locator('#handoff').waitFor();
       assert.equal(await app.locator('#handoff-title').textContent(), names[index]);
       await app.locator('#return-button').click();

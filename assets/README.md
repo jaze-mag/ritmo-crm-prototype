@@ -13,3 +13,12 @@ not used as flattened UI or required at runtime.
 `fonts/` contains Latin WOFF2 Inter Regular/SemiBold and Montserrat Bold from
 Fontsource packages version 5.3.0, plus the original licenses. Fonts are loaded
 locally; no font CDN is used at runtime.
+
+
+## V2 pending assets
+
+The V2 CRM reference and Maya Pre-Call Brief were inspected as inline images.
+Their actual workstation/laptop illustration and Maya portrait are still needed
+as files. The office PNG above is the original V1 entrance artwork, not the
+requested V2 workstation. It remains in use until the approved replacement is
+provided. No invented portrait or replacement office has been added.

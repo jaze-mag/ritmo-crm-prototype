@@ -39,7 +39,7 @@
             <span class="prototype-label">Prototype handoff · No live call is connected</span>
             <button class="action" id="return-button">Return to CRM</button>
           </section>
-          <div class="transition" id="transition" hidden aria-live="polite"><span class="pulse" aria-hidden="true"></span><p>Preparing your discovery call…</p></div>
+          <div class="transition" id="transition" hidden aria-live="polite" tabindex="-1"><span class="pulse" aria-hidden="true"></span><p>Preparing your discovery call…</p></div>
         </section>
         <div class="hinge" aria-hidden="true"></div>
       </div>
@@ -54,6 +54,28 @@
           <button class="action" id="join-button">Join Call <span aria-hidden="true">→</span></button>
         </section>
       </div>
+      <section class="precall" id="maya-brief" aria-labelledby="brief-title" hidden>
+        <h2 id="brief-title" tabindex="-1">PRE-CALL BRIEF</h2>
+        <section class="prospect-profile" aria-labelledby="maya-name">
+          <div class="prospect-portrait" id="maya-portrait" aria-hidden="true"></div>
+          <h3 id="maya-name">Maya Patel</h3>
+          <p>Operations Manager | Brightside Creative</p>
+          <span class="challenge">Challenge Level: Easy</span>
+        </section>
+        <section class="brief-panel brief-known" aria-labelledby="known-title">
+          <h3 id="known-title">WHAT WE KNOW</h3>
+          <ul><li>Brightside Creative is a growing creative agency.</li><li>Maya's team tracks projects across email and spreadsheets.</li></ul>
+          <div class="brief-status"><p>Opportunity Status: Qualified</p><p>Next Step: Not Scheduled</p></div>
+        </section>
+        <section class="brief-panel brief-goal" aria-labelledby="goal-title">
+          <h3 id="goal-title">YOUR GOAL</h3>
+          <ul><li>Ask Maya about her current situation.</li><li>Respond to her concern.</li><li>Schedule a tailored workflow demo at a specific time.</li></ul>
+        </section>
+        <nav class="brief-actions" aria-label="Pre-call navigation">
+          <button class="action secondary" id="back-customers">BACK TO CUSTOMERS</button>
+          <button class="action" id="call-maya">CALL THIS PROSPECT</button>
+        </nav>
+      </section>
       <span class="sr-only" id="announcement" role="status"></span>
     </div>
   </main>

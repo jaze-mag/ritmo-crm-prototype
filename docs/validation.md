@@ -55,3 +55,23 @@ URL policy blocks file URLs (ERR_BLOCKED_BY_ADMINISTRATOR). That policy was not
 changed or bypassed. Windows Edge direct-file behavior still needs a local check;
 no Windows Edge test is claimed. Extract the ZIP, open index.html, and verify all
 three cards, Join Call, and Return to CRM without a local server.
+
+
+## V2 Maya checks
+
+The Chromium HTTP and opaque-origin suites were rerun for V2:
+- Maya opens the pre-call brief directly; no duplicate selection or generic modal.
+- All five supplied knowledge/goal bullets match exactly.
+- Back to Customers and Escape restore the three cards and Maya's keyboard focus.
+- Call This Prospect shows the Maya connection message for a 1.5-second transition
+  and then the exact readiness message; Return to CRM resets the demo.
+- Daniel and Renee retain their detail dialogs, keyboard focus loops, and handoffs.
+- Brief panels and navigation fit the 1280 × 720 canvas without clipping.
+- Reduced motion disables the brief animation and skips the call delay.
+- Existing clock, notification, local fonts, three viewport sizes, and no-external-
+  request checks still pass.
+
+Visual limitation: the approved workstation/laptop artwork and Maya portrait
+remain pending as source files. The existing V1 office entrance remains bundled;
+the portrait area is empty. These two artwork requirements are not complete or
+validated. No replacement artwork has been generated. V1's branch is unchanged.

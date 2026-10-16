@@ -1,16 +1,35 @@
-# Ritmo — Interactive CRM Prototype V1
+# Ritmo — Maya Pre-Call Brief Prototype V2
 
 HTML, CSS, and JavaScript sales-training prototype with no runtime dependencies,
 backend, authentication, external APIs, or build step.
 
+## V2 status
+
+Maya's card now opens the supplied Pre-Call Brief layout and exact training copy.
+Back to Customers restores the dashboard and keyboard focus. Call This Prospect
+shows "Connecting to Maya Patel..." for 1.5 seconds, then "Ready to begin your
+conversation with Maya." Reduced motion skips the timed animation. This is a
+local prototype handoff, not a live AI connection. Daniel and Renee retain their
+existing detail panels and Join Call behavior.
+
+**Artwork pending:** the inline CRM and Pre-Call Brief references have been
+inspected, but the original workstation image and Maya portrait have not been
+provided as accessible files. The CRM currently retains V1's office-entrance PNG;
+the brief reserves the approved portrait area without inventing a substitute.
+The visual correction is not complete. Supply the actual workstation/laptop
+artwork and Maya portrait as PNG files or in a ZIP to finish this version.
+
+V1 remains unchanged on `prototype/ritmo-crm-v1`.
+
 ## Preview on Windows (no build or server required)
 
-1. On GitHub, select `prototype/ritmo-crm-v1`, then choose **Code → Download ZIP**.
+1. On GitHub, select `prototype/ritmo-crm-v2`, then choose **Code → Download ZIP**.
 2. Right-click the downloaded ZIP and choose **Extract All**. Do not open the page
    inside the ZIP preview.
 3. In the extracted project folder, open `index.html` in Microsoft Edge. Keep the
    `src/` and `assets/` folders beside it.
-4. Select Maya Patel, Daniel Brooks, or Renee Alvarez, then choose **Join Call**.
+4. Select Maya Patel, then choose **CALL THIS PROSPECT** from her brief. Daniel
+   and Renee retain **Join Call** in their detail panels.
 
 The scripts now use classic JavaScript loaded in dependency order, so startup
 no longer depends on ES-module loading or a local web server. No Python, Node.js,
@@ -55,8 +74,10 @@ the office illustration is the original image, not a recreation.
 
 - A manager notification arrives shortly after startup.
 - The header clock follows the viewer's local browser time.
-- Click a prospect, or Tab to a card and press Enter/Space, to view their details.
-- Join Call transitions to a local placeholder for the selected prospect.
+- Click a prospect, or Tab to a card and press Enter/Space. Maya opens her brief;
+  Daniel and Renee open their existing details.
+- Call This Prospect (Maya) or Join Call (Daniel/Renee) transitions to the
+  selected prospect’s local handoff. No second selection is required.
 - Return to CRM resets selection and returns focus to the prospect card.
 - Escape, the close button, or clicking outside the panel closes prospect details.
 - Dialog focus stays inside the panel; the dashboard is inert while it is open.

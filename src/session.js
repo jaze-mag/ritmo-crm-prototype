@@ -13,7 +13,11 @@ function createSession(onChange = () => {}) {
     getState: () => state,
     selectCustomer(customerId) {
       if (!customers.some(customer => customer.id === customerId)) throw new RangeError('Unknown customer');
-      return update({ screen: 'crm', customerId });
+      return update({ screen: customerId === 'maya-patel' ? 'brief' : 'crm', customerId });
+    },
+    beginCall() {
+      if (!state.customerId) return false;
+      return update({ ...state, screen: 'connecting' });
     },
     joinCall() {
       if (!state.customerId) return false;

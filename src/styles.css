@@ -4,13 +4,12 @@
 :root { --dark-teal: #315c59; --light-teal: #79aaa5; --peach: #efae87; --cream: #f4e7c8; --near-white: #fffdf6; --soft: #ebf1ee; --gray: #d8d6d0; font-family: Inter, sans-serif; color: var(--dark-teal); background: #173b39; }
 * { box-sizing: border-box; }
 body { margin: 0; }
-button { font: inherit; color: inherit; cursor: pointer; user-select: text; }
+button { font: inherit; color: inherit; cursor: pointer; user-select: none; }
 button:focus-visible { outline: 3px solid var(--dark-teal); outline-offset: 5px; }
 [hidden] { display: none !important; }
 h1, h2, p { margin: 0; }
 .viewport { width: 100%; height: 100svh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .stage { position: relative; width: 1280px; height: 720px; overflow: hidden; border-radius: 30px; background: var(--gray); transform: scale(var(--scale, 1)); transform-origin: center; flex-shrink: 0; }
-.office { position: absolute; width: 100%; height: 100%; object-fit: cover; }
 .asset-notice { position: absolute; left: 30px; top: 17px; font-size: 13px; }
 .desk { position: absolute; inset: 588px 0 0; background: linear-gradient(100deg, #f8f2de, #d5c6a8); border-top: 1px solid #e5ddca; }
 .laptop { position: absolute; left: 190px; top: 59px; width: 906px; height: 563px; padding: 16px 17px 25px; border: 2px solid #817f73; border-radius: 24px 24px 13px 13px; background: linear-gradient(120deg, #a79975, #282e2b 45%, #4f504b); box-shadow: inset 0 0 0 3px #d1c9b5, inset 0 0 0 6px #55584f, 0 5px 6px #21353330; }
@@ -50,16 +49,7 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 .notification::before { content: ''; position: absolute; top: -30px; left: -8px; width: 17px; height: 17px; background: var(--cream); clip-path: polygon(0 0,100% 0,50% 100%); }
 .notification h2 { font: 600 12px/1.5 Inter, sans-serif; margin-bottom: 7px; }
 .notification p { font-size: 14px; line-height: 18px; }
-.dialog-backdrop { position: absolute; inset: 77px 203px 125px 210px; background: #1436339c; display: grid; place-items: center; z-index: 5; border-radius: 3px; }
-.detail { width: 460px; border-radius: 17px; padding: 30px; background: var(--near-white); position: relative; box-shadow: 0 18px 60px #142d2940; animation: panel-in 220ms ease both; }
-.close { position: absolute; top: 10px; right: 12px; border: 0; background: transparent; font-size: 27px; width: 36px; height: 36px; border-radius: 50%; }
-.close:hover { background: var(--soft); }
 .eyebrow { font-size: 11px; letter-spacing: 1.5px; font-weight: 600; }
-.detail h2 { font-size: 28px; margin: 14px 0 7px; }
-#detail-company { font-size: 17px; }
-#detail-role { margin-top: 5px; font-size: 14px; }
-.detail .difficulty { margin-top: 18px; }
-.detail-context { font-size: 15px; line-height: 1.5; margin: 18px 0 24px; }
 .action { border: 0; border-radius: 30px; padding: 13px 26px; background: var(--peach); font-size: 15px; font-weight: 600; transition: background 160ms ease, transform 160ms ease; min-height: 46px; }
 .action:hover { background: var(--light-teal); transform: translateY(-1px); }
 .action span { margin-left: 45px; }
@@ -81,18 +71,19 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 
 #handoff-title:focus { outline: none; }
 
-/* Maya's brief follows the supplied 1280 × 720 two-column reference. */
-.precall { position: absolute; inset: 0; background: #fffdf659; animation: panel-in 260ms ease both; }
-.precall h2 { position: absolute; top: 22px; left: 460px; width: 772px; text-align: center; font-size: 36px; line-height: 1.3; }
-.prospect-profile { position: absolute; left: 24px; top: 46px; width: 426px; height: 616px; border: 2px solid var(--dark-teal); border-radius: 86px; background: #92c4c2f2; text-align: center; padding: 38px 26px; }
-.prospect-portrait { position: relative; width: 350px; height: 328px; margin: 0 auto 36px; border-radius: 64px; overflow: hidden; }
+/* Shared brief follows the supplied 1280 × 720 two-column reference. */
+.precall { position: absolute; inset: 0; z-index: 7; background: rgb(49 92 89 / 35%); animation: brief-fade 260ms ease both; }
+@keyframes brief-fade { from { opacity: 0; } to { opacity: 1; } }
+.precall h2 { position: absolute; top: 22px; left: 460px; width: 772px; text-align: center; font-size: 36px; line-height: 1.3; background: var(--near-white); border-radius: 12px; }
+.prospect-profile { position: absolute; left: 24px; top: 46px; width: 426px; height: 616px; border: 2px solid var(--dark-teal); border-radius: 86px; background: #92c4c2; text-align: center; padding: 38px 26px; }
+.prospect-portrait { position: relative; width: 350px; height: 328px; margin: 0 auto 27px; border-radius: 64px; overflow: hidden; }
 /* Display the actual portrait region from the unchanged, flattened Figma export.
    The 350 × 328 crop at (62, 86) contains artwork only, with no baked UI text. */
 .prospect-portrait img { position: absolute; display: block; width: 1280px; height: 720px; max-width: none; left: -62px; top: -86px; }
 .prospect-profile h3 { font: 700 29px/1.3 Montserrat, sans-serif; margin: 0 0 7px; }
-.prospect-profile p { font-size: 16px; line-height: 1.5; white-space: nowrap; }
+.prospect-profile p { font-size: 16px; line-height: 1.4; }
 .challenge { display: inline-block; margin-top: 12px; border-radius: 16px; padding: 8px; background: var(--cream); font-size: 14px; font-weight: 600; }
-.brief-panel { position: absolute; left: 460px; width: 772px; border: 1px solid #829f95; border-radius: 19px; background: #fffaf0ed; padding: 16px 32px; }
+.brief-panel { position: absolute; left: 460px; width: 772px; border: 1px solid #829f95; border-radius: 19px; background: #fffaf0; padding: 16px 32px; }
 .brief-known { top: 107px; height: 259px; }
 .brief-goal { top: 380px; height: 233px; }
 .brief-panel h3 { margin: 0; font: 700 28px/1.4 Montserrat, sans-serif; }
@@ -107,10 +98,20 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 /* Original supplied workstation, with its flattened UI excluded from rendering.
    Real HTML occupies the screen cutout. The whole stage scales together. */
 .workstation { position: absolute; inset: 0; width: 1280px; height: 720px; pointer-events: none; clip-path: path(evenodd, "M 0 0 H 1280 V 720 H 0 Z M 210 77 H 1077 V 595 H 210 Z"); }
-.office { visibility: hidden; }
-.brief-view .office { visibility: visible; }
-.brief-view .workstation { visibility: hidden; }
 .laptop { left: 210px; top: 77px; width: 867px; height: 518px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
 .screen { width: 867px; height: 518px; border: 0; }
 .camera, .hinge, .laptop-base, .desk { display: none; }
 .dashboard { padding-left: 16px; padding-right: 31px; }
+
+/* Keep the simulation non-editable while leaving future text fields usable. */
+.stage { cursor: default; user-select: none; -webkit-user-select: none; }
+.stage button, .stage a[href], .stage [role="button"] { cursor: pointer; }
+.stage button * { cursor: inherit; }
+.stage input, .stage textarea, .stage [contenteditable]:not([contenteditable="false"]) { cursor: text; user-select: text; -webkit-user-select: text; }
+.stage select, .stage input[type="checkbox"], .stage input[type="radio"] { cursor: pointer; }
+.transition { background: var(--dark-teal); color: var(--cream); gap: 20px; text-align: center; padding: 36px; }
+.transition .eyebrow { color: var(--cream); }
+.transition .pulse { background: var(--peach); margin: 5px 0; }
+.transition h2 { font-size: 29px; line-height: 1.35; }
+.transition p { font-size: 16px; }
+.handoff h2 { max-width: 780px; text-align: center; font-size: 28px; }

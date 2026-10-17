@@ -4,8 +4,8 @@ const { createSession, customers } = window.Ritmo;
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
-const overlay = byId('detail-overlay');
-const screen = document.querySelector('.screen');
+const brief = byId('customer-brief');
+const laptop = document.querySelector('.laptop');
 let lastCard = null;
 let joining = false;
 const session = createSession(state => {
@@ -26,7 +26,7 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-const office = byId('office');
+const office = byId('workstation');
 function checkOffice() {
   const missing = !office.naturalWidth;
   office.hidden = missing;
@@ -44,14 +44,15 @@ customers.forEach((customer, index) => {
   button.dataset.customer = customer.id;
   button.style.setProperty('--accent', accents[index]);
   button.setAttribute('aria-pressed', 'false');
-  if (customer.id !== 'maya-patel') button.setAttribute('aria-haspopup', 'dialog');
+  button.setAttribute('aria-haspopup', 'dialog');
+  button.setAttribute('aria-controls', 'customer-brief');
   for (const [field, className] of [['name', 'customer-name'], ['company', 'customer-company'], ['role', 'customer-role'], ['difficulty', 'difficulty'], ['context', 'customer-context']]) {
     const span = document.createElement('span');
     span.className = className;
     span.textContent = customer[field];
     button.append(span);
   }
-  button.addEventListener('click', () => openDetails(customer, button));
+  button.addEventListener('click', () => openBrief(customer, button));
   byId('customers').append(button);
 });
 for (let i = 0; i < 56; i++) {
@@ -60,88 +61,93 @@ for (let i = 0; i < 56; i++) {
   byId('keyboard').append(key);
 }
 
-function openDetails(customer, button) {
-  if (joining) return;
-  session.selectCustomer(customer.id);
+function fillList(id, items) {
+  byId(id).replaceChildren(...items.map(text => {
+    const item = document.createElement('li');
+    item.textContent = text;
+    return item;
+  }));
+}
+function openBrief(customer, button) {
+  if (joining || !session.selectCustomer(customer.id)) return;
   lastCard = button;
   document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', String(card === button)));
-  if (customer.id === 'maya-patel') {
-    showBrief(true);
-    byId('brief-title').focus();
-    return;
-  }
-  for (const field of ['name', 'company', 'role', 'difficulty', 'context']) byId(`detail-${field}`).textContent = customer[field];
-  overlay.hidden = false;
-  screen.inert = true;
-  byId('join-button').focus();
+  byId('brief-name').textContent = customer.name;
+  byId('brief-role').textContent = customer.role;
+  byId('brief-company').textContent = customer.company;
+  byId('brief-challenge').textContent = `Challenge Level: ${customer.difficulty[0]}${customer.difficulty.slice(1).toLowerCase()}`;
+  fillList('brief-known', customer.brief.known);
+  fillList('brief-goals', customer.brief.goals);
+  const portrait = byId('portrait-image');
+  portrait.src = customer.brief.portrait;
+  portrait.alt = `Illustrated portrait of ${customer.name}`;
+  portrait.style.left = `-${customer.brief.crop.x}px`;
+  portrait.style.top = `-${customer.brief.crop.y}px`;
+  showBrief(true);
+  byId('brief-title').focus();
 }
 function showBrief(visible) {
-  stage.classList.toggle('brief-view', visible);
-  byId('maya-brief').hidden = !visible;
-  for (const selector of ['.laptop', '.laptop-base', '.desk']) document.querySelector(selector).hidden = visible;
-  byId('notification').hidden = visible;
+  brief.hidden = !visible;
+  laptop.inert = visible;
+  byId('notification').inert = visible;
 }
-function closeDetails(restoreFocus = true) {
-  overlay.hidden = true;
-  screen.inert = false;
-  if (restoreFocus) lastCard?.focus();
-}
-byId('close-detail').addEventListener('click', () => closeDetails());
-overlay.addEventListener('click', event => { if (event.target === overlay) closeDetails(); });
-overlay.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { event.preventDefault(); closeDetails(); }
-  if (event.key === 'Tab') {
-    const first = byId('close-detail');
-    const last = byId('join-button');
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-  }
-});
-async function startCall() {
-  if (joining || !session.getState().customerId) return;
-  joining = true;
-  const customer = customers.find(item => item.id === session.getState().customerId);
-  closeDetails(false);
-  showBrief(false);
-  session.beginCall();
-  byId('dashboard').inert = true;
-  byId('transition').hidden = false;
-  byId('notification').hidden = true;
-  const isMaya = customer.id === 'maya-patel';
-  byId('transition').querySelector('p').textContent = isMaya ? 'Connecting to Maya Patel...' : 'Preparing your discovery call…';
-  byId('transition').focus();
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) await new Promise(resolve => setTimeout(resolve, isMaya ? 1500 : 850));
-  session.joinCall();
-  byId('handoff-title').textContent = customer.name;
-  document.querySelector('.handoff-note').textContent = isMaya ? 'Ready to begin your conversation with Maya.' : 'Your discovery conversation begins here.';
+// Single handoff boundary for a future verified Storyline adapter.
+// No external connection is made; statechange remains the host-facing event.
+function renderHandoff(customer) {
+  byId('handoff-title').textContent = `Ready to Speak with ${customer.name}`;
   byId('handoff-company').textContent = `${customer.company} · ${customer.role}`;
   byId('dashboard').hidden = true;
   byId('transition').hidden = true;
   byId('handoff').hidden = false;
   byId('handoff-title').focus();
+}
+async function startCall() {
+  if (joining || session.getState().screen !== 'brief') return;
+  joining = true;
+  const customer = customers.find(item => item.id === session.getState().customerId);
+  showBrief(false);
+  session.beginCall();
+  byId('dashboard').inert = true;
+  byId('transition').hidden = false;
+  byId('notification').hidden = true;
+  byId('connection-title').textContent = `Connecting with ${customer.name}...`;
+  byId('transition').focus();
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) await new Promise(resolve => setTimeout(resolve, 1500));
+  session.joinCall();
+  renderHandoff(customer);
   joining = false;
 }
-byId('join-button').addEventListener('click', startCall);
-byId('call-maya').addEventListener('click', startCall);
+byId('call-prospect').addEventListener('click', startCall);
 function returnToCustomers() {
   if (joining) return;
   showBrief(false);
-  session.returnToCRM();
+  const fromBrief = session.getState().screen === 'brief';
+  if (fromBrief) session.closeBrief();
+  else session.returnToCRM();
   byId('handoff').hidden = true;
   byId('dashboard').hidden = false;
   byId('dashboard').inert = false;
-  document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', 'false'));
+  if (!fromBrief) document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', 'false'));
   byId('notification').hidden = false;
   byId('announcement').textContent = 'Returned to the CRM. Choose a prospect to begin.';
   lastCard?.focus();
 }
 byId('return-button').addEventListener('click', returnToCustomers);
 byId('back-customers').addEventListener('click', returnToCustomers);
-byId('maya-brief').addEventListener('keydown', event => {
+brief.addEventListener('keydown', event => {
   if (event.key === 'Escape') { event.preventDefault(); returnToCustomers(); }
+  if (event.key === 'Tab') {
+    const first = byId('back-customers');
+    const last = byId('call-prospect');
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === byId('brief-title'))) {
+      event.preventDefault(); last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault(); first.focus();
+    }
+  }
 });
 setTimeout(() => {
-  if (session.getState().screen === 'crm' && !joining) {
+  if (['crm', 'brief'].includes(session.getState().screen) && !joining) {
     byId('notification').hidden = false;
     byId('announcement').textContent = 'Message from your manager: Three qualified prospects are ready to talk. Choose one and find out what their team needs.';
   }

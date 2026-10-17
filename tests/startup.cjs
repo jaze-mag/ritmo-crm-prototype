@@ -30,15 +30,10 @@ const { resolve } = require('node:path');
     const names = ['Maya Patel', 'Daniel Brooks', 'Renee Alvarez'];
     for (let index = 0; index < names.length; index++) {
       await app.locator('.customer').nth(index).click();
-      if (index === 0) {
-        assert.equal(await app.locator('#maya-name').textContent(), names[index]);
-        await app.locator('#call-maya').click();
-      } else {
-        assert.equal(await app.locator('#detail-name').textContent(), names[index]);
-        await app.locator('#join-button').click();
-      }
+      assert.equal(await app.locator('#brief-name').textContent(), names[index]);
+      await app.locator('#call-prospect').click();
       await app.locator('#handoff').waitFor();
-      assert.equal(await app.locator('#handoff-title').textContent(), names[index]);
+      assert.equal(await app.locator('#handoff-title').textContent(), `Ready to Speak with ${names[index]}`);
       await app.locator('#return-button').click();
       assert.equal(await app.locator('.customer[aria-pressed="true"]').count(), 0);
     }

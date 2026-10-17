@@ -1,108 +1,70 @@
-# Ritmo — Maya Pre-Call Brief Prototype V2
+# Ritmo Sales Conversations — CRM V2
 
-HTML, CSS, and JavaScript sales-training prototype with no runtime dependencies,
-backend, authentication, external APIs, or build step.
+An interactive HTML/CSS/JavaScript training prototype with three customer briefs,
+local approved artwork and fonts, and no runtime dependencies or build step.
+V1 remains preserved on `prototype/ritmo-crm-v1`.
 
-## V2 status
+## Preview on Windows
 
-Maya's card now opens the supplied Pre-Call Brief layout and exact training copy.
-Back to Customers restores the dashboard and keyboard focus. Call This Prospect
-shows "Connecting to Maya Patel..." for 1.5 seconds, then "Ready to begin your
-conversation with Maya." Reduced motion skips the timed animation. This is a
-local prototype handoff, not a live AI connection. Daniel and Renee retain their
-existing detail panels and Join Call behavior.
+1. On GitHub, select `prototype/ritmo-crm-v2`, then **Code → Download ZIP**.
+2. Right-click the ZIP and choose **Extract All** into a new folder.
+3. Open the extracted `index.html` in Edge. Keep `src/` and `assets/` beside it.
+4. Choose any prospect, review the brief, and select **Call This Prospect**.
 
-The approved workstation and laptop artwork are now bundled from the supplied
-Cinematic Intro (1).zip. The flattened CRM screen is excluded with CSS clipping;
-the interactive HTML screen replaces it. The manager notification remains a
-separate animated HTML element. Maya's portrait is displayed from its region in
-the unchanged Pre-Call Brief PNG. All required runtime artwork is included.
+Classic scripts load in order, preserving direct-file compatibility. No npm,
+Python, build, backend, or internet connection is required for this preview.
+Native Windows Edge testing is unavailable in the cloud; see docs/validation.md.
 
-V1 remains unchanged on `prototype/ritmo-crm-v1`.
-
-## Preview on Windows (no build or server required)
-
-1. On GitHub, select `prototype/ritmo-crm-v2`, then choose **Code → Download ZIP**.
-2. Right-click the downloaded ZIP and choose **Extract All**. Do not open the page
-   inside the ZIP preview.
-3. In the extracted project folder, open `index.html` in Microsoft Edge. Keep the
-   `src/` and `assets/` folders beside it.
-4. Select Maya Patel, then choose **CALL THIS PROSPECT** from her brief. Daniel
-   and Renee retain **Join Call** in their detail panels.
-
-The scripts now use classic JavaScript loaded in dependency order, so startup
-no longer depends on ES-module loading or a local web server. No Python, Node.js,
-npm, package installation, application rebuild, or internet connection is needed
-for the direct-file preview. Artwork and fonts remain bundled locally.
-
-### Optional local server
-
-If your browser's organization policy prevents local-file pages, or you prefer
-HTTP development, open PowerShell in this project folder and run with Python 3:
+If your browser restricts local files, optionally serve the folder with Python 3:
 
 ```powershell
 py -m http.server 8000 --bind 127.0.0.1
 ```
 
-Then open `http://localhost:8000`. If `py` is unavailable but `python --version`
-reports Python 3, use `python -m http.server 8000 --bind 127.0.0.1` instead.
-On macOS/Linux use `python3 -m http.server 8000 --bind 127.0.0.1`.
-Keep the terminal open while previewing; press Ctrl+C to stop the server.
+Open `http://localhost:8000`. Use `python` instead of `py` if appropriate; macOS/Linux
+can use `python3`. Keep the terminal open; Ctrl+C stops the server.
 
-### Why the cards were blank
+## Interaction flow
 
-The original page used `<script type="module">`. Direct-file browser security
-blocks that module load, so the JavaScript that creates the cards never executes,
-while the static header, pipeline, and artwork still appear. The existing data,
-state logic, and UI now load as three ordered classic scripts, isolated in function
-scopes and sharing a small `window.Ritmo` namespace. The visual design is unchanged.
+All three customer cards open the same accessible brief component, populated from
+`src/customers.js`. Each brief includes its approved portrait, difficulty, profile,
+knowledge, goals, and status indicators. The workstation and live CRM remain
+mounted and visible beneath a transparent dark-teal overlay. No office-entrance
+image is loaded. Solid cream and teal panels keep foreground text readable.
 
-HTTP and opaque-origin startup regression tests pass in Chromium. Native Windows
-Edge `file://` testing is not available in the cloud environment: its managed
-browser blocks all file URLs. See `docs/validation.md` for the exact coverage.
+- **Back to Customers** or Escape closes the brief without reloading the CRM,
+  preserves the selected card, and restores keyboard focus.
+- **Call This Prospect** runs the existing pulse animation for 1.5 seconds with
+  “Connecting with [Customer Name]...” on a dark-teal panel.
+- The handoff reads “Ready to Speak with [Customer Name]” and “Your customer
+  conversation is ready.” It is a local placeholder, not a live AI connection.
+- **Return to CRM** resets the call selection and focuses the original card.
+- The clock, card hover effects, and animated manager notification are preserved.
 
-## Approved artwork
+Modal focus stays within its controls; the background is inert while open.
+Reduced motion removes animation and the call delay. Noninteractive interface
+text uses an arrow cursor and cannot be highlighted. Buttons use a pointer.
+Text inputs, textareas, and future editable fields retain editing and selection.
 
-- `assets/ritmo-workstation.png`: unchanged supplied 1280 × 720 workstation and
-  laptop export, with the manager message removed. The embedded screen rectangle
-  (210, 77)–(1077, 595) is clipped out in CSS; all live screen content is HTML.
-- `assets/ritmo-office-background.png`: original office illustration, retained for
-  Maya's brief background.
-- `assets/references/maya-precall-approved.png`: unchanged supplied brief export;
-  CSS displays only the portrait region. Brief text and buttons remain HTML.
+## Artwork and composition
 
-No replacement artwork has been generated. The previous CSS laptop casing and
-keyboard are hidden so the approved illustrated laptop is visible.
+The original workstation/laptop image is unchanged. Its flattened screen is
+clipped out and replaced by the existing HTML CRM. Each supplied brief PNG is
+stored unchanged; CSS displays only its portrait area, never its baked text or
+buttons. All three customer ZIPs are incorporated. See assets/README.md for sources.
 
-## Demo
+The 1280 × 720 composition scales proportionally into the viewport. Desktop and
+landscape Storyline playback are the intended uses; phone-sized windows display
+the same composition at smaller text sizes. No new art has been generated.
 
-- A manager notification arrives shortly after startup.
-- The header clock follows the viewer's local browser time.
-- Click a prospect, or Tab to a card and press Enter/Space. Maya opens her brief;
-  Daniel and Renee open their existing details.
-- Call This Prospect (Maya) or Join Call (Daniel/Renee) transitions to the
-  selected prospect’s local handoff. No second selection is required.
-- Return to CRM resets selection and returns focus to the prospect card.
-- Escape, the close button, or clicking outside the panel closes prospect details.
-- Dialog focus stays inside the panel; the dashboard is inert while it is open.
-- Reduced-motion preferences remove animation and the transition delay.
+## Structure
 
-The composition uses a 1280 × 720 stage scaled proportionally into the viewport.
-Small phones retain the full composition at smaller text sizes; this prototype is
-intended primarily for desktop training and Storyline's landscape player.
-The laptop framing is HTML/CSS; all CRM copy is real, selectable HTML.
+- `src/customers.js`: shared profiles, knowledge, goals, and portrait metadata.
+- `src/session.js`: selection, brief, connection, and handoff state.
+- `src/main.js`: shared rendering, focus management, clock, and state-change events.
+- `src/styles.css`: existing composition, modal, cursor rules, and motion styles.
+- `assets/fonts/`: bundled Inter/Montserrat WOFF2 files and licenses.
+- `docs/validation.md`: browser checks and their limits.
+- `docs/storyline.md`: the future Web Object communication boundary.
 
-## Files
-
-- `src/customers.js`: supplied customer content and stable IDs.
-- `src/session.js`: local customer selection, handoff, and reset state.
-- `src/main.js`: UI, clock, focus management, and local state-change events.
-- `src/styles.css`: composition, typography, transitions, and accessibility styles.
-- `assets/fonts/`: local Fontsource Inter 400/600 and Montserrat 700, version 5.3.0,
-  with accompanying font licenses.
-- `docs/storyline.md`: proposed host integration contract.
-- `docs/validation.md`: completed checks and limitations.
-
-No Storyline player integration or AI integration is implemented. The handoff
-screen never starts a real call. Reusable customer data and session logic can
-support later positive/negative conclusions without coupling them to this layout.
+No Storyline player API, Devlin AI integration, or fake conversation is implemented.

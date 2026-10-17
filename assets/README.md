@@ -1,38 +1,29 @@
 # Approved assets
 
-The three inline references were inspected:
+## Runtime artwork
 
-- `ritmo-crm-reference.png`: the approved 1280 × 720 layout.
-- `ritmo-office-background.png`: approved sunlit anime office illustration.
-- `ritmo-style-guide.png`: approved typography, colors, and states.
+- `ritmo-workstation.png`: original Cinematic Intro (1).png supplied with the
+  manager message removed. Unchanged from the working V2 baseline. The screen
+  region (210,77)–(1077,595) is excluded with CSS clipping and replaced by HTML.
+- `references/maya-precall-approved.png`: Maya Pre-Call Brief.png from the latest
+  Maya Pre-Call Brief.zip, preserved byte for byte.
+- `references/daniel-precall-approved.png`: Daniel Pre-Call Brief.png from Daniel
+  Pre-Call Brief.zip, preserved byte for byte.
+- `references/renee-precall-approved.png`: Renee Pre-Call Brief.png from Renee
+  Pre-Call Brief.zip, preserved byte for byte.
 
-The original office PNG is bundled unchanged, extracted from the supplied
-Ritmo Office.zip. Layout/style reference images were inspected in chat; they are
-not used as flattened UI or required at runtime.
+The three brief exports are flattened 1280 × 720 images. CSS displays only a
+350 × 328 portrait region: Maya (62,86), Daniel (62,87), Renee (63,86).
+The baked headings, body text, statuses, and buttons are excluded from view.
+The shared semantic HTML brief supplies these elements instead. No portrait is
+generated or redrawn. Crop coordinates live with customer data in customers.js.
 
-`fonts/` contains Latin WOFF2 Inter Regular/SemiBold and Montserrat Bold from
-Fontsource packages version 5.3.0, plus the original licenses. Fonts are loaded
-locally; no font CDN is used at runtime.
+`fonts/` contains Fontsource 5.3.0 Latin WOFF2 Inter Regular/SemiBold and Montserrat
+Bold with the original licenses. No runtime font CDN is used.
 
+## Retained reference material
 
-## V2 supplied mockups
-
-- `references/ritmo-crm-approved.png`: unchanged Cinematic Intro.png from the
-  uploaded Cinematic Intro.zip. This is a flattened CRM reference, not a clean
-  workstation background. It is retained for visual comparison.
-- `references/maya-precall-approved.png`: unchanged Pre-Call Brief.png from the
-  uploaded Pre-Call Brief.zip. The brief displays only its portrait region using
-  CSS overflow clipping at x=62, y=86, width=350, height=328. The source image is
-  not edited, and its baked text/buttons are never displayed in the live brief.
-
-## Approved workstation in use
-
-`ritmo-workstation.png` is the unchanged Cinematic Intro (1).png from the user's
-updated ZIP. The baked manager message has been removed in this supplied export.
-The app clips out the flattened screen rectangle (210,77)–(1077,595) and overlays
-real HTML at the same coordinates, leaving only the actual workstation/laptop art
-visible. The manager notification remains an independently animated HTML element.
-
-The V1 office-entrance PNG remains in use only behind Maya's brief. All runtime
-image assets are now available locally. The older flattened CRM export remains
-in references/ for provenance, not as the runtime background.
+`ritmo-office-background.png` is the prior V1 entrance illustration. It is retained
+unchanged for provenance but is not referenced or loaded by V2. The older flattened
+CRM export in references/ is also reference-only. All required runtime assets are
+bundled; no additional image export is needed.

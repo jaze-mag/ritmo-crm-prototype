@@ -11,9 +11,8 @@
 <body>
   <main class="viewport" aria-label="Ritmo sales training prototype">
     <div class="stage" id="stage">
-      <img class="office" id="office" src="./assets/ritmo-office-background.png" alt="Sunlit illustrated office with coworkers at their desks">
-      <img class="workstation" id="workstation" src="./assets/ritmo-workstation.png" alt="" aria-hidden="true" width="1280" height="720">
-      <p class="asset-notice" id="asset-notice" hidden>Approved office image not yet bundled.</p>
+      <img class="workstation" draggable="false" id="workstation" src="./assets/ritmo-workstation.png" alt="" aria-hidden="true" width="1280" height="720">
+      <p class="asset-notice" id="asset-notice" hidden>Approved workstation image not yet bundled.</p>
       <div class="desk" aria-hidden="true"></div>
       <div class="laptop">
         <div class="camera" aria-hidden="true"></div>
@@ -36,47 +35,43 @@
             <span class="call-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="12" height="12" rx="3"/><path d="m15 10 6-3v10l-6-3z"/></svg></span>
             <h2 id="handoff-title" tabindex="-1"></h2>
             <p id="handoff-company"></p>
-            <p class="handoff-note">Your discovery conversation begins here.</p>
+            <p class="handoff-note">Your customer conversation is ready.</p>
             <span class="prototype-label">Prototype handoff · No live call is connected</span>
             <button class="action" id="return-button">Return to CRM</button>
           </section>
-          <div class="transition" id="transition" hidden aria-live="polite" tabindex="-1"><span class="pulse" aria-hidden="true"></span><p>Preparing your discovery call…</p></div>
+          <section class="transition" id="transition" hidden tabindex="-1" aria-labelledby="connection-title">
+            <span class="eyebrow">RITMO · OUTBOUND CALL</span>
+            <span class="pulse" aria-hidden="true"></span>
+            <h2 id="connection-title"></h2>
+            <p>Preparing your customer conversation</p>
+          </section>
         </section>
         <div class="hinge" aria-hidden="true"></div>
       </div>
       <div class="laptop-base" aria-hidden="true"><div class="keyboard" id="keyboard"></div><div class="trackpad"></div><div class="base-lip"></div></div>
       <aside class="notification" id="notification" aria-label="Message from your manager" hidden><h2>MESSAGE FROM YOUR MANAGER</h2><p>Three qualified prospects are ready to talk. Choose one and find out what their team needs.</p></aside>
-      <div class="dialog-backdrop" id="detail-overlay" hidden>
-        <section class="detail" role="dialog" aria-modal="true" aria-labelledby="detail-name" aria-describedby="detail-context" tabindex="-1">
-          <button class="close" id="close-detail" aria-label="Close prospect details">×</button>
-          <span class="eyebrow">PROSPECT DETAILS</span>
-          <h2 id="detail-name"></h2><p id="detail-company"></p><p id="detail-role"></p>
-          <span class="difficulty" id="detail-difficulty"></span><p class="detail-context" id="detail-context"></p>
-          <button class="action" id="join-button">Join Call <span aria-hidden="true">→</span></button>
-        </section>
-      </div>
-      <section class="precall" id="maya-brief" aria-labelledby="brief-title" hidden>
-        <h2 id="brief-title" tabindex="-1">PRE-CALL BRIEF</h2>
-        <section class="prospect-profile" aria-labelledby="maya-name">
-          <div class="prospect-portrait" id="maya-portrait">
-            <img src="./assets/references/maya-precall-approved.png" alt="Illustrated portrait of Maya Patel" width="1280" height="720">
+      <section class="precall" id="customer-brief" role="dialog" aria-modal="true" aria-labelledby="brief-title brief-name" hidden>
+        <h2 id="brief-title" tabindex="-1">Pre-Call Brief</h2>
+        <section class="prospect-profile" aria-labelledby="brief-name">
+          <div class="prospect-portrait" id="brief-portrait">
+            <img id="portrait-image" alt="" draggable="false" width="1280" height="720">
           </div>
-          <h3 id="maya-name">Maya Patel</h3>
-          <p>Operations Manager | Brightside Creative</p>
-          <span class="challenge">Challenge Level: Easy</span>
+          <h3 id="brief-name"></h3>
+          <p id="brief-role"></p><p id="brief-company"></p>
+          <span class="challenge" id="brief-challenge"></span>
         </section>
         <section class="brief-panel brief-known" aria-labelledby="known-title">
-          <h3 id="known-title">WHAT WE KNOW</h3>
-          <ul><li>Brightside Creative is a growing creative agency.</li><li>Maya's team tracks projects across email and spreadsheets.</li></ul>
+          <h3 id="known-title">What We Know</h3>
+          <ul id="brief-known"></ul>
           <div class="brief-status"><p>Opportunity Status: Qualified</p><p>Next Step: Not Scheduled</p></div>
         </section>
         <section class="brief-panel brief-goal" aria-labelledby="goal-title">
-          <h3 id="goal-title">YOUR GOAL</h3>
-          <ul><li>Ask Maya about her current situation.</li><li>Respond to her concern.</li><li>Schedule a tailored workflow demo at a specific time.</li></ul>
+          <h3 id="goal-title">Your Goal</h3>
+          <ul id="brief-goals"></ul>
         </section>
         <nav class="brief-actions" aria-label="Pre-call navigation">
-          <button class="action secondary" id="back-customers">BACK TO CUSTOMERS</button>
-          <button class="action" id="call-maya">CALL THIS PROSPECT</button>
+          <button class="action secondary" id="back-customers">Back to Customers</button>
+          <button class="action" id="call-prospect">Call This Prospect</button>
         </nav>
       </section>
       <span class="sr-only" id="announcement" role="status"></span>

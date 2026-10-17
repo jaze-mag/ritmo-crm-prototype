@@ -1,31 +1,44 @@
-# Validation
+# V2 validation
 
-Browser: headless system Chromium, automated through Playwright (tooling installed
-outside the project). Application runtime has no npm dependency.
+Browser: system Chromium through Playwright. No runtime npm dependencies.
 
-Checked:
-- All three prospects render the supplied name, company, role, difficulty, and context.
-- Keyboard activation and pointer clicks open details.
-- Modal Tab/Shift+Tab loop, Escape, close button, and focus restoration.
-- Selection, Join Call, selected-customer handoff, and return/reset for all prospects.
-- Three corresponding handoff state events.
-- Manager notification appears after startup.
-- Local clock datetime changes over time.
-- Bundled Inter and Montserrat fonts load.
-- Reduced-motion mode disables the detail animation.
-- Stage fits 1280 × 720, 640 × 360, 390 × 844, and 1920 × 1080 viewports.
-- No uncaught JavaScript errors or external network requests during the demo.
+## Passed checks
 
-Limitations:
-- The original office PNG is bundled unchanged; its load and 1280 × 720
-  composition were checked in Chromium.
-- The laptop casing is now the supplied artwork; the live screen is HTML.
-- No Storyline/LMS published package or cross-browser testing has been performed.
-- No live calls, backend, AI services, or player API integration are implemented.
+For Maya, Daniel, and Renee independently:
 
-## Re-run browser checks
+- Card opens the one shared brief with the correct name, role, company, challenge,
+  five knowledge/goal bullets, status text, and approved portrait PNG.
+- Original workstation and dashboard remain visible and mounted beneath the modal.
+- The dashboard is inert; background cards cannot receive keyboard focus.
+- Initial heading focus, Tab/Shift+Tab containment, Escape, Back to Customers, and
+  focus restoration work. Closing the brief retains the selected card.
+- Call This Prospect uses the correct dynamic connection headline and supporting
+  text, with the original pulse motion and one 1.5-second delay.
+- Duplicate connection clicks and attempted prospect switching cannot create a
+  second connection or change the in-progress customer.
+- Correct dynamic handoff headline, supporting copy, and Return to CRM behavior.
+- Complete brief fits 1280 × 720 without overflowing panels or colliding status
+  text; action buttons remain within 640 × 360 and 390 × 844 viewports.
 
-With the app server running on port 8000 and system Chromium installed:
+Shared checks:
+
+- Before/after CRM screenshots were pixel-identical with the live clock masked and
+  matching reduced-motion settings. Workstation and local font assets are unchanged.
+- Clock continues ticking; notification appears; existing card hover motion remains.
+- Pointer cursors on cards/buttons, arrow cursor and no selection on display text.
+- A temporary textarea accepted text and retained its text cursor and selection.
+- Reduced motion removes brief animation and skips the connection delay.
+- All assets load without failures, no uncaught JavaScript errors, and no external
+  requests. The old office-entrance image is never requested.
+- The opaque-origin regression suite passes all three brief/call/return flows;
+  classic-script startup remains independent of ES-module CORS loading.
+- All three uploaded ZIPs passed integrity checks; bundled brief PNGs match their
+  ZIP entries byte for byte. Full-size brief, connection, and handoff screenshots
+  were visually inspected.
+
+## Run tests
+
+Start the app server on port 8000. With system Chromium installed:
 
 ```sh
 npm install --prefix /tmp/ritmo-tools --cache /tmp/ritmo-npm playwright --no-audit --no-fund
@@ -33,62 +46,18 @@ NODE_PATH=/tmp/ritmo-tools/node_modules node tests/browser.cjs
 NODE_PATH=/tmp/ritmo-tools/node_modules node tests/startup.cjs
 ```
 
-Screenshots are written under /tmp/ritmo-*.png. This tooling is development-only
-and is not included in the Web Object package.
+`CHROMIUM_PATH` can select a compatible browser executable. Screenshots are written
+to /tmp/ritmo-*.png. The optional comparison in browser.cjs uses /tmp/ritmo-before.png
+if present; the recorded baseline came from commit 3ec54ce before these edits.
+Test tooling is installed outside the repository and is not packaged for runtime.
 
+## Limits
 
-## Direct-file startup fix
+Native Windows Edge/file:// testing and Storyline/LMS playback are not verified
+here. The cloud browser restricts file URL navigation; the opaque-origin test
+checks script loading and interactions, not every native-file behavior. Portrait
+font CORS restrictions inside that sandbox are separate; fonts load and are tested
+in the normal HTTP suite.
 
-Before the fix, an opaque-origin sandboxed frame reproduced the module CORS error:
-main.js was blocked from origin `null`, leaving no customer cards. The original
-application used ES modules, which also require CORS checks when loaded via file://.
-
-After the fix, the same frame loads all three classic scripts and passes customer
-selection, Join Call, and return/reset for every prospect. The regular HTTP suite
-also passes. tests/startup.cjs guards against reintroducing module-only startup.
-Fonts in the HTTP opaque-origin frame are subject to separate CORS restrictions;
-font loading is checked in the normal HTTP suite. The frame test verifies script
-startup and interactions, not native file-font behavior.
-
-Native file:// navigation was attempted, but this cloud browser's administrative
-URL policy blocks file URLs (ERR_BLOCKED_BY_ADMINISTRATOR). That policy was not
-changed or bypassed. Windows Edge direct-file behavior still needs a local check;
-no Windows Edge test is claimed. Extract the ZIP, open index.html, and verify all
-three cards, Join Call, and Return to CRM without a local server.
-
-
-## V2 Maya checks
-
-The Chromium HTTP and opaque-origin suites were rerun for V2:
-- Maya opens the pre-call brief directly; no duplicate selection or generic modal.
-- All five supplied knowledge/goal bullets match exactly.
-- Back to Customers and Escape restore the three cards and Maya's keyboard focus.
-- Call This Prospect shows the Maya connection message for a 1.5-second transition
-  and then the exact readiness message; Return to CRM resets the demo.
-- Daniel and Renee retain their detail dialogs, keyboard focus loops, and handoffs.
-- Brief panels and navigation fit the 1280 × 720 canvas without clipping.
-- Reduced motion disables the brief animation and skips the call delay.
-- Existing clock, notification, local fonts, three viewport sizes, and no-external-
-  request checks still pass.
-
-The uploaded Pre-Call Brief PNG is now bundled unchanged. Browser checks verify
-its dimensions, successful loading, and the portrait-only clipping region. The
-1280 × 720 brief screenshot was visually inspected, and both browser suites were
-rerun successfully after adding the portrait. All brief text remains real HTML.
-
-## Approved workstation integration
-
-The supplied Cinematic Intro (1).png is bundled unchanged as ritmo-workstation.png.
-Its manager message is absent, allowing the existing HTML notification to animate
-independently. The baked screen region is excluded with an even-odd CSS clip path.
-The HTML screen is aligned to the resulting cutout; the previous CSS laptop/desk
-approximation is hidden.
-
-Both browser suites passed after integration. Additional checks confirm the
-1280 × 720 workstation asset loads, the screen clip path is active, the artificial
-laptop base is hidden, and background visibility switches correctly between the
-CRM and Maya's brief. CRM and handoff screenshots were visually inspected at
-1280 × 720; the notification does not remain baked into the handoff background.
-The source PNG matches the ZIP entry byte for byte. No required artwork is missing.
-V1's branch is unchanged. Native Windows Edge testing remains unavailable here,
-as noted above; classic-script direct-file compatibility is preserved.
+The fixed composition scales down on phones rather than reflowing, so text becomes
+smaller. No live AI call, Devlin AI integration, or Storyline player API is claimed.

@@ -12,10 +12,16 @@ runtime requirements. Use a 16:9 Web Object region; the reference stage is 1280 
 - `getState()` returns immutable `{ screen, customerId }`.
 - `selectCustomer(id)` validates the ID and opens `brief` for any customer.
   Selection is rejected during `connecting`.
-- `closeBrief()` enters `crm`, retaining the selected customer; only valid in brief.
+- `closeBrief()` remains a state helper that retains selection. The current UI
+  uses `returnToCRM()` for all returns to clear visual and logical selection.
 - `beginCall()` enters `connecting`; requires a selection in brief.
 - `joinCall()` enters `handoff`; only valid after connecting.
 - `returnToCRM()` clears the selection and returns to `crm`.
+
+The UI displays a full approved PNG with two transparent, accessible button
+hotspots. An offscreen text summary supplies screen-reader content. Pointer
+returns focus the neutral dashboard heading; keyboard returns focus the card.
+The original dashboard stays mounted and inert during the brief.
 
 The UI emits `ritmo:statechange` CustomEvents on its own window with that state in
 `event.detail`. IDs are `maya-patel`, `daniel-brooks`, and `renee-alvarez`. Events

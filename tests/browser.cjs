@@ -51,41 +51,48 @@ const expected = [
    assert.equal(await page.evaluate(()=>window.dashboardNode===document.querySelector('#dashboard')),true);
    await card.evaluate(el=>el.focus());
    assert.equal(await card.evaluate(el=>el===document.activeElement),false,'Background card must not receive focus');
-   assert.equal(await page.locator('#brief-name').textContent(),customer.name);
-   assert.equal(await page.locator('#brief-role').textContent(),customer.role);
-   assert.equal(await page.locator('#brief-company').textContent(),customer.company);
-   assert.equal(await page.locator('#brief-challenge').textContent(),`Challenge Level: ${customer.level}`);
-   assert.deepEqual(await page.locator('#brief-known li').allTextContents(),customer.known);
-   assert.deepEqual(await page.locator('#brief-goals li').allTextContents(),customer.goals);
-   assert.deepEqual(await page.locator('.brief-status p').allTextContents(),['Opportunity Status: Qualified','Next Step: Not Scheduled']);
-   assert.ok((await page.locator('#portrait-image').getAttribute('src')).includes(`${customer.image}-precall-approved.png`));
-   await page.waitForFunction(()=>document.querySelector('#portrait-image').complete && document.querySelector('#portrait-image').naturalWidth===1280);
-   assert.equal(await page.locator('#brief-portrait').evaluate(el=>getComputedStyle(el).overflow),'hidden');
-   assert.equal(await page.locator('#brief-known').evaluate(el=>getComputedStyle(el).cursor),'default');
-   assert.equal(await page.locator('#brief-known').evaluate(el=>getComputedStyle(el).userSelect),'none');
-   await page.screenshot({path:`/tmp/ritmo-${customer.image}-brief.png`});
-   for(const selector of ['.prospect-profile','.brief-known','.brief-goal','.brief-actions','#brief-title','#brief-role','#brief-company','#brief-known','#brief-goals']){
-    const el=page.locator(selector),box=await el.boundingBox();
-    assert.ok(box.x>=0 && box.y>=0 && box.x+box.width<=1280 && box.y+box.height<=720,`${customer.name}: ${selector} outside canvas`);
-    assert.equal(await el.evaluate(el=>el.scrollHeight<=el.clientHeight+1 && el.scrollWidth<=el.clientWidth+1),true,`${customer.name}: ${selector} overflows`);
+   assert.equal(await page.locator('#brief-title').textContent(),`Pre-Call Brief: ${customer.name}`);
+   const summary=await page.locator('#brief-summary').textContent();
+   for (const text of [customer.role,customer.company,...customer.known,...customer.goals]) assert.ok(summary.includes(text));
+   assert.ok((await page.locator('#brief-image').getAttribute('src')).includes(`${customer.image}-precall-approved.png`));
+   await page.waitForFunction(()=>document.querySelector('#brief-image').complete && document.querySelector('#brief-image').naturalWidth===1280);
+   assert.equal(await page.locator('#brief-image').evaluate(el=>el.naturalHeight),720);
+   assert.equal(await page.locator('#brief-image').evaluate(el=>getComputedStyle(el).objectFit),'contain');
+   assert.equal(await page.locator('#brief-image').evaluate(el=>getComputedStyle(el).filter),'none');
+   assert.equal(await page.locator('#customer-brief img').count(),1);
+   assert.equal(await page.locator('#customer-brief button').count(),2);
+   assert.equal(await page.locator('.brief-panel, .prospect-profile').count(),0);
+   for(const [id,x,y] of [['back-customers',460,635],['call-prospect',995,634]]) {
+    const hotspot=page.locator('#'+id),box=await hotspot.boundingBox();
+    for(const [actual,target] of [[box.x,x],[box.y,y],[box.width,238],[box.height,49]]) assert.ok(Math.abs(actual-target)<0.1);
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el).cursor),'pointer');
+    assert.ok(await hotspot.getAttribute('aria-label'));
    }
-   const bottom=await page.locator('#brief-known').boundingBox(),status=await page.locator('.brief-status').boundingBox();
-   assert.ok(bottom.y+bottom.height<status.y,'Known text must not overlap status boxes');
+   await page.mouse.move(0,0);
+   await page.screenshot({path:`/tmp/ritmo-${customer.image}-brief.png`});
    await page.keyboard.press('Shift+Tab');assert.equal(await page.locator('#call-prospect').evaluate(el=>el===document.activeElement),true);
+   assert.equal(await page.locator('#call-prospect').evaluate(el=>el.matches(':focus-visible')),true);
    await page.keyboard.press('Tab');assert.equal(await page.locator('#back-customers').evaluate(el=>el===document.activeElement),true);
    await page.keyboard.press('Shift+Tab');assert.equal(await page.locator('#call-prospect').evaluate(el=>el===document.activeElement),true);
    await page.locator('#back-customers').click();
-   assert.equal(await modal.isVisible(),false);assert.equal(await card.evaluate(el=>el===document.activeElement),true);
-   assert.equal(await card.getAttribute('aria-pressed'),'true','Closing brief preserves selected card');
-   await page.keyboard.press('Enter');await page.keyboard.press('Escape');
+   assert.equal(await modal.isVisible(),false);
+   assert.equal(await page.locator('#discovery-title').evaluate(el=>el===document.activeElement),true);
+   assert.equal(await page.locator('.customer[aria-pressed="true"]').count(),0);
+   assert.equal(await page.locator('.customer:focus-visible').count(),0);
+   await card.focus();await page.keyboard.press('Enter');await page.keyboard.press('Escape');
    assert.equal(await card.evaluate(el=>el===document.activeElement),true);
    await card.click();
    // Small landscape and portrait viewports retain the complete modal.
    for(const [width,height] of [[640,360],[390,844]]){
     await page.setViewportSize({width,height});
     await page.waitForFunction(()=>Math.abs(document.querySelector('#stage').getBoundingClientRect().width-Math.min(innerWidth,innerHeight*1280/720))<1);
-    const box=await page.locator('.brief-actions').boundingBox();
+    const box=await page.locator('.brief-artwork').boundingBox();
     assert.ok(box.x>=-1 && box.y>=-1 && box.x+box.width<=width+1 && box.y+box.height<=height+1);
+    assert.ok(Math.abs(box.width / box.height - 16/9)<0.001);
+    const hotspot=await page.locator('#call-prospect').boundingBox();
+    assert.ok(Math.abs((hotspot.x-box.x)/box.width - 995/1280)<0.001);
+    assert.ok(Math.abs((hotspot.y-box.y)/box.height - 634/720)<0.001);
    }
    await page.setViewportSize({width:1280,height:720});
    await page.locator('#call-prospect').click();
@@ -103,8 +110,11 @@ const expected = [
    assert.equal(await page.locator('.handoff-note').textContent(),'Your customer conversation is ready.');
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-handoff.png`});
    await page.locator('#return-button').click();
-   assert.equal(await card.evaluate(el=>el===document.activeElement),true);
+   assert.equal(await page.locator('#discovery-title').evaluate(el=>el===document.activeElement),true);
    assert.equal(await page.locator('.customer[aria-pressed="true"]').count(),0);
+   assert.equal(await page.locator('.customer:focus-visible').count(),0);
+   await page.mouse.move(0,0);
+   for(const c of await page.locator('.customer').all()) assert.equal(await c.evaluate(el=>getComputedStyle(el).boxShadow),'none');
    console.log(`PASS ${customer.name}: brief, content, portrait, layout, focus, back, Escape, connection, handoff, return.`);
   }
   const states=await page.evaluate(()=>window.events);
@@ -114,7 +124,9 @@ const expected = [
   await page.locator('.customer').first().click();
   assert.equal(await page.locator('#customer-brief').evaluate(el=>getComputedStyle(el).animationName),'none');
   await page.locator('#call-prospect').click();await page.locator('#handoff').waitFor();
-  await page.locator('#return-button').click();
+  await page.locator('#return-button').focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await page.locator('.customer').first().evaluate(el=>el===document.activeElement && el.matches(':focus-visible')),true);
   // Selection restrictions must not break future conversation fields.
   await page.evaluate(()=>{const el=document.createElement('textarea');el.id='future-input';el.style.cssText='position:absolute;top:0;left:0;z-index:20';document.querySelector('#stage').append(el)});
   await page.locator('#future-input').fill('Future conversation');

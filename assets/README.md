@@ -12,11 +12,18 @@
 - `references/renee-precall-approved.png`: Renee Pre-Call Brief.png from Renee
   Pre-Call Brief.zip, preserved byte for byte.
 
-The three brief exports are flattened 1280 × 720 images. CSS displays only a
-350 × 328 portrait region: Maya (62,86), Daniel (62,87), Renee (63,86).
-The baked headings, body text, statuses, and buttons are excluded from view.
-The shared semantic HTML brief supplies these elements instead. No portrait is
-generated or redrawn. Crop coordinates live with customer data in customers.js.
+The three brief exports are displayed as complete 1280 × 720 compositions. No
+cropping, image manipulation, recoloring, or text reconstruction is applied.
+Their original backgrounds and buttons are part of the visible PNG. CSS uses
+`object-fit: contain` inside a 16:9 container; both image and transparent semantic
+button hotspots scale together. The app's outer rounded clipping is removed while
+a brief is open so the PNG's own original corners remain intact.
+
+Hotspot coordinates in the source image:
+- Back to Customers: x=460, y=635, width=238, height=49.
+- Call This Prospect: x=995, y=634, width=238, height=49.
+
+The original source files remain unchanged from the uploaded ZIPs.
 
 `fonts/` contains Fontsource 5.3.0 Latin WOFF2 Inter Regular/SemiBold and Montserrat
 Bold with the original licenses. No runtime font CDN is used.

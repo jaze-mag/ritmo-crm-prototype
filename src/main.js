@@ -8,6 +8,11 @@ const brief = byId('customer-brief');
 const laptop = document.querySelector('.laptop');
 let lastCard = null;
 let joining = false;
+let keyboardNavigation = false;
+document.addEventListener('keydown', event => {
+  if (['Tab', 'Enter', ' ', 'Escape', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) keyboardNavigation = true;
+}, true);
+document.addEventListener('pointerdown', () => { keyboardNavigation = false; }, true);
 const session = createSession(state => {
   window.dispatchEvent(new CustomEvent('ritmo:statechange', { detail: state }));
 });
@@ -61,32 +66,23 @@ for (let i = 0; i < 56; i++) {
   byId('keyboard').append(key);
 }
 
-function fillList(id, items) {
-  byId(id).replaceChildren(...items.map(text => {
-    const item = document.createElement('li');
-    item.textContent = text;
-    return item;
-  }));
-}
 function openBrief(customer, button) {
   if (joining || !session.selectCustomer(customer.id)) return;
   lastCard = button;
   document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', String(card === button)));
-  byId('brief-name').textContent = customer.name;
-  byId('brief-role').textContent = customer.role;
-  byId('brief-company').textContent = customer.company;
-  byId('brief-challenge').textContent = `Challenge Level: ${customer.difficulty[0]}${customer.difficulty.slice(1).toLowerCase()}`;
-  fillList('brief-known', customer.brief.known);
-  fillList('brief-goals', customer.brief.goals);
-  const portrait = byId('portrait-image');
-  portrait.src = customer.brief.portrait;
-  portrait.alt = `Illustrated portrait of ${customer.name}`;
-  portrait.style.left = `-${customer.brief.crop.x}px`;
-  portrait.style.top = `-${customer.brief.crop.y}px`;
+  byId('brief-title').textContent = `Pre-Call Brief: ${customer.name}`;
+  byId('brief-summary').textContent = [
+    `${customer.role}, ${customer.company}. Challenge Level: ${customer.difficulty.toLowerCase()}.`,
+    'What We Know.', ...customer.brief.known,
+    'Opportunity Status: Qualified. Next Step: Not Scheduled.',
+    'Your Goal.', ...customer.brief.goals,
+  ].join(' ');
+  byId('brief-image').src = customer.brief.artwork;
   showBrief(true);
   byId('brief-title').focus();
 }
 function showBrief(visible) {
+  stage.classList.toggle('brief-open', visible);
   brief.hidden = !visible;
   laptop.inert = visible;
   byId('notification').inert = visible;
@@ -121,16 +117,17 @@ byId('call-prospect').addEventListener('click', startCall);
 function returnToCustomers() {
   if (joining) return;
   showBrief(false);
-  const fromBrief = session.getState().screen === 'brief';
-  if (fromBrief) session.closeBrief();
-  else session.returnToCRM();
+  session.returnToCRM();
   byId('handoff').hidden = true;
   byId('dashboard').hidden = false;
   byId('dashboard').inert = false;
-  if (!fromBrief) document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', 'false'));
+  document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', 'false'));
   byId('notification').hidden = false;
   byId('announcement').textContent = 'Returned to the CRM. Choose a prospect to begin.';
-  lastCard?.focus();
+  // Keyboard users return to their card; pointer users get a neutral focus target.
+  // This prevents programmatic focus from leaving a persistent card outline.
+  if (keyboardNavigation) lastCard?.focus();
+  else byId('discovery-title').focus({ preventScroll: true });
 }
 byId('return-button').addEventListener('click', returnToCustomers);
 byId('back-customers').addEventListener('click', returnToCustomers);

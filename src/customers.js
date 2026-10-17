@@ -4,23 +4,22 @@ const briefs = {
   'maya-patel': {
     known: ['Brightside Creative is a growing creative agency.', "Maya's team tracks projects across email and spreadsheets."],
     goals: ['Ask Maya about her current situation.', 'Respond to her concern.', 'Schedule a tailored workflow demo at a specific time.'],
-    portrait: './assets/references/maya-precall-approved.png', crop: { x: 62, y: 86 },
+    artwork: './assets/references/maya-precall-approved.png',
   },
   'daniel-brooks': {
     known: ['Northstar Consulting wants smoother team handoffs.', "Daniel's team struggles with manual handoffs between teams."],
     goals: ['Ask Daniel about his current handoff process.', 'Uncover where delays or confusion occur.', 'Secure a specific next step for a tailored workflow demo.'],
-    portrait: './assets/references/daniel-precall-approved.png', crop: { x: 62, y: 87 },
+    artwork: './assets/references/daniel-precall-approved.png',
   },
   'renee-alvarez': {
     known: ['Summit Logistics needs reliable workflows.', 'Renee is cautious after a failed software rollout.'],
     goals: ["Acknowledge Renee's previous experience.", "Explore her team's needs and concerns.", 'Secure a specific next step for a tailored demo.'],
-    portrait: './assets/references/renee-precall-approved.png', crop: { x: 63, y: 86 },
+    artwork: './assets/references/renee-precall-approved.png',
   },
 };
 for (const brief of Object.values(briefs)) {
   Object.freeze(brief.known);
   Object.freeze(brief.goals);
-  Object.freeze(brief.crop);
   Object.freeze(brief);
 }
 const customers = Object.freeze([

@@ -24,7 +24,7 @@
           </header>
           <div class="dashboard" id="dashboard">
             <section class="discovery" aria-labelledby="discovery-title">
-              <h2 id="discovery-title">Today's Discovery Calls</h2>
+              <h2 id="discovery-title" tabindex="-1">Today's Discovery Calls</h2>
               <p class="support">3 qualified opportunities · Choose one prospect to begin</p>
               <div class="customers" id="customers"></div>
             </section>
@@ -50,29 +50,14 @@
       </div>
       <div class="laptop-base" aria-hidden="true"><div class="keyboard" id="keyboard"></div><div class="trackpad"></div><div class="base-lip"></div></div>
       <aside class="notification" id="notification" aria-label="Message from your manager" hidden><h2>MESSAGE FROM YOUR MANAGER</h2><p>Three qualified prospects are ready to talk. Choose one and find out what their team needs.</p></aside>
-      <section class="precall" id="customer-brief" role="dialog" aria-modal="true" aria-labelledby="brief-title brief-name" hidden>
-        <h2 id="brief-title" tabindex="-1">Pre-Call Brief</h2>
-        <section class="prospect-profile" aria-labelledby="brief-name">
-          <div class="prospect-portrait" id="brief-portrait">
-            <img id="portrait-image" alt="" draggable="false" width="1280" height="720">
-          </div>
-          <h3 id="brief-name"></h3>
-          <p id="brief-role"></p><p id="brief-company"></p>
-          <span class="challenge" id="brief-challenge"></span>
-        </section>
-        <section class="brief-panel brief-known" aria-labelledby="known-title">
-          <h3 id="known-title">What We Know</h3>
-          <ul id="brief-known"></ul>
-          <div class="brief-status"><p>Opportunity Status: Qualified</p><p>Next Step: Not Scheduled</p></div>
-        </section>
-        <section class="brief-panel brief-goal" aria-labelledby="goal-title">
-          <h3 id="goal-title">Your Goal</h3>
-          <ul id="brief-goals"></ul>
-        </section>
-        <nav class="brief-actions" aria-label="Pre-call navigation">
-          <button class="action secondary" id="back-customers">Back to Customers</button>
-          <button class="action" id="call-prospect">Call This Prospect</button>
-        </nav>
+      <section class="precall" id="customer-brief" role="dialog" aria-modal="true" aria-labelledby="brief-title" aria-describedby="brief-summary" hidden>
+        <h2 class="sr-only" id="brief-title" tabindex="-1">Pre-Call Brief</h2>
+        <p class="sr-only" id="brief-summary"></p>
+        <div class="brief-artwork">
+          <img id="brief-image" alt="" draggable="false" width="1280" height="720">
+          <button class="brief-hotspot back-hotspot" id="back-customers" aria-label="Back to Customers"></button>
+          <button class="brief-hotspot call-hotspot" id="call-prospect" aria-label="Call This Prospect"></button>
+        </div>
       </section>
       <span class="sr-only" id="announcement" role="status"></span>
     </div>

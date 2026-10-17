@@ -7,18 +7,20 @@ Browser: system Chromium through Playwright. No runtime npm dependencies.
 For Maya, Daniel, and Renee independently:
 
 - Card opens the one shared brief with the correct name, role, company, challenge,
-  five knowledge/goal bullets, status text, and approved portrait PNG.
+  five knowledge/goal information in the screen-reader summary and the correct complete
+  approved PNG; no duplicate visible HTML text or buttons.
 - Original workstation and dashboard remain visible and mounted beneath the modal.
 - The dashboard is inert; background cards cannot receive keyboard focus.
 - Initial heading focus, Tab/Shift+Tab containment, Escape, Back to Customers, and
-  focus restoration work. Closing the brief retains the selected card.
+  focus restoration work. Every return clears selection. Pointer returns focus
+  the neutral heading without card outlines; keyboard returns keep card focus.
 - Call This Prospect uses the correct dynamic connection headline and supporting
   text, with the original pulse motion and one 1.5-second delay.
 - Duplicate connection clicks and attempted prospect switching cannot create a
   second connection or change the in-progress customer.
 - Correct dynamic handoff headline, supporting copy, and Return to CRM behavior.
-- Complete brief fits 1280 × 720 without overflowing panels or colliding status
-  text; action buttons remain within 640 × 360 and 390 × 844 viewports.
+- Complete image fits 1280 × 720 without cropping or stretching; the 16:9 ratio
+  and hotspot alignment are preserved at 640 × 360 and 390 × 844.
 
 Shared checks:
 
@@ -61,3 +63,22 @@ in the normal HTTP suite.
 
 The fixed composition scales down on phones rather than reflowing, so text becomes
 smaller. No live AI call, Devlin AI integration, or Storyline player API is claimed.
+
+
+## Final visual-fidelity and card-state correction
+
+The reconstructed brief panels were replaced with the original full PNGs.
+Both invisible hotspots match their source button coordinates within 0.1 pixels
+at 1280 × 720 and retain the same relative coordinates when scaled. They expose
+accessible names and a focus ring only when keyboard focus requires one.
+
+Screenshots for all three briefs were compared against their PNG source pixels.
+Every fully opaque source pixel matches exactly at 1280 × 720 after the fade.
+Original transparent/antialiased corners naturally composite over the underlying
+scene. Removing the stage's extra rounded clipping while the modal is open avoids
+trimming the PNG's own corners. No image file was changed.
+
+The browser journeys verify zero pressed cards, no card focus ring, and no card
+shadow after pointer returns and pointer movement away. A separate keyboard-only
+return verifies focus and :focus-visible on the originating card. Existing hover
+motion and focus styles remain enabled; no global focus suppression was added.

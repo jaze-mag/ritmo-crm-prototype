@@ -26,22 +26,27 @@ can use `python3`. Keep the terminal open; Ctrl+C stops the server.
 
 ## Interaction flow
 
-All three customer cards open the same accessible brief component, populated from
-`src/customers.js`. Each brief includes its approved portrait, difficulty, profile,
-knowledge, goals, and status indicators. The workstation and live CRM remain
-mounted and visible beneath a transparent dark-teal overlay. No office-entrance
-image is loaded. Solid cream and teal panels keep foreground text readable.
+All three customer cards open the same accessible modal, displaying the complete,
+original customer-specific 1280 × 720 PNG. Its own background, typography, portrait,
+panels, and rendered buttons are preserved unchanged. No visible HTML panels or
+text are reconstructed on top. Two transparent semantic button hotspots align
+with the illustrated buttons and scale with the image in one 16:9 container.
+The original CRM remains mounted and inert beneath the modal.
 
-- **Back to Customers** or Escape closes the brief without reloading the CRM,
-  preserves the selected card, and restores keyboard focus.
+- **Back to Customers** or Escape closes the brief without reloading the CRM and
+  clears the selection. Pointer users receive neutral focus on the dashboard
+  heading; keyboard users return to their card with a visible focus indicator.
 - **Call This Prospect** runs the existing pulse animation for 1.5 seconds with
   “Connecting with [Customer Name]...” on a dark-teal panel.
 - The handoff reads “Ready to Speak with [Customer Name]” and “Your customer
   conversation is ready.” It is a local placeholder, not a live AI connection.
-- **Return to CRM** resets the call selection and focuses the original card.
+- **Return to CRM** clears every selected-card state. Pointer returns have no
+  persistent card border; keyboard returns preserve accessible card focus.
 - The clock, card hover effects, and animated manager notification are preserved.
 
 Modal focus stays within its controls; the background is inert while open.
+Hotspots have accessible names and visible keyboard focus rings. A visually hidden
+brief summary provides the customer information to screen readers.
 Reduced motion removes animation and the call delay. Noninteractive interface
 text uses an arrow cursor and cannot be highlighted. Buttons use a pointer.
 Text inputs, textareas, and future editable fields retain editing and selection.
@@ -50,8 +55,8 @@ Text inputs, textareas, and future editable fields retain editing and selection.
 
 The original workstation/laptop image is unchanged. Its flattened screen is
 clipped out and replaced by the existing HTML CRM. Each supplied brief PNG is
-stored unchanged; CSS displays only its portrait area, never its baked text or
-buttons. All three customer ZIPs are incorporated. See assets/README.md for sources.
+stored and displayed unchanged as a complete composition, including its baked
+text and buttons. Transparent hotspots supply the interaction. All three customer ZIPs are incorporated. See assets/README.md for sources.
 
 The 1280 × 720 composition scales proportionally into the viewport. Desktop and
 landscape Storyline playback are the intended uses; phone-sized windows display
@@ -59,7 +64,7 @@ the same composition at smaller text sizes. No new art has been generated.
 
 ## Structure
 
-- `src/customers.js`: shared profiles, knowledge, goals, and portrait metadata.
+- `src/customers.js`: shared profiles, knowledge, goals, and full brief image paths.
 - `src/session.js`: selection, brief, connection, and handoff state.
 - `src/main.js`: shared rendering, focus management, clock, and state-change events.
 - `src/styles.css`: existing composition, modal, cursor rules, and motion styles.

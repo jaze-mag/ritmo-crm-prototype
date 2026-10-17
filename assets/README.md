@@ -14,10 +14,12 @@
 
 The three brief exports are displayed as complete 1280 × 720 compositions. No
 cropping, image manipulation, recoloring, or text reconstruction is applied.
-Their original backgrounds and buttons are part of the visible PNG. CSS uses
+Their original backgrounds and buttons are part of the visible PNG.
+On hover/focus only, the hotspot adds light teal and a readable label over the
+original button; this treatment disappears when neither state applies. CSS uses
 `object-fit: contain` inside a 16:9 container; both image and transparent semantic
-button hotspots scale together. The app's outer rounded clipping is removed while
-a brief is open so the PNG's own original corners remain intact.
+button hotspots scale together. The brief is centered at 75% of the stage width (960 × 540 on the reference
+canvas), capped at native resolution. Its original corners remain fully visible.
 
 Hotspot coordinates in the source image:
 - Back to Customers: x=460, y=635, width=238, height=49.

@@ -62,12 +62,23 @@ const expected = [
    assert.equal(await page.locator('#customer-brief img').count(),1);
    assert.equal(await page.locator('#customer-brief button').count(),2);
    assert.equal(await page.locator('.brief-panel, .prospect-profile').count(),0);
+   const art=await page.locator('.brief-artwork').boundingBox();
+   assert.deepEqual(art,{x:160,y:90,width:960,height:540});
    for(const [id,x,y] of [['back-customers',460,635],['call-prospect',995,634]]) {
     const hotspot=page.locator('#'+id),box=await hotspot.boundingBox();
-    for(const [actual,target] of [[box.x,x],[box.y,y],[box.width,238],[box.height,49]]) assert.ok(Math.abs(actual-target)<0.1);
+    for(const [actual,target] of [[box.x,160+x*.75],[box.y,90+y*.75],[box.width,238*.75],[box.height,49*.75]]) assert.ok(Math.abs(actual-target)<0.1);
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el).cursor),'pointer');
     assert.ok(await hotspot.getAttribute('aria-label'));
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'0');
+    await hotspot.hover(); await page.waitForTimeout(200);
+    const hover=await hotspot.evaluate(el=>{const s=getComputedStyle(el,'::after');return {opacity:s.opacity,background:s.backgroundColor,color:s.color,font:s.fontSize,label:s.content}});
+    assert.equal(hover.opacity,'1');assert.equal(hover.background,'rgb(121, 170, 165)');
+    assert.equal(hover.color,'rgb(49, 92, 89)');assert.equal(hover.font,'15px');
+    assert.ok(hover.label.includes(await hotspot.getAttribute('aria-label')));
+    await page.screenshot({path:`/tmp/ritmo-${customer.image}-${id}-hover.png`});
+    await page.mouse.move(0,0); await page.waitForTimeout(200);
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'0');
    }
    await page.mouse.move(0,0);
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-brief.png`});
@@ -84,12 +95,15 @@ const expected = [
    assert.equal(await card.evaluate(el=>el===document.activeElement),true);
    await card.click();
    // Small landscape and portrait viewports retain the complete modal.
-   for(const [width,height] of [[640,360],[390,844]]){
+   for(const [width,height] of [[640,360],[390,844],[2560,1440]]){
     await page.setViewportSize({width,height});
     await page.waitForFunction(()=>Math.abs(document.querySelector('#stage').getBoundingClientRect().width-Math.min(innerWidth,innerHeight*1280/720))<1);
     const box=await page.locator('.brief-artwork').boundingBox();
     assert.ok(box.x>=-1 && box.y>=-1 && box.x+box.width<=width+1 && box.y+box.height<=height+1);
     assert.ok(Math.abs(box.width / box.height - 16/9)<0.001);
+    assert.ok(box.width<=1280.1 && box.height<=720.1,'Image must not exceed native size');
+    assert.ok(Math.abs(box.x+box.width/2-width/2)<0.1);
+    assert.ok(Math.abs(box.y+box.height/2-height/2)<0.1);
     const hotspot=await page.locator('#call-prospect').boundingBox();
     assert.ok(Math.abs((hotspot.x-box.x)/box.width - 995/1280)<0.001);
     assert.ok(Math.abs((hotspot.y-box.y)/box.height - 634/720)<0.001);

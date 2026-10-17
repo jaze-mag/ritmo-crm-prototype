@@ -73,13 +73,16 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 /* The complete approved PNG and its hotspots share one 16:9 coordinate space. */
 .precall { position: absolute; inset: 0; z-index: 7; display: grid; place-items: center; background: rgb(49 92 89 / 35%); animation: brief-fade 260ms ease both; }
 @keyframes brief-fade { from { opacity: 0; } to { opacity: 1; } }
-.stage.brief-open { border-radius: 0; }
-.brief-artwork { position: relative; width: 100%; aspect-ratio: 16 / 9; }
+.brief-artwork { position: relative; width: min(75%, calc(1280px / var(--scale, 1))); aspect-ratio: 16 / 9; container-type: inline-size; }
 #brief-image { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-.brief-hotspot { position: absolute; padding: 0; border: 0; background: transparent; border-radius: 26px; cursor: pointer; }
+.brief-hotspot { position: absolute; padding: 0; border: 0; background: transparent; border-radius: 999px; cursor: pointer; }
 /* Original button bounds: Back (460,635,238,49), Call (995,634,238,49). */
 .back-hotspot { left: 35.9375%; top: 88.194444%; width: 18.59375%; height: 6.805556%; }
 .call-hotspot { left: 77.734375%; top: 88.055556%; width: 18.59375%; height: 6.805556%; }
+/* Hide the baked label only while the teal state is shown; no duplicate default text.
+   Container units keep the label and border proportional to the complete image. */
+.brief-hotspot::after { content: attr(aria-label); position: absolute; inset: 0; display: grid; place-items: center; border-radius: inherit; border: 0.078125cqw solid #829f95; background: var(--light-teal); color: var(--dark-teal); font: 600 1.5625cqw/1 Inter, sans-serif; white-space: nowrap; opacity: 0; transition: opacity 160ms ease; pointer-events: none; }
+.brief-hotspot:hover::after, .brief-hotspot:focus-visible::after { opacity: 1; }
 .brief-hotspot:focus-visible { outline: 3px solid var(--dark-teal); outline-offset: 3px; box-shadow: 0 0 0 6px var(--cream); }
 #brief-title:focus, #transition:focus, #discovery-title:focus { outline: none; }
 

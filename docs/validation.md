@@ -69,10 +69,12 @@ smaller. No live AI call, Devlin AI integration, or Storyline player API is clai
 
 The reconstructed brief panels were replaced with the original full PNGs.
 Both invisible hotspots match their source button coordinates within 0.1 pixels
-at 1280 × 720 and retain the same relative coordinates when scaled. They expose
+in the original full-size implementation and retain the same relative coordinates
+when scaled. The current 75% size is covered by the polish checks below. They expose
 accessible names and a focus ring only when keyboard focus requires one.
 
-Screenshots for all three briefs were compared against their PNG source pixels.
+Before the 75% polish, screenshots for all three full-size briefs were compared
+against their PNG source pixels.
 Every fully opaque source pixel matches exactly at 1280 × 720 after the fade.
 Original transparent/antialiased corners naturally composite over the underlying
 scene. Removing the stage's extra rounded clipping while the modal is open avoids
@@ -82,3 +84,23 @@ The browser journeys verify zero pressed cards, no card focus ring, and no card
 shadow after pointer returns and pointer movement away. A separate keyboard-only
 return verifies focus and :focus-visible on the originating card. Existing hover
 motion and focus styles remain enabled; no global focus suppression was added.
+
+
+## Final 75% size and hover polish
+
+All three briefs now measure 960 × 540, centered at (160,90) in the reference
+1280 × 720 stage. Width uses proportional CSS sizing with a native-resolution cap,
+not an additional scale transform. The original 16:9 aspect ratio and contain
+rendering are preserved; source images and workstation artwork remain unchanged.
+
+Both hotspots were tested for light-teal (#79AAA5) hover fill, dark-teal labels,
+pointer cursor, and restoration to a transparent state on pointer exit. Label
+size is proportional to the image (15px on the reference canvas), with no visible
+duplicate in the default state. Keyboard focus indicators remain enabled.
+
+The full customer journey suite and opaque-origin startup suite passed after the
+change. Tests cover centered sizing and hotspot positions at 1280 × 720,
+640 × 360, 390 × 844, and 2560 × 1440. The large viewport check confirms that the
+image never exceeds 1280 × 720. Default and hover screenshots were inspected;
+25% reduction was retained without adjustment. Return-to-CRM card state, clock,
+notification, hover motion, reduced motion, and no-external-request checks pass.

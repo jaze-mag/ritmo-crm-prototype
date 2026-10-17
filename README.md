@@ -31,6 +31,10 @@ original customer-specific 1280 × 720 PNG. Its own background, typography, port
 panels, and rendered buttons are preserved unchanged. No visible HTML panels or
 text are reconstructed on top. Two transparent semantic button hotspots align
 with the illustrated buttons and scale with the image in one 16:9 container.
+Briefs use 75% of the stage width (960 × 540 at 1280 × 720), stay centered,
+and never display above their native 1280 × 720 resolution. Both hotspots turn
+light teal on hover or keyboard focus, with a matching readable label shown only
+during that state. The original baked buttons remain untouched in the default state.
 The original CRM remains mounted and inert beneath the modal.
 
 - **Back to Customers** or Escape closes the brief without reloading the CRM and

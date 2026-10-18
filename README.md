@@ -77,3 +77,16 @@ the same composition at smaller text sizes. No new art has been generated.
 - `docs/storyline.md`: the future Web Object communication boundary.
 
 No Storyline player API, Devlin AI integration, or fake conversation is implemented.
+
+## Manager message and brief typography
+
+The original manager notification appears on first arrival. Selecting any customer
+immediately hides it for the rest of the tab session, including every return to
+the dashboard. Session storage preserves dismissal across refreshes when allowed;
+if storage is unavailable, dismissal lasts until the page is reloaded. A fresh
+independent tab/session can display the message again.
+
+Brief text remains embedded in the approved PNGs. No clean text-free brief
+exports were supplied, so no masking or duplicate HTML text has been added.
+The 960 × 540 reference size, placement, artwork, and live teal hover labels are
+unchanged. See `assets/README.md` for the exact exports needed for live typography.

@@ -46,3 +46,9 @@ reduced motion, and return navigation in the actual published player. The cursor
 rules explicitly allow future input/textarea/editable fields; no global key or
 pointer suppression is used. Standalone navigation must remain functional if the
 host integration is absent.
+
+The manager notification dismissal is separate from customer/navigation state.
+`sessionStorage` key `ritmo.managerMessageDismissed.v1` remembers dismissal in
+this tab across refreshes; storage-denied contexts fall back to in-memory state.
+Returning to CRM or changing customers never resets it. A future verified host
+adapter can define a learning-attempt reset policy; none is assumed here.

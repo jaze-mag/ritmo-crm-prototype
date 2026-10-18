@@ -104,3 +104,26 @@ change. Tests cover centered sizing and hotspot positions at 1280 × 720,
 image never exceeds 1280 × 720. Default and hover screenshots were inspected;
 25% reduction was retained without adjustment. Return-to-CRM card state, clock,
 notification, hover motion, reduced motion, and no-external-request checks pass.
+
+## Manager notification session polish — 2026-10-18
+
+Passed `tests/notification.cjs`, `tests/browser.cjs`, and `tests/startup.cjs`
+using Playwright 1.56.1 and system Chromium over the local HTTP server.
+Notification checks cover each customer as the first selection, complete
+brief/back/call/return journeys, refresh persistence, fresh-session appearance,
+early selection before the entrance timer, and denied-storage fallback. Hidden
+means the element has `hidden` and computed `display: none`.
+
+The full journey suite checks all three briefs at 960 × 540 centered within
+1280 × 720, responsive sizing, teal button hover, keyboard focus/trapping,
+Escape/back, dynamic handoffs, reduced motion, clock, card reset, and absence of
+failed/external requests. Reviewed all three brief screenshots: no notification
+is visible behind or around the briefs. No CSS, HTML, fonts, or artwork changed.
+The optional old baseline PNG comparison was not run because that temporary
+baseline was absent in this environment. Native Windows Edge/file-URL testing
+was not performed; classic-script opaque-origin startup passed.
+
+Text sharpening was intentionally deferred: the three supplied archives contain
+only flattened, text-bearing PNGs. Existing PNG text, composition, and live hover
+labels remain unchanged. No masking or overlapping text was introduced. Exact
+text-free export requirements are documented in assets/README.md.

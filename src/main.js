@@ -9,6 +9,18 @@ const laptop = document.querySelector('.laptop');
 let lastCard = null;
 let joining = false;
 let keyboardNavigation = false;
+// Tab-scoped persistence is optional: restricted/file origins may deny storage.
+const managerDismissalKey = 'ritmo.managerMessageDismissed.v1';
+let managerDismissed = false;
+let managerTimer;
+try { managerDismissed = sessionStorage.getItem(managerDismissalKey) === 'true'; } catch {}
+function dismissManagerMessage() {
+  managerDismissed = true;
+  clearTimeout(managerTimer);
+  byId('notification').hidden = true;
+  byId('announcement').textContent = '';
+  try { sessionStorage.setItem(managerDismissalKey, 'true'); } catch {}
+}
 document.addEventListener('keydown', event => {
   if (['Tab', 'Enter', ' ', 'Escape', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) keyboardNavigation = true;
 }, true);
@@ -68,6 +80,7 @@ for (let i = 0; i < 56; i++) {
 
 function openBrief(customer, button) {
   if (joining || !session.selectCustomer(customer.id)) return;
+  dismissManagerMessage();
   lastCard = button;
   document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', String(card === button)));
   byId('brief-title').textContent = `Pre-Call Brief: ${customer.name}`;
@@ -122,7 +135,6 @@ function returnToCustomers() {
   byId('dashboard').hidden = false;
   byId('dashboard').inert = false;
   document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', 'false'));
-  byId('notification').hidden = false;
   byId('announcement').textContent = 'Returned to the CRM. Choose a prospect to begin.';
   // Keyboard users return to their card; pointer users get a neutral focus target.
   // This prevents programmatic focus from leaving a persistent card outline.
@@ -143,8 +155,8 @@ brief.addEventListener('keydown', event => {
     }
   }
 });
-setTimeout(() => {
-  if (['crm', 'brief'].includes(session.getState().screen) && !joining) {
+managerTimer = setTimeout(() => {
+  if (!managerDismissed && session.getState().screen === 'crm' && !joining) {
     byId('notification').hidden = false;
     byId('announcement').textContent = 'Message from your manager: Three qualified prospects are ready to talk. Choose one and find out what their team needs.';
   }

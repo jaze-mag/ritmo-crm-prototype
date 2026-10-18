@@ -47,7 +47,8 @@ const expected = [
    assert.equal(await page.locator('.laptop').isVisible(),true);
    assert.equal(await page.locator('.laptop').evaluate(el=>el.inert),true);
    assert.equal(await page.locator('#workstation').isVisible(),true);
-   assert.equal(await page.locator('#notification').isVisible(),true);
+   assert.equal(await page.locator('#notification').isVisible(),false);
+   assert.equal(await page.locator('#notification').evaluate(el=>el.hidden && getComputedStyle(el).display==='none'),true);
    assert.equal(await page.evaluate(()=>window.dashboardNode===document.querySelector('#dashboard')),true);
    await card.evaluate(el=>el.focus());
    assert.equal(await card.evaluate(el=>el===document.activeElement),false,'Background card must not receive focus');

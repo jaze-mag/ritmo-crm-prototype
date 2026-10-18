@@ -90,3 +90,8 @@ Brief text remains embedded in the approved PNGs. No clean text-free brief
 exports were supplied, so no masking or duplicate HTML text has been added.
 The 960 × 540 reference size, placement, artwork, and live teal hover labels are
 unchanged. See `assets/README.md` for the exact exports needed for live typography.
+
+The brief's 260ms fade releases its opacity animation when entry completes.
+Its image does not scale or move during entry. This avoids retaining a finished
+animation effect, but raster text still cannot match the resolution-independent
+HTML text of the dashboard; the text-free exports above are needed for that.

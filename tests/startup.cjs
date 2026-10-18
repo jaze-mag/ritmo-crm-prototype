@@ -19,7 +19,12 @@ const { resolve } = require('node:path');
       if (request.resourceType() === 'script') scriptFailures.push(request.url());
     });
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto('http://127.0.0.1:8000/');
+    // Keep the host blank: replacing a running app leaves its timers attached
+    // to a document whose clock/notification nodes no longer exist.
+    await page.route('http://127.0.0.1:8000/__startup_host__', route => route.fulfill({
+      contentType: 'text/html', body: '<!doctype html><title>Startup test host</title>',
+    }));
+    await page.goto('http://127.0.0.1:8000/__startup_host__');
     // A sandbox without allow-same-origin gives the document an opaque origin.
     // ES-module requests fail CORS here just as they do when opened via file://.
     // This does not override the managed browser's restriction on file URLs.

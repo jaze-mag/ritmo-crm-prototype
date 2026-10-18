@@ -127,3 +127,42 @@ Text sharpening was intentionally deferred: the three supplied archives contain
 only flattened, text-bearing PNGs. Existing PNG text, composition, and live hover
 labels remain unchanged. No masking or overlapping text was introduced. Exact
 text-free export requirements are documented in assets/README.md.
+
+## Brief rendering investigation — 2026-10-18
+
+The image source is 1280 × 720; the approved visible brief is 960 × 540 at
+(x=160, y=90) in the 1280 × 720 stage. All brief edges are integer-aligned at
+this viewport. The stage has an identity scale matrix; neither the brief nor
+its image has another transform, filter, backdrop filter, or `will-change` hint.
+The image uses normal browser interpolation (`image-rendering: auto`). Text in
+the PNG is downsampled along with the artwork, unlike the live dashboard text.
+No clean text-free brief artwork is available. Native asset detail cannot be
+restored by CSS without replacing the text-bearing artwork.
+
+The opacity fade previously used `animation-fill-mode: both`, leaving a finished
+opacity effect attached after entry. Changed only this brief animation to
+`backwards`: the same 260ms fade runs, then its effect is released and the normal
+fully opaque style applies. This avoids retaining animation-related compositing;
+it does not change layout, image sizing, interpolation, fonts, or hover effects.
+An initial before/after Chromium screenshot comparison differed in only 147 of
+518,400 pixels and showed no material improvement in raster text. Consequently
+this change is a rendering-lifecycle correction, not a claim that the PNG text
+now matches live HTML typography. The reported intermittent loss of sharpness
+was not reproduced as a continuing idle effect in this browser.
+
+`tests/clarity.cjs` inspects initial/mid-fade geometry and opacity, confirms the
+animation is released, and compares screenshots after settling, idling, hovering
+both buttons, and closing/reopening after switching through all three customers.
+It runs at 1280 × 720 with device pixel ratios 1 and 2. Text-free export requirements
+remain in assets/README.md. No image editing, masking, duplicate text, font
+smoothing overrides, or pixelated image interpolation was introduced.
+
+All four suites passed: clarity (DPR 1 and 2), full browser journeys,
+notification persistence, and opaque-origin startup. The new screenshot check
+initially sampled the Back button during its outgoing hover transition; waiting
+for that transition produced identical idle/reopen pixels. The startup harness
+also exposed a pre-existing test isolation problem: replacing a running host app
+with an iframe left its timers accessing removed DOM nodes. The host now serves
+an empty same-origin test page before inserting the sandboxed app; application
+logic is unchanged. Native Windows Edge and its reported intermittent rendering
+behavior were not tested directly in this Linux Chromium environment.

@@ -90,9 +90,13 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 
 /* Original supplied workstation, with its flattened UI excluded from rendering.
    Real HTML occupies the screen cutout. The whole stage scales together. */
-.workstation { position: absolute; inset: 0; width: 1280px; height: 720px; pointer-events: none; clip-path: path(evenodd, "M 0 0 H 1280 V 720 H 0 Z M 210 77 H 1077 V 595 H 210 Z"); }
+.workstation { position: absolute; inset: 0; width: 1280px; height: 720px; pointer-events: none; clip-path: path(evenodd, "M 0 0 H 1280 V 720 H 0 Z M 214 77 H 1073 Q 1077 77 1077 81 V 593 Q 1077 595 1075 595 H 212 Q 210 595 210 593 V 81 Q 210 77 214 77 Z"); }
 .laptop { left: 210px; top: 77px; width: 867px; height: 518px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
-.screen { width: 867px; height: 518px; border: 0; }
+/* Match the artwork cutout exactly; no padding or border shifts live content. */
+.screen { width: 867px; height: 518px; border: 0; border-radius: 4px 4px 2px 2px; isolation: isolate; }
+/* A narrow inner bezel edge sits above every in-screen state, including calls.
+   It never intercepts input or changes text/image rendering across the display. */
+.screen::after { content: ''; position: absolute; inset: 0; z-index: 7; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgb(16 43 41 / 25%), inset 0 2px 4px rgb(16 43 41 / 20%); }
 .camera, .hinge, .laptop-base, .desk { display: none; }
 .dashboard { padding-left: 16px; padding-right: 31px; }
 

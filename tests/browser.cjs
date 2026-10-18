@@ -23,6 +23,17 @@ const expected = [
   assert.equal(await page.locator('#workstation').evaluate(el=>el.complete && el.naturalWidth===1280),true);
   assert.equal(await page.locator('#office').count(),0);
   assert.equal(await page.evaluate(()=>document.fonts.check('700 25px Montserrat') && document.fonts.check('400 14px Inter')),true);
+  assert.deepEqual(await page.locator('.screen').boundingBox(),{x:210,y:77,width:867,height:518});
+  const edge=await page.locator('.screen').evaluate(el=>{
+   const s=getComputedStyle(el),edge=getComputedStyle(el,'::after');
+   return {overflow:s.overflow,radius:s.borderRadius,isolation:s.isolation,pointer:edge.pointerEvents,z:edge.zIndex};
+  });
+  assert.deepEqual(edge,{overflow:'hidden',radius:'4px 4px 2px 2px',isolation:'isolate',pointer:'none',z:'7'});
+  async function assertInScreen(selector) {
+   const box=await page.locator(selector).boundingBox(),screen=await page.locator('.screen').boundingBox();
+   assert.ok(box.x>=screen.x && box.y>=screen.y && box.x+box.width<=screen.x+screen.width && box.y+box.height<=screen.y+screen.height,selector+' must fit the display');
+  }
+  await assertInScreen('#dashboard');
   // Preserve the existing rendered CRM composition, excluding the live clock.
   const clockMask=await page.addStyleTag({content:'#clock {visibility:hidden}'});
   await page.screenshot({path:'/tmp/ritmo-after.png'});
@@ -119,8 +130,11 @@ const expected = [
    await page.evaluate(()=>{document.querySelector('#call-prospect').click();document.querySelector('.customer').click()});
    await page.waitForTimeout(800);
    assert.equal(await page.locator('#transition').isVisible(),true);
+   await assertInScreen('#transition');
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-connecting.png`});
    await page.locator('#handoff').waitFor();
+   await page.locator('#handoff').evaluate(el=>Promise.all(el.getAnimations().map(animation=>animation.finished)));
+   await assertInScreen('#handoff');
    assert.equal(await page.locator('#handoff-title').textContent(),`Ready to Speak with ${customer.name}`);
    assert.equal(await page.locator('.handoff-note').textContent(),'Your customer conversation is ready.');
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-handoff.png`});

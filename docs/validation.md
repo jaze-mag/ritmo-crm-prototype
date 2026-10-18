@@ -166,3 +166,27 @@ with an iframe left its timers accessing removed DOM nodes. The host now serves
 an empty same-origin test page before inserting the sandboxed app; application
 logic is unchanged. Native Windows Edge and its reported intermittent rendering
 behavior were not tested directly in this Linux Chromium environment.
+
+## Laptop display integration — 2026-10-18
+
+Matched the workstation image's display cutout to the live screen's rounded
+corners (4px top, 2px bottom). The screen retains its exact bounds: x=210, y=77,
+width=867, height=518 within the 1280 × 720 stage. A pointer-transparent pseudo
+layer adds a 1px translucent inner edge and a restrained 2px-offset/4px-blur inset
+shadow. Local stacking isolation keeps that edge above dashboard/connection/
+handoff content and below the existing separate brief overlays. No content
+padding, border width, fonts, UI colors, artwork, or application logic changed.
+
+A before/after dashboard comparison with the clock hidden found differences only
+within (210,77)–(1077,595); the interior excluding an 8px edge margin was pixel
+identical. Dashboard, brief, connection, and handoff screenshots were reviewed.
+Brief placement remains the approved stage overlay, rather than being resized
+into the laptop. Added display-boundary and non-intercepting edge assertions to
+the existing journey tests; handoff bounds are checked after its existing entry
+animation settles (overflow clips the animation while moving).
+
+Passed the full Chromium journey suite for all three customers, notification
+session regression tests, and brief rendering stability tests at DPR 1 and 2.
+This includes keyboard focus, hover, reduced motion, responsive layouts, call
+transitions, return navigation, and no failed/external asset requests. Native
+Windows Edge was not tested in this environment.

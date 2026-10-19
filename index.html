@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#315c59">
+  <title>Ritmo — Account Executive Dashboard</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+  <main class="viewport" aria-label="Ritmo sales training prototype">
+    <div class="stage" id="stage">
+      <img class="workstation" draggable="false" id="workstation" src="./assets/ritmo-workstation.png" alt="" aria-hidden="true" width="1280" height="720">
+      <p class="asset-notice" id="asset-notice" hidden>Approved workstation image not yet bundled.</p>
+      <div class="desk" aria-hidden="true"></div>
+      <div class="laptop">
+        <div class="camera" aria-hidden="true"></div>
+        <section class="screen" aria-label="Account executive dashboard">
+          <header class="app-header">
+            <span class="brand">ritmo</span>
+            <div class="header-copy"><h1>ACCOUNT EXECUTIVE DASHBOARD</h1><p>Workflow Management for Growing Teams</p></div>
+            <time id="clock" aria-label="Local time"></time>
+          </header>
+          <div class="dashboard" id="dashboard">
+            <section class="discovery" aria-labelledby="discovery-title">
+              <h2 id="discovery-title" tabindex="-1">Today's Discovery Calls</h2>
+              <p class="support">3 qualified opportunities · Choose one prospect to begin</p>
+              <div class="customers" id="customers"></div>
+            </section>
+            <section class="pipeline" aria-label="Pipeline status"><h2>PIPELINE STATUS</h2><p>3 qualified leads <span aria-hidden="true">•</span> <span id="pipeline-status">Next step not scheduled</span></p></section>
+          </div>
+          <section class="handoff" id="handoff" aria-labelledby="handoff-title" hidden>
+            <span class="eyebrow">DISCOVERY CALL</span>
+            <span class="call-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="12" height="12" rx="3"/><path d="m15 10 6-3v10l-6-3z"/></svg></span>
+            <h2 id="handoff-title" tabindex="-1"></h2>
+            <p id="handoff-company"></p>
+            <p class="handoff-note">Your customer conversation is ready.</p>
+            <span class="prototype-label">Prototype handoff · No live call is connected</span>
+            <button class="action" id="return-button">Return to CRM</button>
+          </section>
+          <section class="transition" id="transition" hidden tabindex="-1" aria-labelledby="connection-title">
+            <span class="eyebrow">RITMO · OUTBOUND CALL</span>
+            <span class="pulse" aria-hidden="true"></span>
+            <h2 id="connection-title"></h2>
+            <p>Preparing your customer conversation</p>
+          </section>
+        </section>
+        <div class="hinge" aria-hidden="true"></div>
+      </div>
+      <div class="laptop-base" aria-hidden="true"><div class="keyboard" id="keyboard"></div><div class="trackpad"></div><div class="base-lip"></div></div>
+      <aside class="notification" id="notification" aria-label="Message from your manager" hidden><h2>MESSAGE FROM YOUR MANAGER</h2><p>Three qualified prospects are ready to talk. Choose one and find out what their team needs.</p></aside>
+      <section class="precall" id="customer-brief" role="dialog" aria-modal="true" aria-labelledby="brief-title" aria-describedby="brief-summary" hidden>
+        <h2 class="sr-only" id="brief-title" tabindex="-1">Pre-Call Brief</h2>
+        <p class="sr-only" id="brief-summary"></p>
+        <div class="brief-artwork">
+          <img id="brief-image" alt="" draggable="false" width="1280" height="720">
+          <button class="brief-hotspot back-hotspot" id="back-customers" aria-label="Back to Customers"></button>
+          <button class="brief-hotspot call-hotspot" id="call-prospect" aria-label="Call This Prospect"></button>
+        </div>
+      </section>
+      <span class="sr-only" id="announcement" role="status"></span>
+    </div>
+  </main>
+  <!-- Classic scripts load in dependency order, including when opened via file://. -->
+  <script src="./src/customers.js"></script>
+  <script src="./src/session.js"></script>
+  <script src="./src/main.js"></script>
+</body>
+</html>

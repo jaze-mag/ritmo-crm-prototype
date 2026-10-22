@@ -84,9 +84,9 @@ const expected = [
     assert.ok(await hotspot.getAttribute('aria-label'));
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'0');
     await hotspot.hover(); await page.waitForTimeout(200);
-    const hover=await hotspot.evaluate(el=>{const s=getComputedStyle(el,'::after');return {opacity:s.opacity,background:s.backgroundColor,color:s.color,font:s.fontSize,label:s.content}});
+    const hover=await hotspot.evaluate(el=>{const s=getComputedStyle(el,'::after');return {opacity:s.opacity,background:s.backgroundColor,color:s.color,border:s.borderTopColor,font:s.fontSize,label:s.content}});
     assert.equal(hover.opacity,'1');assert.equal(hover.background,'rgb(121, 170, 165)');
-    assert.equal(hover.color,'rgb(49, 92, 89)');assert.equal(hover.font,'15px');
+    assert.equal(hover.color,'rgb(244, 231, 200)');assert.equal(hover.border,'rgb(49, 92, 89)');assert.equal(hover.font,'15px');
     assert.ok(hover.label.includes(await hotspot.getAttribute('aria-label')));
     await page.screenshot({path:`/tmp/ritmo-${customer.image}-${id}-hover.png`});
     await page.mouse.move(0,0); await page.waitForTimeout(200);
@@ -96,6 +96,8 @@ const expected = [
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-brief.png`});
    await page.keyboard.press('Shift+Tab');assert.equal(await page.locator('#call-prospect').evaluate(el=>el===document.activeElement),true);
    assert.equal(await page.locator('#call-prospect').evaluate(el=>el.matches(':focus-visible')),true);
+   await page.waitForTimeout(200);
+   assert.equal(await page.locator('#call-prospect').evaluate(el=>getComputedStyle(el,'::after').color),'rgb(244, 231, 200)');
    await page.keyboard.press('Tab');assert.equal(await page.locator('#back-customers').evaluate(el=>el===document.activeElement),true);
    await page.keyboard.press('Shift+Tab');assert.equal(await page.locator('#call-prospect').evaluate(el=>el===document.activeElement),true);
    await page.locator('#back-customers').click();

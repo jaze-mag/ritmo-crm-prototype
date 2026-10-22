@@ -190,3 +190,21 @@ session regression tests, and brief rendering stability tests at DPR 1 and 2.
 This includes keyboard focus, hover, reduced motion, responsive layouts, call
 transitions, return navigation, and no failed/external asset requests. Native
 Windows Edge was not tested in this environment.
+
+## Pre-call button hover colors — 2026-10-21
+
+Both shared brief hotspots now use #79AAA5 background, #F4E7C8 label text,
+and #315C59 border on hover and keyboard focus. The opaque settled overlay
+covers the original PNG label; leaving hover/focus restores the original image.
+Geometry, border width, fonts, opacity timing, focus ring, and all PNGs are
+unchanged. This affects both buttons for Maya, Daniel, and Renee.
+
+The explicitly requested cream/teal pairing has approximately 2.11:1 text contrast,
+below WCAG AA's 4.5:1 requirement for normal text. It matches the requested style
+guide but is not a contrast-compliance fix. No alternate palette was substituted.
+
+Browser checks verify exact hover fill/text/border values, cream keyboard-focus
+labels, hotspot alignment, default-state restoration, all customer navigation,
+notification persistence, and brief rendering stability. Public URL access is
+blocked by this environment's proxy (CONNECT 403), so local browser checks do
+not establish that GitHub Pages has finished deploying or validate Windows Edge.

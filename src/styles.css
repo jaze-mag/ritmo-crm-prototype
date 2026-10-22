@@ -83,7 +83,7 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 .call-hotspot { left: 77.734375%; top: 88.055556%; width: 18.59375%; height: 6.805556%; }
 /* Hide the baked label only while the teal state is shown; no duplicate default text.
    Container units keep the label and border proportional to the complete image. */
-.brief-hotspot::after { content: attr(aria-label); position: absolute; inset: 0; display: grid; place-items: center; border-radius: inherit; border: 0.078125cqw solid #829f95; background: var(--light-teal); color: var(--dark-teal); font: 600 1.5625cqw/1 Inter, sans-serif; white-space: nowrap; opacity: 0; transition: opacity 160ms ease; pointer-events: none; }
+.brief-hotspot::after { content: attr(aria-label); position: absolute; inset: 0; display: grid; place-items: center; border-radius: inherit; border: 0.078125cqw solid var(--dark-teal); background: var(--light-teal); color: var(--cream); font: 600 1.5625cqw/1 Inter, sans-serif; white-space: nowrap; opacity: 0; transition: opacity 160ms ease; pointer-events: none; }
 .brief-hotspot:hover::after, .brief-hotspot:focus-visible::after { opacity: 1; }
 .brief-hotspot:focus-visible { outline: 3px solid var(--dark-teal); outline-offset: 3px; box-shadow: 0 0 0 6px var(--cream); }
 #brief-title:focus, #transition:focus, #discovery-title:focus { outline: none; }

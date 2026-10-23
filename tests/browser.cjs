@@ -105,7 +105,7 @@ const expected = [
    assert.equal(await page.locator('#discovery-title').evaluate(el=>el===document.activeElement),true);
    assert.equal(await page.locator('.customer[aria-pressed="true"]').count(),0);
    assert.equal(await page.locator('.customer:focus-visible').count(),0);
-   await card.focus();await page.keyboard.press('Enter');await page.keyboard.press('Escape');
+   await card.focus();await page.keyboard.press('Enter');await modal.waitFor();await page.keyboard.press('Escape');
    assert.equal(await card.evaluate(el=>el===document.activeElement),true);
    await card.click();
    // Small landscape and portrait viewports retain the complete modal.
@@ -140,7 +140,17 @@ const expected = [
    assert.equal(await page.locator('#handoff-title').textContent(),`Ready to Speak with ${customer.name}`);
    assert.equal(await page.locator('.handoff-note').textContent(),'Your customer conversation is ready.');
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-handoff.png`});
-   await page.locator('#return-button').click();
+   const returnButton=page.locator('#return-button');
+   await page.mouse.move(0,0);await page.waitForTimeout(200);
+   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(239, 174, 135)');
+   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).color),'rgb(49, 92, 89)');
+   await returnButton.hover();await page.waitForTimeout(200);
+   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(121, 170, 165)');
+   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).color),'rgb(244, 231, 200)');
+   assert.ok((await returnButton.evaluate(el=>getComputedStyle(el).boxShadow)).includes('rgb(49, 92, 89)'));
+   await page.mouse.move(0,0);await page.waitForTimeout(200);
+   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(239, 174, 135)');
+   await returnButton.click();
    assert.equal(await page.locator('#discovery-title').evaluate(el=>el===document.activeElement),true);
    assert.equal(await page.locator('.customer[aria-pressed="true"]').count(),0);
    assert.equal(await page.locator('.customer:focus-visible').count(),0);

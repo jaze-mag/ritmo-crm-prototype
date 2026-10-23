@@ -16,8 +16,9 @@ const assert = require('node:assert/strict');
       for (let pass = 0; pass < 2; pass++) {
         for (const name of ['maya', 'daniel', 'renee']) {
           // Pause at specific points to inspect the fade without timing races.
-          await page.evaluate(name => {
+          await page.evaluate(async name => {
             document.querySelector(`[data-customer^="${name}-"]`).click();
+            while (document.querySelector('.precall').hidden) await new Promise(requestAnimationFrame);
             const animation = document.querySelector('.precall').getAnimations()[0];
             animation.pause();
             window.briefAnimation = animation;

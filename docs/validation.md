@@ -208,3 +208,35 @@ labels, hotspot alignment, default-state restoration, all customer navigation,
 notification persistence, and brief rendering stability. Public URL access is
 blocked by this environment's proxy (CONNECT 403), so local browser checks do
 not establish that GitHub Pages has finished deploying or validate Windows Edge.
+
+## Brief image readiness and handoff button — 2026-10-23
+
+Cause: the shared image's src changed immediately before the brief was shown.
+Browsers can retain the old decoded bitmap while fetching/decoding a new src.
+The brief now stays hidden while a fresh off-DOM image decodes, then updates
+artwork and accessible content together before the existing fade begins. A
+request counter invalidates older loads on reselection or return; Escape can
+cancel a pending load. Return clears the old image src and descriptive text.
+Failed image decoding leaves the CRM usable, announces the failure, and allows
+retry. Call actions cannot start while the brief is still pending or hidden.
+
+The shared Return to CRM button alone receives an inset dark-teal border without
+changing its dimensions. Hover/focus uses #79AAA5 fill and #F4E7C8 text; default
+remains #EFAE87 with #315C59 text. Existing focus outline remains. As previously
+noted, the requested cream/teal pair has 2.11:1 contrast, not WCAG AA normal-text
+contrast compliance.
+
+`tests/brief-loading.cjs` repeats all six requested customer sequences twice,
+artificially delays decoding, resolves requests out of order, samples each
+animation frame for decoded-image/customer identity, and checks cancellation,
+failure, and retry. Existing browser tests also check all three handoffs' default,
+hover, inset border, mouse-leave restoration, and click/keyboard return behavior.
+Tests that previously assumed synchronous brief opening now wait for visibility.
+The separate brief rendering tests retain their initial/mid-fade checks.
+
+Passed: all five Chromium suites (full journeys, notifications, classic-script
+startup, rendering stability at DPR 1/2, and delayed brief loading). Additional
+keyboard checks confirmed cream focus text, visible focus, and Enter-to-return
+for all three handoffs. Public-site requests still fail at the environment proxy
+with CONNECT 403; actual GitHub Pages completion and Windows Edge cannot be
+verified here.

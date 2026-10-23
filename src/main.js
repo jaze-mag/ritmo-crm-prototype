@@ -8,6 +8,8 @@ const brief = byId('customer-brief');
 const laptop = document.querySelector('.laptop');
 let lastCard = null;
 let joining = false;
+let briefRequest = 0;
+let briefPending = false;
 let keyboardNavigation = false;
 // Tab-scoped persistence is optional: restricted/file origins may deny storage.
 const managerDismissalKey = 'ritmo.managerMessageDismissed.v1';
@@ -78,10 +80,27 @@ for (let i = 0; i < 56; i++) {
   byId('keyboard').append(key);
 }
 
-function openBrief(customer, button) {
+async function openBrief(customer, button) {
   if (joining || !session.selectCustomer(customer.id)) return;
   dismissManagerMessage();
   lastCard = button;
+  const request = ++briefRequest;
+  briefPending = true;
+  showBrief(false);
+  // Decode a fresh image off-DOM: changing src on the displayed image can
+  // leave its previous bitmap visible until the new request finishes.
+  const artwork = byId('brief-image').cloneNode(false);
+  artwork.src = customer.brief.artwork;
+  try {
+    await artwork.decode();
+  } catch {
+    if (request !== briefRequest) return;
+    returnToCustomers();
+    byId('announcement').textContent = 'The customer brief could not load. Please select the customer to try again.';
+    return;
+  }
+  if (request !== briefRequest || session.getState().customerId !== customer.id) return;
+  briefPending = false;
   document.querySelectorAll('.customer').forEach(card => card.setAttribute('aria-pressed', String(card === button)));
   byId('brief-title').textContent = `Pre-Call Brief: ${customer.name}`;
   byId('brief-summary').textContent = [
@@ -90,7 +109,7 @@ function openBrief(customer, button) {
     'Opportunity Status: Qualified. Next Step: Not Scheduled.',
     'Your Goal.', ...customer.brief.goals,
   ].join(' ');
-  byId('brief-image').src = customer.brief.artwork;
+  byId('brief-image').replaceWith(artwork);
   showBrief(true);
   byId('brief-title').focus();
 }
@@ -111,7 +130,7 @@ function renderHandoff(customer) {
   byId('handoff-title').focus();
 }
 async function startCall() {
-  if (joining || session.getState().screen !== 'brief') return;
+  if (joining || briefPending || brief.hidden || session.getState().screen !== 'brief') return;
   joining = true;
   const customer = customers.find(item => item.id === session.getState().customerId);
   showBrief(false);
@@ -129,8 +148,13 @@ async function startCall() {
 byId('call-prospect').addEventListener('click', startCall);
 function returnToCustomers() {
   if (joining) return;
+  ++briefRequest;
+  briefPending = false;
   showBrief(false);
   session.returnToCRM();
+  byId('brief-image').removeAttribute('src');
+  byId('brief-title').textContent = 'Pre-Call Brief';
+  byId('brief-summary').textContent = '';
   byId('handoff').hidden = true;
   byId('dashboard').hidden = false;
   byId('dashboard').inert = false;
@@ -143,6 +167,9 @@ function returnToCustomers() {
 }
 byId('return-button').addEventListener('click', returnToCustomers);
 byId('back-customers').addEventListener('click', returnToCustomers);
+document.addEventListener('keydown', event => {
+  if (briefPending && event.key === 'Escape') { event.preventDefault(); returnToCustomers(); }
+});
 brief.addEventListener('keydown', event => {
   if (event.key === 'Escape') { event.preventDefault(); returnToCustomers(); }
   if (event.key === 'Tab') {

@@ -35,6 +35,7 @@ const { resolve } = require('node:path');
     const names = ['Maya Patel', 'Daniel Brooks', 'Renee Alvarez'];
     for (let index = 0; index < names.length; index++) {
       await app.locator('.customer').nth(index).click();
+      await app.locator('#customer-brief').waitFor();
       assert.equal(await app.locator('#brief-title').textContent(), `Pre-Call Brief: ${names[index]}`);
       await app.locator('#call-prospect').click();
       await app.locator('#handoff').waitFor();

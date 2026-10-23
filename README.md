@@ -28,13 +28,14 @@ can use `python3`. Keep the terminal open; Ctrl+C stops the server.
 
 All three customer cards open the same accessible modal, displaying the complete,
 original customer-specific 1280 × 720 PNG. Its own background, typography, portrait,
-panels, and rendered buttons are preserved unchanged. No visible HTML panels or
-text are reconstructed on top. Two transparent semantic button hotspots align
-with the illustrated buttons and scale with the image in one 16:9 container.
+and panels are preserved unchanged. Two semantic button hotspots align with
+the illustrated buttons and scale with the image in one 16:9 container. Their
+opaque backgrounds cover the baked button labels with consistent live typography.
 Briefs use 75% of the stage width (960 × 540 at 1280 × 720), stay centered,
 and never display above their native 1280 × 720 resolution. Both hotspots turn
-light teal on hover or keyboard focus, with a matching readable label shown only
-during that state. The original baked buttons remain untouched in the default state.
+light teal with cream text on hover or keyboard focus. Default fills remain
+cream for Back and peach for Call, with dark-teal text. The label stays the same
+size and position in every state; only colors transition.
 The original CRM remains mounted and inert beneath the modal.
 
 - **Back to Customers** or Escape closes the brief without reloading the CRM and

@@ -240,3 +240,20 @@ keyboard checks confirmed cream focus text, visible focus, and Enter-to-return
 for all three handoffs. Public-site requests still fail at the environment proxy
 with CONNECT 403; actual GitHub Pages completion and Windows Edge cannot be
 verified here.
+
+## Stable brief-button labels — 2026-10-23
+
+The perceived text enlargement came from crossfading the baked PNG label into a
+separate live Inter label. Both brief buttons now keep the same live label and
+opaque background in all states. Only fill, text, and border colors transition;
+there is no label opacity swap, scale, or font change. Default Back remains cream,
+Call remains peach, and both use dark-teal default text. The approved teal/cream
+hover palette and keyboard focus ring remain. PNG assets, hotspot coordinates,
+brief dimensions, and navigation logic are unchanged. The known contrast
+limitation of the requested cream/teal palette still applies.
+
+Passed the full three-customer journey suite, delayed-image switching regression,
+and rendering stability at DPR 1 and 2. Assertions check the same 15px live label
+in default/hover states at 1280 × 720, correct default colors on pointer exit,
+hotspot alignment, keyboard focus, and navigation. Default/hover screenshots
+were reviewed. Public deployment verification remains subject to network access.

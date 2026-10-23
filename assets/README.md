@@ -13,10 +13,10 @@
   Pre-Call Brief.zip, preserved byte for byte.
 
 The three brief exports are displayed as complete 1280 × 720 compositions. No
-cropping, image manipulation, recoloring, or text reconstruction is applied.
-Their original backgrounds and buttons are part of the visible PNG.
-On hover/focus only, the hotspot adds light teal and a readable label over the
-original button; this treatment disappears when neither state applies. CSS uses
+cropping or image manipulation is applied to the PNG files. Their original
+backgrounds remain visible. Each button hotspot uses an opaque fill and a live
+label in both default and hover/focus states, covering only its original button.
+Keeping one label avoids the size jump from swapping raster and browser text. CSS uses
 `object-fit: contain` inside a 16:9 container; both image and transparent semantic
 button hotspots scale together. The brief is centered at 75% of the stage width (960 × 540 on the reference
 canvas), capped at native resolution. Its original corners remain fully visible.

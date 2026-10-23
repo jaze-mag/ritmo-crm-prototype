@@ -82,7 +82,10 @@ const expected = [
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el).cursor),'pointer');
     assert.ok(await hotspot.getAttribute('aria-label'));
-    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'0');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'1');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').backgroundColor),id==='back-customers'?'rgb(244, 231, 200)':'rgb(239, 174, 135)');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').fontSize),'15px');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').color),'rgb(49, 92, 89)');
     await hotspot.hover(); await page.waitForTimeout(200);
     const hover=await hotspot.evaluate(el=>{const s=getComputedStyle(el,'::after');return {opacity:s.opacity,background:s.backgroundColor,color:s.color,border:s.borderTopColor,font:s.fontSize,label:s.content}});
     assert.equal(hover.opacity,'1');assert.equal(hover.background,'rgb(121, 170, 165)');
@@ -90,7 +93,10 @@ const expected = [
     assert.ok(hover.label.includes(await hotspot.getAttribute('aria-label')));
     await page.screenshot({path:`/tmp/ritmo-${customer.image}-${id}-hover.png`});
     await page.mouse.move(0,0); await page.waitForTimeout(200);
-    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'0');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'1');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').backgroundColor),id==='back-customers'?'rgb(244, 231, 200)':'rgb(239, 174, 135)');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').fontSize),'15px');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').color),'rgb(49, 92, 89)');
    }
    await page.mouse.move(0,0);
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-brief.png`});

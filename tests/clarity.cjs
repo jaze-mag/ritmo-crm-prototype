@@ -26,7 +26,7 @@ const assert = require('node:assert/strict');
           await page.locator('#brief-image').evaluate(el => el.decode());
           for (const time of [0, 130]) {
             await page.evaluate(time => { window.briefAnimation.currentTime = time; }, time);
-            assert.deepEqual(await art.boundingBox(), {x:160,y:90,width:960,height:540});
+            assert.deepEqual(await art.boundingBox(), {x:210,y:92.15625,width:867,height:487.6875});
             const styles = await page.evaluate(() => ['.precall','.brief-artwork','#brief-image'].map(q => {
               const s = getComputedStyle(document.querySelector(q));
               return {transform:s.transform,filter:s.filter,backdrop:s.backdropFilter,willChange:s.willChange};

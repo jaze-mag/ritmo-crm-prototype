@@ -5,12 +5,15 @@
 - `ritmo-workstation.png`: original Cinematic Intro (1).png supplied with the
   manager message removed. Unchanged from the working V2 baseline. The screen
   region (210,77)–(1077,595) is excluded with CSS clipping and replaced by HTML.
-- `references/maya-precall-approved.png`: Maya Pre-Call Brief.png from the latest
-  Maya Pre-Call Brief.zip, preserved byte for byte.
-- `references/daniel-precall-approved.png`: Daniel Pre-Call Brief.png from Daniel
-  Pre-Call Brief.zip, preserved byte for byte.
-- `references/renee-precall-approved.png`: Renee Pre-Call Brief.png from Renee
-  Pre-Call Brief.zip, preserved byte for byte.
+- `references/maya-precall-approved.png`: Maya Pre-Call Brief-V2.png from
+  Maya Pre-Call Brief-V2.zip (2026-11-02), copied byte for byte.
+- `references/daniel-precall-approved.png`: Daniel Pre-Call Brief-V2.png from
+  Daniel Pre-Call Brief-V2.zip (2026-11-02), copied byte for byte.
+- `references/renee-precall-approved.png`: Renee Pre-Call Brief-V2.png from
+  Renee Pre-Call Brief-V2.zip (2026-11-02), copied byte for byte.
+
+The stable runtime filenames are retained for deployment compatibility. Previous
+artwork is preserved in Git history and the untouched V1 branch.
 
 The three brief exports are displayed as complete 1280 × 720 compositions. No
 cropping or image manipulation is applied to the PNG files. Their original
@@ -18,8 +21,8 @@ backgrounds remain visible. Each button hotspot uses an opaque fill and a live
 label in both default and hover/focus states, covering only its original button.
 Keeping one label avoids the size jump from swapping raster and browser text. CSS uses
 `object-fit: contain` inside a 16:9 container; both image and transparent semantic
-button hotspots scale together. The brief is centered at 75% of the stage width (960 × 540 on the reference
-canvas), capped at native resolution. Its original corners remain fully visible.
+button hotspots scale together. The brief is centered inside the laptop display at 867 × 487.6875 on the
+1280 × 720 reference stage, preserving 16:9 with narrow near-white margins. Its original corners remain fully visible.
 
 Hotspot coordinates in the source image:
 - Back to Customers: x=460, y=635, width=238, height=49.

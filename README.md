@@ -26,17 +26,19 @@ can use `python3`. Keep the terminal open; Ctrl+C stops the server.
 
 ## Interaction flow
 
-All three customer cards open the same accessible modal, displaying the complete,
+All three customer cards open an accessible brief inside the laptop display, showing the complete,
 original customer-specific 1280 × 720 PNG. Its own background, typography, portrait,
 and panels are preserved unchanged. Two semantic button hotspots align with
 the illustrated buttons and scale with the image in one 16:9 container. Their
 opaque backgrounds cover the baked button labels with consistent live typography.
-Briefs use 75% of the stage width (960 × 540 at 1280 × 720), stay centered,
-and never display above their native 1280 × 720 resolution. Both hotspots turn
+Briefs fill the 867px-wide laptop display at the reference 1280 × 720 stage.
+Their 16:9 size is 867 × 487.6875, vertically centered in the 518px-high display
+with narrow solid near-white margins. The entire brief stays inside the bezel. Both hotspots turn
 light teal with cream text on hover or keyboard focus. Default fills remain
 cream for Back and peach for Call, with dark-teal text. The label stays the same
 size and position in every state; only colors transition.
-The original CRM remains mounted and inert beneath the modal.
+The original CRM remains mounted, hidden, and inert while the brief is open.
+The office remains visible outside the laptop and is never dimmed by the brief.
 
 - **Back to Customers** or Escape closes the brief without reloading the CRM and
   clears the selection. Pointer users receive neutral focus on the dashboard
@@ -89,8 +91,8 @@ independent tab/session can display the message again.
 
 Brief text remains embedded in the approved PNGs. No clean text-free brief
 exports were supplied, so no masking or duplicate HTML text has been added.
-The 960 × 540 reference size, placement, artwork, and live teal hover labels are
-unchanged. See `assets/README.md` for the exact exports needed for live typography.
+The latest solid-background V2 exports are used without image editing.
+The live button labels retain their stable typography and teal hover treatment. See `assets/README.md` for the exact exports needed for live typography.
 
 The brief's 260ms fade releases its opacity animation when entry completes.
 Its image does not scale or move during entry. This avoids retaining a finished

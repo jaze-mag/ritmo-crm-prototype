@@ -257,3 +257,26 @@ and rendering stability at DPR 1 and 2. Assertions check the same 15px live labe
 in default/hover states at 1280 × 720, correct default colors on pointer exit,
 hotspot alignment, keyboard focus, and navigation. Default/hover screenshots
 were reviewed. Public deployment verification remains subject to network access.
+
+## Mentor feedback: briefs inside the laptop — 2026-11-02
+
+Replaced all three runtime brief PNGs with the exact supplied V2 exports (no
+image editing). Retained stable runtime filenames for the publishing allowlist.
+Moved the shared dialog into .screen, using the existing display clipping and
+bezel treatment. Briefs are 867 × 487.6875 at (210,92.15625) within the 867 × 518
+display at (210,77). The remaining vertical space uses solid #FFFDF6, matching
+the exports. There is no stage-wide dimming or floating panel. The hidden CRM
+siblings are inert; the laptop itself is not inert, keeping the brief's controls
+accessible. Existing image-decode and request-invalidation logic is unchanged.
+
+Updated containment/focus/layout assertions for the new intended composition.
+Full journey tests exercise 1280 × 720, 1366 × 768, 1920 × 1080, 2560 × 1440,
+and smaller viewports, verifying every brief/hotspot stays inside the display.
+All five suites cover full customer flows, manager persistence, classic-script
+startup, delayed-image switching, and rendering stability at DPR 1 and 2.
+
+The original artwork's text remains rasterized and shrinks with the simulated
+laptop; smaller/mobile viewports are not intended for detailed reading. At the
+reference desktop composition the full design remains visible without cropping.
+No office introduction, audio, or other features were invented; the existing
+workstation, notification animation, clock, call transition, and handoff remain.

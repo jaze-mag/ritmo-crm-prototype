@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ritmo — Maya's demo scheduled</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="viewport">
+    <section class="scene" id="scene" data-state="loading" aria-labelledby="result-title" aria-busy="true">
+      <img class="artwork" id="artwork" src="./assets/positive-consequence.png" width="1280" height="720" alt="" draggable="false">
+      <!-- Solid masks match the supplied export's flat panel colors. They reveal
+           the original artwork without editing, duplicating, or replacing text. -->
+      <div class="mask badge-mask" data-mask="badge" aria-hidden="true"></div>
+      <div class="mask check-mask" data-mask="check" aria-hidden="true"></div>
+      <div class="mask stage-mask" data-mask="stage" aria-hidden="true"></div>
+      <div class="mask calendar-mask" data-mask="calendar" aria-hidden="true"></div>
+      <div class="mask message-mask" data-mask="message" aria-hidden="true"></div>
+      <div class="accent badge-accent" data-accent="badge" aria-hidden="true"></div>
+      <div class="accent stage-accent" data-accent="stage" aria-hidden="true"></div>
+      <div class="accent calendar-accent" data-accent="calendar" aria-hidden="true"></div>
+      <div class="mask screen-mask" data-mask="screen" aria-hidden="true"></div>
+      <div class="controls" id="controls" hidden>
+        <button id="skip" type="button">Skip Animation</button>
+        <button id="replay" type="button" hidden>Replay</button>
+        <button id="continue" type="button" hidden>Continue</button>
+      </div>
+      <div class="sr-only">
+        <h1 id="result-title">A clear next step. A moving opportunity.</h1>
+        <p>Your discovery call with Maya has moved the deal forward.</p>
+        <h2>Demo scheduled</h2>
+        <p>Brightside Creative. Maya Patel. Opportunity stage: Discovery → Demo Scheduled.</p>
+        <p>Next step: Tailored workflow demo</p>
+        <h2>Calendar confirmation</h2>
+        <p>Brightside Creative Workflow Demo. Accepted.</p>
+        <p>Maya accepted the invitation and added her project lead.</p>
+        <p>Scheduled time: as agreed during the call</p>
+        <p>Maya: “Invite received—I’ve added our project lead so we can walk through our current workflow together.”</p>
+      </div>
+    </section>
+    <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+    <p id="load-error" hidden>The artwork could not load. Keep this folder and its assets together, then reload the page.</p>
+  </main>
+  <script src="./animation.js"></script>
+</body>
+</html>

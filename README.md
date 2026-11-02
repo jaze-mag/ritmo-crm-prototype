@@ -98,3 +98,12 @@ The brief's 260ms fade releases its opacity animation when entry completes.
 Its image does not scale or move during entry. This avoids retaining a finished
 animation effect, but raster text still cannot match the resolution-independent
 HTML text of the dashboard; the text-free exports above are needed for that.
+
+## Independent Maya positive consequence
+
+Open `positive-consequence/index.html` for the standalone 4.5-second success
+animation, or visit `/positive-consequence/` on the existing GitHub Pages site.
+It supports Skip Animation, Replay, Continue acknowledgement, and reduced motion.
+The folder is self-contained for future local Storyline Web Object packaging.
+It is deliberately not connected to the CRM/AI outcome flow. See
+`positive-consequence/README.md` for timing, controls, and the local event API.

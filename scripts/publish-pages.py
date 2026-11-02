@@ -17,6 +17,11 @@ FILES = [
     'assets/fonts/inter-latin-600-normal.woff2',
     'assets/fonts/montserrat-latin-700-normal.woff2',
     'assets/fonts/inter-LICENSE', 'assets/fonts/montserrat-LICENSE',
+    'positive-consequence/index.html', 'positive-consequence/styles.css',
+    'positive-consequence/animation.js',
+    'positive-consequence/assets/positive-consequence.png',
+    'positive-consequence/assets/inter-latin-600-normal.woff2',
+    'positive-consequence/assets/inter-LICENSE',
 ]
 
 

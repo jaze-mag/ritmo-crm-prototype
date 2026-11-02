@@ -101,3 +101,14 @@ than the development checkout. No missing assets or external runtime requests
 were detected. The publishing helper was run twice and reused the same commit,
 confirming that unchanged content does not create repeated deployment commits.
 Prepared publishing commit: `de0f20fc28fec7b2336529b1db7ac3568b32cb36`.
+
+
+## Separate positive-consequence preview
+
+The publishing allowlist also includes the self-contained positive-consequence/
+runtime folder. Its public URL is:
+https://jaze-mag.github.io/ritmo-crm-prototype/positive-consequence/
+
+This is an independent preview; the main CRM remains at the original root URL.
+The V2 source contains its local packaging README and tests, which are not
+published. Future runs of the same publishing helper update both experiences.

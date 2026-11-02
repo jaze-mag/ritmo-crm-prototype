@@ -75,7 +75,7 @@ const expected = [
    assert.equal(await page.locator('#customer-brief button').count(),2);
    assert.equal(await page.locator('.brief-panel, .prospect-profile').count(),0);
    const art=await page.locator('.brief-artwork').boundingBox();
-   assert.deepEqual(art,{x:210,y:92.15625,width:867,height:487.6875});
+   assert.deepEqual(art,{x:234,y:105.65625,width:819,height:460.6875});
    await assertInScreen('#customer-brief');
    assert.equal(await modal.evaluate(el=>el.parentElement.classList.contains('screen')),true);
    assert.equal(await modal.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 253, 246)');
@@ -83,24 +83,24 @@ const expected = [
    assert.equal(await page.locator('.laptop').evaluate(el=>el.inert),false);
    for(const [id,x,y] of [['back-customers',460,635],['call-prospect',995,634]]) {
     const hotspot=page.locator('#'+id),box=await hotspot.boundingBox();
-    for(const [actual,target] of [[box.x,210+x*867/1280],[box.y,92.15625+y*867/1280],[box.width,238*867/1280],[box.height,49*867/1280]]) assert.ok(Math.abs(actual-target)<0.1);
+    for(const [actual,target] of [[box.x,234+x*819/1280],[box.y,105.65625+y*819/1280],[box.width,238*819/1280],[box.height,49*819/1280]]) assert.ok(Math.abs(actual-target)<0.1);
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el).cursor),'pointer');
     assert.ok(await hotspot.getAttribute('aria-label'));
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'1');
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').backgroundColor),id==='back-customers'?'rgb(244, 231, 200)':'rgb(239, 174, 135)');
-    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').fontSize),'13.5469px');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').fontSize),'12.7969px');
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').color),'rgb(49, 92, 89)');
     await hotspot.hover(); await page.waitForTimeout(200);
     const hover=await hotspot.evaluate(el=>{const s=getComputedStyle(el,'::after');return {opacity:s.opacity,background:s.backgroundColor,color:s.color,border:s.borderTopColor,font:s.fontSize,label:s.content}});
     assert.equal(hover.opacity,'1');assert.equal(hover.background,'rgb(121, 170, 165)');
-    assert.equal(hover.color,'rgb(244, 231, 200)');assert.equal(hover.border,'rgb(49, 92, 89)');assert.equal(hover.font,'13.5469px');
+    assert.equal(hover.color,'rgb(244, 231, 200)');assert.equal(hover.border,'rgb(49, 92, 89)');assert.equal(hover.font,'12.7969px');
     assert.ok(hover.label.includes(await hotspot.getAttribute('aria-label')));
     await page.screenshot({path:`/tmp/ritmo-${customer.image}-${id}-hover.png`});
     await page.mouse.move(0,0); await page.waitForTimeout(200);
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').opacity),'1');
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').backgroundColor),id==='back-customers'?'rgb(244, 231, 200)':'rgb(239, 174, 135)');
-    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').fontSize),'13.5469px');
+    assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').fontSize),'12.7969px');
     assert.equal(await hotspot.evaluate(el=>getComputedStyle(el,'::after').color),'rgb(49, 92, 89)');
    }
    await page.mouse.move(0,0);
@@ -128,7 +128,8 @@ const expected = [
     assert.ok(Math.abs(box.width / box.height - 16/9)<0.001);
     const display=await page.locator('.screen').boundingBox();
     assert.ok(box.x>=display.x-.1 && box.y>=display.y-.1 && box.x+box.width<=display.x+display.width+.1 && box.y+box.height<=display.y+display.height+.1);
-    assert.ok(Math.abs(box.width-display.width)<.1);
+    assert.ok(Math.abs(box.width-display.width*819/867)<.1);
+    assert.ok(Math.abs(box.x-display.x-(display.width-box.width)/2)<.1);
     assert.ok(Math.abs(box.y+box.height/2-display.y-display.height/2)<.1);
     const hotspot=await page.locator('#call-prospect').boundingBox();
     assert.ok(Math.abs((hotspot.x-box.x)/box.width - 995/1280)<0.001);

@@ -31,9 +31,9 @@ original customer-specific 1280 × 720 PNG. Its own background, typography, port
 and panels are preserved unchanged. Two semantic button hotspots align with
 the illustrated buttons and scale with the image in one 16:9 container. Their
 opaque backgrounds cover the baked button labels with consistent live typography.
-Briefs fill the 867px-wide laptop display at the reference 1280 × 720 stage.
-Their 16:9 size is 867 × 487.6875, vertically centered in the 518px-high display
-with narrow solid near-white margins. The entire brief stays inside the bezel. Both hotspots turn
+Briefs sit inside the 867px-wide laptop display at the reference 1280 × 720 stage,
+with 24px left/right padding. Their 16:9 size is 819 × 460.6875, centered in the
+518px-high display with about 28.7px top/bottom padding. The entire brief stays inside the bezel. Both hotspots turn
 light teal with cream text on hover or keyboard focus. Default fills remain
 cream for Back and peach for Call, with dark-teal text. The label stays the same
 size and position in every state; only colors transition.

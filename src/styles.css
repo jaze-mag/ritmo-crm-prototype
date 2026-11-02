@@ -75,7 +75,7 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 /* Release the opacity animation after entry instead of retaining its effect.
    Keep the artwork at its final layout size throughout the fade. */
 @keyframes brief-fade { from { opacity: 0; } to { opacity: 1; } }
-.brief-artwork { position: relative; width: 100%; aspect-ratio: 16 / 9; container-type: inline-size; }
+.brief-artwork { position: relative; width: calc(100% - 48px); aspect-ratio: 16 / 9; container-type: inline-size; }
 #brief-image { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .brief-hotspot { position: absolute; padding: 0; border: 0; background: transparent; border-radius: 999px; cursor: pointer; }
 /* Original button bounds: Back (460,635,238,49), Call (995,634,238,49). */

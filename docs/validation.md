@@ -280,3 +280,18 @@ laptop; smaller/mobile viewports are not intended for detailed reading. At the
 reference desktop composition the full design remains visible without cropping.
 No office introduction, audio, or other features were invented; the existing
 workstation, notification animation, clock, call transition, and handoff remain.
+
+## Brief horizontal padding — 2026-11-02
+
+Changed only the shared artwork container width to calc(100% - 48px). At the
+1280 × 720 reference stage each brief is 819 × 460.6875 at (234,105.65625),
+providing 24px left/right and 28.65625px top/bottom space inside the laptop.
+The larger vertical margins follow from proportional 16:9 scaling; there is no
+cropping or distortion. Hotspots and their labels remain in the same proportional
+image coordinate system. No artwork, interaction logic, or timing changed.
+
+Passed the full Chromium customer journey suite and rendering stability at DPR 1
+and 2. Additional pointer-click checks exercised both brief buttons and correct
+handoff/return routing for all three customers at 640 × 360, 1366 × 768, and
+1920 × 1080. Screenshot review confirmed visible rounded corners and balanced
+margins. Public Pages verification is limited by this environment's network access.

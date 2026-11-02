@@ -21,8 +21,8 @@ backgrounds remain visible. Each button hotspot uses an opaque fill and a live
 label in both default and hover/focus states, covering only its original button.
 Keeping one label avoids the size jump from swapping raster and browser text. CSS uses
 `object-fit: contain` inside a 16:9 container; both image and transparent semantic
-button hotspots scale together. The brief is centered inside the laptop display at 867 × 487.6875 on the
-1280 × 720 reference stage, preserving 16:9 with narrow near-white margins. Its original corners remain fully visible.
+button hotspots scale together. The brief is centered inside the laptop display at 819 × 460.6875 on the
+1280 × 720 reference stage, preserving 16:9 with 24px horizontal and approximately 28.7px vertical margins. Its original corners remain fully visible.
 
 Hotspot coordinates in the source image:
 - Back to Customers: x=460, y=635, width=238, height=49.

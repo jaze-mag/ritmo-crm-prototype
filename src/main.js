@@ -5,7 +5,7 @@ const { createSession, customers } = window.Ritmo;
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
 const brief = byId('customer-brief');
-const laptop = document.querySelector('.laptop');
+const screenContent = [...document.querySelector('.screen').children].filter(element => element !== brief);
 let lastCard = null;
 let joining = false;
 let briefRequest = 0;
@@ -116,7 +116,7 @@ async function openBrief(customer, button) {
 function showBrief(visible) {
   stage.classList.toggle('brief-open', visible);
   brief.hidden = !visible;
-  laptop.inert = visible;
+  screenContent.forEach(element => { element.inert = visible; });
   byId('notification').inert = visible;
 }
 // Single handoff boundary for a future verified Storyline adapter.

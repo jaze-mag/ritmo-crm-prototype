@@ -45,20 +45,20 @@
             <h2 id="connection-title"></h2>
             <p>Preparing your customer conversation</p>
           </section>
+          <section class="precall" id="customer-brief" role="dialog" aria-modal="true" aria-labelledby="brief-title" aria-describedby="brief-summary" hidden>
+            <h2 class="sr-only" id="brief-title" tabindex="-1">Pre-Call Brief</h2>
+            <p class="sr-only" id="brief-summary"></p>
+            <div class="brief-artwork">
+              <img id="brief-image" alt="" draggable="false" width="1280" height="720">
+              <button class="brief-hotspot back-hotspot" id="back-customers" aria-label="Back to Customers"></button>
+              <button class="brief-hotspot call-hotspot" id="call-prospect" aria-label="Call This Prospect"></button>
+            </div>
+          </section>
         </section>
         <div class="hinge" aria-hidden="true"></div>
       </div>
       <div class="laptop-base" aria-hidden="true"><div class="keyboard" id="keyboard"></div><div class="trackpad"></div><div class="base-lip"></div></div>
       <aside class="notification" id="notification" aria-label="Message from your manager" hidden><h2>MESSAGE FROM YOUR MANAGER</h2><p>Three qualified prospects are ready to talk. Choose one and find out what their team needs.</p></aside>
-      <section class="precall" id="customer-brief" role="dialog" aria-modal="true" aria-labelledby="brief-title" aria-describedby="brief-summary" hidden>
-        <h2 class="sr-only" id="brief-title" tabindex="-1">Pre-Call Brief</h2>
-        <p class="sr-only" id="brief-summary"></p>
-        <div class="brief-artwork">
-          <img id="brief-image" alt="" draggable="false" width="1280" height="720">
-          <button class="brief-hotspot back-hotspot" id="back-customers" aria-label="Back to Customers"></button>
-          <button class="brief-hotspot call-hotspot" id="call-prospect" aria-label="Call This Prospect"></button>
-        </div>
-      </section>
       <span class="sr-only" id="announcement" role="status"></span>
     </div>
   </main>

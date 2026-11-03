@@ -18,8 +18,8 @@ https://jaze-mag.github.io/ritmo-crm-prototype/positive-consequence/
 The scene is 1280 × 720 and scales proportionally with letterboxing when needed.
 All runtime resources are relative and live inside this folder. There are no
 CDNs, external calls, analytics, authentication, audio files, or package dependencies.
-The original `Positive Consequence.png` export is included unchanged; local Inter
-SemiBold and its license are included for the small interactive controls.
+The original `Positive Consequence.png` export is included unchanged; local Inter Regular/SemiBold, Montserrat Bold, and their licenses are included
+for the live interface and controls.
 
 ## Sequence and controls
 
@@ -68,11 +68,23 @@ These are local CustomEvents, not cross-window messages. There is no `GetPlayer`
 can wrap this boundary with validated messaging if required. Do not route a real
 customer outcome to this screen until that outcome integration is implemented.
 
-## Artwork technique
+## Rendering technique
 
-The supplied export is flattened. Temporary CSS masks match its flat background
-colors and reveal the existing regions; no artwork file or wording is edited.
-All masks and short-lived highlight layers are removed from rendering on completion
-or Skip. Apart from the header controls, the completed design is the original
-image. The visible text remains raster text; the equivalent complete result is
-also present as accessible HTML for screen readers.
+The supplied image is retained unchanged for the office and laptop. Its entire
+flattened display region is excluded with a proportional CSS clip; matching
+HTML/CSS panels, local-font text, and an SVG checkmark occupy the same display
+bounds. No raster lettering remains beneath the live text. The 1280 × 720
+reference composition and original device positions are preserved.
+
+Responsive layout uses container-relative CSS dimensions instead of transforming
+a 1280px bitmap layer. Text and the checkmark therefore render at the actual
+viewport/device-pixel density. The office illustration itself is still the
+original 1280 × 720 raster export; a higher-resolution original would be needed
+for extra illustration detail on larger displays. No sharpening filter, blur,
+text scaling animation, or permanent GPU hint is applied.
+
+The stage emphasis animates only the color of the inline words and arrow. Its
+parent card and line never move, scale, or receive a rectangular highlight.
+Playback retains the original sequence and controls. All effects are cancelled
+on completion or Skip, leaving normal fully opaque HTML. Local fonts and artwork
+finish loading before playback starts to avoid font swaps during animation.

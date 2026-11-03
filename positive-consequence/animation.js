@@ -2,7 +2,7 @@
   'use strict';
   const byId = id => document.getElementById(id);
   const scene = byId('scene');
-  const masks = [...scene.querySelectorAll('.mask')];
+  const reveals = [...scene.querySelectorAll('[data-reveal]')];
   const accents = [...scene.querySelectorAll('.accent')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   let animations = [];
@@ -11,11 +11,6 @@
   let continued = false;
   let state = 'loading';
 
-  function resize() {
-    scene.style.setProperty('--scale', Math.min(innerWidth / 1280, innerHeight / 720));
-  }
-  addEventListener('resize', resize);
-  resize();
   function setState(next) {
     state = next;
     scene.dataset.state = next;
@@ -30,7 +25,7 @@
   function complete() {
     const moveFocus = document.activeElement === byId('skip');
     cancelAnimations();
-    masks.forEach(mask => { mask.hidden = true; });
+    reveals.forEach(element => { element.style.opacity = '1'; });
     accents.forEach(accent => { accent.hidden = true; });
     byId('skip').hidden = true;
     byId('replay').hidden = false;
@@ -40,8 +35,8 @@
     if (moveFocus) byId('continue').focus();
   }
   function fade(name, delay, duration) {
-    const mask = scene.querySelector(`[data-mask="${name}"]`);
-    animations.push(mask.animate([{opacity: 1}, {opacity: 0}], {delay, duration, easing: 'ease', fill: 'forwards'}));
+    const element = scene.querySelector(`[data-reveal="${name}"]`);
+    animations.push(element.animate([{opacity: 0}, {opacity: 1}], {delay, duration, easing: 'ease', fill: 'forwards'}));
   }
   function highlight(name, delay, duration) {
     const accent = scene.querySelector(`[data-accent="${name}"]`);
@@ -59,7 +54,7 @@
     byId('skip').hidden = false;
     byId('replay').hidden = true;
     byId('continue').hidden = true;
-    masks.forEach(mask => { mask.hidden = false; });
+    reveals.forEach(element => { element.style.opacity = '0'; });
     accents.forEach(accent => { accent.hidden = false; });
     setState('playing');
     byId('status').textContent = 'Maya’s opportunity update.';
@@ -70,7 +65,10 @@
     fade('check', 850, 350);
     highlight('badge', 850, 650);
     fade('stage', 1500, 600);
-    highlight('stage', 1800, 700);
+    // Color on the inline glyphs only; no rectangle, shadow, scale, or movement.
+    animations.push(byId('stage-text').animate([
+      { color: '#315c59' }, { color: '#102f2d', offset: .45 }, { color: '#315c59' },
+    ], { delay: 1800, duration: 700, easing: 'ease-in-out', fill: 'forwards' }));
     fade('calendar', 2500, 650);
     highlight('calendar', 2900, 600);
     fade('message', 3500, 1000);
@@ -101,7 +99,7 @@
   addEventListener('pagehide', () => { cancelAnimations(); });
   addEventListener('pageshow', event => { if (event.persisted && ready) { setState('idle'); play(); } });
   window.RitmoPositive = Object.freeze({ play, replay: play, skip, continue: continueResult, getState: () => ({ state, continued }) });
-  byId('artwork').decode().then(() => {
+  Promise.all([byId('artwork').decode(), document.fonts.ready]).then(() => {
     ready = true;
     setState('idle');
     play();

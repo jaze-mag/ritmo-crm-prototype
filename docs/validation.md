@@ -319,3 +319,36 @@ and handoffs. The independent Continue emits a local event only; it never invoke
 Devlin AI, Storyline APIs, or existing customer routing. Native Windows Edge,
 Storyline player embedding, and public GitHub Pages response cannot be verified
 here; the public URL is blocked by the environment proxy with CONNECT 403.
+
+## Positive consequence: live typography and inline emphasis — 2026-11-02
+
+Cause: the positive consequence used a flattened 1280 × 720 export for every
+screen label, and scaled the entire scene using transform: scale(). At larger or
+fractional viewports that resampled already-rasterized text. No blur filter was
+present. The stage pulse came from a separate bordered/shadowed rectangle.
+
+The office/laptop PNG remains unchanged. Its entire display interior is excluded
+with proportional clipping and replaced by matching live HTML/CSS content using
+bundled Inter Regular/SemiBold and Montserrat Bold, plus an SVG checkmark. Layout
+uses container-relative CSS pixels instead of transforming the scene. Display
+bounds remain x=210, y=76, width=870, height=518 at the reference composition.
+The source artwork is not edited or overlaid with duplicate raster lettering.
+Only the office illustration remains resolution-limited above the native size.
+
+Removed the stage rectangle. Only opacity and color animate on the inline stage
+text/arrow; its parent line and card have identical bounds at all sampled times.
+No stage background, border, shadow, scale, or layout animation exists. Original
+badge/calendar highlights, 4.5-second sequence, control behavior, local events,
+and reduced-motion handling remain. Playback waits for local fonts and artwork;
+completion/Skip cancels every animation and leaves fully opaque live content.
+
+Passed tests/positive.cjs: frame samples including mid-emphasis, unchanged card
+geometry, no transforms/filters, zero completed animation effects, natural
+playback timing, skip, replay, Continue, reduced motion, responsive controls, and
+local-only assets. Passed tests/positive-iframe.cjs in Chromium at DPR 1 and 2,
+using 1280 × 720 and 960 × 540 iframe sizes: correct device bounds, no overflow,
+no scene transforms, and working replay/Continue. Final screenshots were reviewed.
+The full three-customer CRM suite also passed; its runtime files were not changed.
+Native Windows Edge and Articulate's player are not available here. Public Pages
+verification remains dependent on network access; iframe tests do not constitute
+verification in Storyline itself.

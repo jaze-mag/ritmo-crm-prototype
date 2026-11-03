@@ -352,3 +352,27 @@ The full three-customer CRM suite also passed; its runtime files were not change
 Native Windows Edge and Articulate's player are not available here. Public Pages
 verification remains dependent on network access; iframe tests do not constitute
 verification in Storyline itself.
+
+## Independent Maya negative consequence — 2026-11-02
+
+Added negative-consequence/ using the supplied Negative Consequence.png unchanged
+for its office/laptop artwork, with live HTML typography inside the original
+screen boundaries. Reused the positive preview's standalone structure without
+modifying its files. Exact negative copy includes Follow-up Needed, Discovery →
+At Risk, Not Sent, no confirmed date/time, and Maya's original response. Status
+fills use the export's #EFAE87. No success checkmark or celebratory sound is used.
+
+The 4.5-second sequence retains screen/badge/stage/follow-up/message ordering.
+Stage emphasis affects only inline text color. Skip, Replay, Continue, reduced
+motion, local font assets, and local-only event APIs match the positive preview;
+negative events are namespaced separately and carry outcome: at-risk. No AI or
+CRM routing integration is introduced.
+
+Passed tests/negative.cjs: exact status copy/colors, timing, static stage geometry,
+no transforms/filters, final hold, cancellation/skip, replay, single Continue event
+with correct outcome, keyboard focus, responsive controls, reduced motion, reload,
+and no external/failed requests. Passed tests/negative-iframe.cjs at DPR 1/2 and
+1280 × 720 / 960 × 540, checking display bounds and no overflow. Final screenshots
+were reviewed against the export. The existing three-customer CRM suite passed;
+its runtime and the positive-consequence folder remain byte-for-byte unchanged.
+Actual Windows Edge/Storyline-player and public Pages verification are not claimed.

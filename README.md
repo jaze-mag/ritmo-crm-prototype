@@ -107,3 +107,13 @@ It supports Skip Animation, Replay, Continue acknowledgement, and reduced motion
 The folder is self-contained for future local Storyline Web Object packaging.
 It is deliberately not connected to the CRM/AI outcome flow. See
 `positive-consequence/README.md` for timing, controls, and the local event API.
+
+
+## Independent Maya negative consequence
+
+Open `negative-consequence/index.html` for the matching 4.5-second At Risk outcome,
+or visit `/negative-consequence/` on the existing GitHub Pages site. Live text,
+Skip Animation, Replay, Continue acknowledgement, and reduced motion match the
+positive preview. The self-contained folder can be packaged separately as a local
+Storyline Web Object. It is not connected to an AI result or the current CRM flow.
+See `negative-consequence/README.md` for its separate event API and packaging notes.

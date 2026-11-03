@@ -21,6 +21,9 @@ FILES = [
     'positive-consequence/animation.js',
     'positive-consequence/assets/positive-consequence.png',
     'positive-consequence/assets/inter-latin-600-normal.woff2',
+    'positive-consequence/assets/inter-latin-400-normal.woff2',
+    'positive-consequence/assets/montserrat-latin-700-normal.woff2',
+    'positive-consequence/assets/montserrat-LICENSE',
     'positive-consequence/assets/inter-LICENSE',
 ]
 

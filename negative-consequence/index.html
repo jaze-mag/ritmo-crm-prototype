@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ritmo — Maya's opportunity at risk</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="viewport">
+    <section class="scene" id="scene" data-state="loading" aria-labelledby="result-title" aria-busy="true">
+      <!-- Exclude the entire flattened display, preserving the original device
+           and office. Live HTML fills that same opening, with no duplicate text. -->
+      <img class="artwork" id="artwork" src="./assets/negative-consequence.png" width="1280" height="720" alt="" draggable="false">
+      <div class="screen">
+        <div class="screen-content" data-reveal="screen">
+          <header class="header">
+            <span class="brand">ritmo</span>
+            <p class="dashboard-title">ACCOUNT EXECUTIVE DASHBOARD</p>
+            <p class="dashboard-subtitle">Brightside Creative <span aria-hidden="true">•</span> Opportunity update</p>
+          </header>
+          <section class="panel" aria-labelledby="result-title">
+            <h1 id="result-title">No next step. Opportunity at risk.</h1>
+            <p class="intro">The call ended without a clear commitment from Maya.</p>
+            <div class="badge" data-reveal="badge">
+              <span>FOLLOW-UP NEEDED</span>
+            </div>
+            <section class="opportunity" aria-labelledby="customer-name">
+              <p class="company">BRIGHTSIDE CREATIVE</p>
+              <h2 id="customer-name">Maya Patel</h2>
+              <p class="stage-label">Opportunity stage</p>
+              <p class="stage-line"><span id="stage-text" data-reveal="stage">Discovery <span class="arrow">→</span> At Risk</span></p>
+              <p class="next-step">Next step: Not scheduled</p>
+            </section>
+            <section class="calendar" data-reveal="calendar" aria-labelledby="calendar-title">
+              <h2 id="calendar-title">DEMO FOLLOW-UP STATUS</h2>
+              <h3>Brightside Creative Workflow Demo</h3>
+              <p class="accepted">NOT SENT</p>
+              <p class="invitation">Maya is not ready to schedule a demo. Her<br>concerns remain unresolved.</p>
+              <p class="schedule">No confirmed date or time</p>
+            </section>
+          </section>
+          <p class="message" data-reveal="message">Maya: “Thanks for the conversation. I’m not ready to schedule a demo yet.”</p>
+          <div class="accent badge-accent" data-accent="badge" aria-hidden="true"></div>
+          <div class="accent calendar-accent" data-accent="calendar" aria-hidden="true"></div>
+        </div>
+        <div class="controls" id="controls" hidden>
+          <button id="skip" type="button">Skip Animation</button>
+          <button id="replay" type="button" hidden>Replay</button>
+          <button id="continue" type="button" hidden>Continue</button>
+        </div>
+      </div>
+    </section>
+    <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+    <p id="load-error" hidden>The artwork could not load. Keep this folder and its assets together, then reload the page.</p>
+  </main>
+  <script src="./animation.js"></script>
+</body>
+</html>

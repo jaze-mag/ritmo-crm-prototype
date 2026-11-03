@@ -41,7 +41,7 @@ h1 { position: absolute; left: calc(16 * var(--u)); top: calc(14 * var(--u)); fo
 .message { position: absolute; left: calc(14 * var(--u)); top: calc(440 * var(--u)); width: calc(828 * var(--u)); height: calc(55 * var(--u)); padding: calc(10 * var(--u)) calc(13 * var(--u)); border-radius: calc(10 * var(--u)); background: #477572; color: #fffdf6; }
 .accent { position: absolute; pointer-events: none; opacity: 0; border: calc(1 * var(--u)) solid #efae87; box-shadow: 0 0 calc(8 * var(--u)) calc(2 * var(--u)) rgb(239 174 135 / 20%); }
 .badge-accent { left: calc(30 * var(--u)); top: calc(165 * var(--u)); width: calc(247 * var(--u)); height: calc(40 * var(--u)); border-radius: calc(22 * var(--u)); }
-.calendar-accent { left: calc(443 * var(--u)); top: calc(244 * var(--u)); width: calc(123 * var(--u)); height: calc(31 * var(--u)); border-radius: calc(18 * var(--u)); }
+.calendar-accent { border-color: #79aaa5; box-shadow: 0 0 calc(8 * var(--u)) calc(2 * var(--u)) rgb(121 170 165 / 25%); left: calc(443 * var(--u)); top: calc(244 * var(--u)); width: calc(123 * var(--u)); height: calc(31 * var(--u)); border-radius: calc(18 * var(--u)); }
 .controls { position: absolute; right: calc(15 * var(--u)); top: calc(32 * var(--u)); display: flex; gap: calc(8 * var(--u)); z-index: 5; }
 button { min-height: calc(28 * var(--u)); padding: calc(5 * var(--u)) calc(10 * var(--u)); font: 600 calc(12 * var(--u))/1.3 Inter, sans-serif; color: #f4e7c8; background: #214846; border: calc(1 * var(--u)) solid #79aaa5; border-radius: calc(18 * var(--u)); cursor: pointer; transition: background-color 160ms ease; }
 button:hover { background: #315c59; }

@@ -25,13 +25,21 @@ const assert = require('node:assert/strict');
  assert.equal(await page.evaluate(()=>document.fonts.check('700 24px Montserrat') && document.fonts.check('400 14px Inter')),true);
  await page.evaluate(()=>{window.effects=document.getAnimations();window.effects.forEach(a=>a.pause())});
  const opacity=name=>page.locator(`[data-reveal="${name}"]`).evaluate(el=>Number(getComputedStyle(el).opacity));
- for(const t of [0,500,1500,2000,2500,3500,4490]){
+ for(const t of [0,500,1500,2000,2500,3110,3500,4490]){
   await page.evaluate(t=>window.effects.forEach(a=>a.currentTime=t),t);
   if(t===0) assert.equal(await opacity('screen'),0);
   if(t===500){assert.equal(await opacity('screen'),1);assert.equal(await opacity('badge'),0)}
   if(t===1500){assert.equal(await opacity('badge'),1);assert.equal(await opacity('calendar'),0)}
   if(t===2000) assert.notEqual(await page.locator('#stage-text').evaluate(el=>getComputedStyle(el).color),'rgb(49, 92, 89)');
   if(t===2500){assert.equal(await opacity('stage'),1);assert.equal(await opacity('calendar'),0)}
+  if(t===3110){
+   const ring=page.locator('.calendar-accent');
+   assert.equal(await ring.evaluate(el=>getComputedStyle(el).borderColor),'rgb(121, 170, 165)');
+   assert.ok(Number(await ring.evaluate(el=>getComputedStyle(el).opacity))>.5);
+   const a=await ring.boundingBox(),pill=await page.locator('.accepted').boundingBox();
+   assert.ok(Math.abs(a.x-pill.x+1)<.1 && Math.abs(a.y-pill.y+1)<.1);
+   assert.ok(Math.abs(a.width-pill.width-2)<.1 && Math.abs(a.height-pill.height-2)<.1);
+  }
   if(t===3500){assert.equal(await opacity('calendar'),1);assert.equal(await opacity('message'),0)}
   assert.deepEqual(await page.locator('.stage-line').boundingBox(),stageBox);
   assert.deepEqual(await page.locator('.opportunity').boundingBox(),cardBox);

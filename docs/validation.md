@@ -376,3 +376,11 @@ and no external/failed requests. Passed tests/negative-iframe.cjs at DPR 1/2 and
 were reviewed against the export. The existing three-customer CRM suite passed;
 its runtime and the positive-consequence folder remain byte-for-byte unchanged.
 Actual Windows Edge/Storyline-player and public Pages verification are not claimed.
+
+## Not Sent pill pulse — 2026-11-02
+
+The negative follow-up pill's peach pulse outline blended into its peach fill.
+Changed only .calendar-accent to the positive preview's #79AAA5 border and teal
+25%-opacity glow. Pill fill, dimensions, 2.9–3.5s timing, all other highlights,
+and controls are unchanged. The negative suite checks the visible pulse color
+and the 1px surrounding alignment, along with playback and navigation behavior.

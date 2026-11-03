@@ -25,6 +25,15 @@ FILES = [
     'positive-consequence/assets/montserrat-latin-700-normal.woff2',
     'positive-consequence/assets/montserrat-LICENSE',
     'positive-consequence/assets/inter-LICENSE',
+    'negative-consequence/index.html',
+    'negative-consequence/styles.css',
+    'negative-consequence/animation.js',
+    'negative-consequence/assets/negative-consequence.png',
+    'negative-consequence/assets/inter-latin-400-normal.woff2',
+    'negative-consequence/assets/inter-latin-600-normal.woff2',
+    'negative-consequence/assets/montserrat-latin-700-normal.woff2',
+    'negative-consequence/assets/inter-LICENSE',
+    'negative-consequence/assets/montserrat-LICENSE',
 ]
 
 

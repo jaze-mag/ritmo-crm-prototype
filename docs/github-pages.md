@@ -112,3 +112,11 @@ https://jaze-mag.github.io/ritmo-crm-prototype/positive-consequence/
 This is an independent preview; the main CRM remains at the original root URL.
 The V2 source contains its local packaging README and tests, which are not
 published. Future runs of the same publishing helper update both experiences.
+
+
+The matching independent negative-consequence preview is also included in the
+publishing allowlist at:
+https://jaze-mag.github.io/ritmo-crm-prototype/negative-consequence/
+
+Its runtime files and local fonts are published; its README/tests stay in V2.
+Neither consequence preview changes the main CRM's customer routing.

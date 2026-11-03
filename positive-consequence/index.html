@@ -10,34 +10,47 @@
 <body>
   <main class="viewport">
     <section class="scene" id="scene" data-state="loading" aria-labelledby="result-title" aria-busy="true">
+      <!-- Exclude the entire flattened display, preserving the original device
+           and office. Live HTML fills that same opening, with no duplicate text. -->
       <img class="artwork" id="artwork" src="./assets/positive-consequence.png" width="1280" height="720" alt="" draggable="false">
-      <!-- Solid masks match the supplied export's flat panel colors. They reveal
-           the original artwork without editing, duplicating, or replacing text. -->
-      <div class="mask badge-mask" data-mask="badge" aria-hidden="true"></div>
-      <div class="mask check-mask" data-mask="check" aria-hidden="true"></div>
-      <div class="mask stage-mask" data-mask="stage" aria-hidden="true"></div>
-      <div class="mask calendar-mask" data-mask="calendar" aria-hidden="true"></div>
-      <div class="mask message-mask" data-mask="message" aria-hidden="true"></div>
-      <div class="accent badge-accent" data-accent="badge" aria-hidden="true"></div>
-      <div class="accent stage-accent" data-accent="stage" aria-hidden="true"></div>
-      <div class="accent calendar-accent" data-accent="calendar" aria-hidden="true"></div>
-      <div class="mask screen-mask" data-mask="screen" aria-hidden="true"></div>
-      <div class="controls" id="controls" hidden>
-        <button id="skip" type="button">Skip Animation</button>
-        <button id="replay" type="button" hidden>Replay</button>
-        <button id="continue" type="button" hidden>Continue</button>
-      </div>
-      <div class="sr-only">
-        <h1 id="result-title">A clear next step. A moving opportunity.</h1>
-        <p>Your discovery call with Maya has moved the deal forward.</p>
-        <h2>Demo scheduled</h2>
-        <p>Brightside Creative. Maya Patel. Opportunity stage: Discovery → Demo Scheduled.</p>
-        <p>Next step: Tailored workflow demo</p>
-        <h2>Calendar confirmation</h2>
-        <p>Brightside Creative Workflow Demo. Accepted.</p>
-        <p>Maya accepted the invitation and added her project lead.</p>
-        <p>Scheduled time: as agreed during the call</p>
-        <p>Maya: “Invite received—I’ve added our project lead so we can walk through our current workflow together.”</p>
+      <div class="screen">
+        <div class="screen-content" data-reveal="screen">
+          <header class="header">
+            <span class="brand">ritmo</span>
+            <p class="dashboard-title">ACCOUNT EXECUTIVE DASHBOARD</p>
+            <p class="dashboard-subtitle">Brightside Creative <span aria-hidden="true">•</span> Opportunity update</p>
+          </header>
+          <section class="panel" aria-labelledby="result-title">
+            <h1 id="result-title">A clear next step. A moving opportunity.</h1>
+            <p class="intro">Your discovery call with Maya has moved the deal forward.</p>
+            <div class="badge" data-reveal="badge">
+              <svg class="check" data-reveal="check" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-11"/></svg>
+              <span>DEMO SCHEDULED</span>
+            </div>
+            <section class="opportunity" aria-labelledby="customer-name">
+              <p class="company">BRIGHTSIDE CREATIVE</p>
+              <h2 id="customer-name">Maya Patel</h2>
+              <p class="stage-label">Opportunity stage</p>
+              <p class="stage-line"><span id="stage-text" data-reveal="stage">Discovery <span class="arrow">→</span> Demo Scheduled</span></p>
+              <p class="next-step">Next step: Tailored workflow demo</p>
+            </section>
+            <section class="calendar" data-reveal="calendar" aria-labelledby="calendar-title">
+              <h2 id="calendar-title">CALENDAR CONFIRMATION</h2>
+              <h3>Brightside Creative Workflow Demo</h3>
+              <p class="accepted">ACCEPTED</p>
+              <p class="invitation">Maya accepted the invitation and added her project lead.</p>
+              <p class="schedule">Scheduled time: as agreed during the call</p>
+            </section>
+          </section>
+          <p class="message" data-reveal="message">Maya: “Invite received—I’ve added our project lead so we can walk through our current workflow together.”</p>
+          <div class="accent badge-accent" data-accent="badge" aria-hidden="true"></div>
+          <div class="accent calendar-accent" data-accent="calendar" aria-hidden="true"></div>
+        </div>
+        <div class="controls" id="controls" hidden>
+          <button id="skip" type="button">Skip Animation</button>
+          <button id="replay" type="button" hidden>Replay</button>
+          <button id="continue" type="button" hidden>Continue</button>
+        </div>
       </div>
     </section>
     <p id="status" class="sr-only" role="status" aria-live="polite"></p>

@@ -5,7 +5,8 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let state = 'loading', generation = 0, animations = [], timers = [], sound = false, navigation = null;
   const audio = {whoosh: new Audio('assets/whoosh.wav'), confirmation: new Audio('assets/confirmation.wav')};
-  Object.values(audio).forEach(item => { item.volume = .45; });
+  audio.whoosh.volume = .45;
+  audio.confirmation.volume = .9;
   function stop() {
     generation++;
     animations.forEach(a => a.cancel()); animations = [];

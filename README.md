@@ -117,3 +117,10 @@ Skip Animation, Replay, Continue acknowledgement, and reduced motion match the
 positive preview. The self-contained folder can be packaged separately as a local
 Storyline Web Object. It is not connected to an AI result or the current CRM flow.
 See `negative-consequence/README.md` for its separate event API and packaging notes.
+
+### Standalone cinematic conclusions
+
+- [Positive conclusion](positive-conclusion/index.html)
+- [Negative conclusion](negative-conclusion/index.html)
+
+Each includes the Later That Week opening, sharp HTML typography, optional local sound, skip/replay controls, and a documented navigation adapter. See each folder's README for offline/Storyline packaging and unconnected course destinations. These modules do not change the CRM or consequence flows.

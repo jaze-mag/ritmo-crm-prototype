@@ -16,3 +16,5 @@ On the published GitHub Pages site, Choose Another Customer returns to the exist
 Copy this entire folder, keeping index.html, styles.css, animation.js and assets together. In Storyline use Insert → Web Object → browse to this folder. Use a 16:9 object and publish the course to test. On a fresh visit playback starts automatically; if Storyline preserves the frame, invoke `RitmoConclusion.replay()` through a future host adapter. Revisit behavior is host-controlled. This has been tested in Chromium iframes, not in the Storyline application or Windows Edge.
 
 The optional audio is original synthesized noise/tones, packaged locally; no external recordings. Font licenses are in assets.
+
+The opportunity pill pulse at 4.9 seconds has its own local stage.wav cue: rising for Advanced, descending for Stalled. It follows Sound On/Off and is canceled on skip/replay.

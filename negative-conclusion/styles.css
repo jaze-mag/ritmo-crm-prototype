@@ -12,9 +12,9 @@ body { cursor: default; }
 /* Reserve the approved manager area while the learner opens the message. */
 .manager-prompt { height:calc(101 * var(--u)); display:flex; align-items:center; gap:calc(14 * var(--u)); padding-left:calc(23 * var(--u)); }
 .manager-prompt > span { font-size:clamp(10px,calc(14 * var(--u)),14px); }
-#open-manager { width:calc(58 * var(--u)); height:calc(50 * var(--u)); min-width:44px; min-height:44px; padding:8px; border-radius:12px; background:#fffdf6; display:grid; place-items:center; flex-shrink:0; }
-#open-manager svg { width:30px; max-width:100%; fill:none; stroke:currentColor; stroke-width:1.8; }
-.manager-ready #open-manager { animation:mail-attention 1.6s ease-in-out 3; }
+#open-manager { width:calc(70 * var(--u)); height:calc(60 * var(--u)); min-width:44px; min-height:44px; padding:8px; border-radius:12px; background:#fffdf6; display:grid; place-items:center; flex-shrink:0; }
+#open-manager svg { width:38px; max-width:100%; fill:none; stroke:currentColor; stroke-width:1.8; }
+.manager-ready #open-manager { animation:mail-attention 1.6s ease-in-out infinite; }
 @keyframes mail-attention { 0%,100% {box-shadow:0 0 0 0 #79aaa500} 50% {box-shadow:0 0 0 4px #79aaa54d} }
 #manager-message:focus-visible {outline:2px solid #315c59;outline-offset:2px;}
 @media(prefers-reduced-motion:reduce) { .manager-ready #open-manager {animation:none;} }

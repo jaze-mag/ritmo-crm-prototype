@@ -54,7 +54,10 @@
     if ($('#manager-message').hidden) {
       $('.manager').classList.add('manager-ready');
       if (notify) {
-        if (!reduced.matches) reveal($('.manager'),0,350);
+        if (!reduced.matches) {
+          reveal($('.manager'),0,350);
+          reveal($('[data-reveal="navigation"]'),0,350);
+        }
         cue('manager');
       }
     }
@@ -73,7 +76,6 @@
     cue('whoosh');
     animate(intro,[{opacity:1},{opacity:0}],2800,500); reveal(conclusion,2800,500);
     ['header','banner','customer','opportunity'].forEach((key,i) => reveal($(`[data-reveal="${key}"]`),3000+i*600));
-    reveal($('[data-reveal="navigation"]'),6000);
     reveal($('.symbol'),3800,450);
     animate($('.symbol'),[{color:'#315c59'},{color:document.body.dataset.outcome==='positive'?'#fffdf6':'#b37b32'},{color:document.body.dataset.outcome==='positive'?'#153e3b':'#783727'}],3800,650);
     animate($('.pill'),[{boxShadow:'0 0 0 0 transparent'},{boxShadow:`0 0 0 3px ${document.body.dataset.outcome==='positive'?'#79aaa5':'#efae87'}`},{boxShadow:'0 0 0 0 transparent'}],stagePulseAt,650);

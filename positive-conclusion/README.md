@@ -18,3 +18,6 @@ Copy this entire folder, keeping index.html, styles.css, animation.js and assets
 The optional audio is original synthesized noise/tones, packaged locally; no external recordings. Font licenses are in assets.
 
 The opportunity pill pulse at 4.9 seconds has its own local stage.wav cue: rising for Advanced, descending for Stalled. It follows Sound On/Off and is canceled on skip/replay.
+
+## Interactive manager update
+At 6.6 seconds the manager envelope appears with an optional local ding. Click or press Enter/Space to reveal the unchanged message. Skip/reduced motion shows the unopened envelope immediately without a ding. Replay closes and resets it. The envelope has a 44px minimum target and a limited, gentle outline pulse; reduced motion disables the pulse.

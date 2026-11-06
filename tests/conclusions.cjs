@@ -7,7 +7,8 @@ for(const outcome of ['positive','negative']){
  await page.screenshot({path:'/tmp/'+outcome+'-intro.png'});
  await page.waitForFunction(()=>RitmoConclusion.getState()==='complete');
  assert.equal(await page.locator('.opportunity h3').textContent(),outcome==='positive'?'Pilot Discussion':'At Risk');
- assert.equal(await page.evaluate(()=>document.getAnimations().length),0);
+ await page.waitForTimeout(400);
+ assert.equal(await page.evaluate(()=>document.getAnimations().filter(a=>a.effect?.target!==document.querySelector('#open-manager')).length),0);
  await page.screenshot({path:'/tmp/'+outcome+'-conclusion.png'});
  for(const action of ['retry','customers','finish']){await page.locator(`[data-action=${action}]`).click();assert.equal(await page.locator('dialog').evaluate(e=>e.open),true);await page.locator('#dismiss').click();}
  await page.evaluate(()=>{window.nav=[];RitmoConclusion.setNavigation(d=>window.nav.push(d));});await page.locator('[data-action=retry]').click();assert.equal(await page.evaluate(()=>window.nav[0].customerId),'maya-patel');

@@ -4,10 +4,11 @@
   const intro = $('.intro'), conclusion = $('.conclusion');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let state = 'loading', generation = 0, animations = [], timers = [], sound = false, navigation = null;
-  const audio = {whoosh: new Audio('assets/whoosh.wav'), confirmation: new Audio('assets/confirmation.wav'), stage: new Audio('assets/stage.wav')};
+  const audio = {whoosh: new Audio('assets/whoosh.wav'), confirmation: new Audio('assets/confirmation.wav'), stage: new Audio('assets/stage.wav'), manager: new Audio('assets/manager.wav')};
   audio.whoosh.volume = .45;
   audio.confirmation.volume = .9;
   audio.stage.volume = .9;
+  audio.manager.volume = .9;
   const stagePulseAt = 4900;
   function stop() {
     generation++;
@@ -20,19 +21,48 @@
   function animate(element, frames, delay, duration) {
     const animation = element.animate(frames, {delay, duration, fill:'both', easing:'ease-in-out'});
     animations.push(animation);
+    return animation;
   }
-  function reveal(element, delay, duration = 500) { animate(element, [{opacity:0},{opacity:1}], delay, duration); }
-  function complete() {
+  function reveal(element, delay, duration = 500) {
+    const animation = animate(element, [{opacity:0},{opacity:1}], delay, duration);
+    if (state === 'complete') animation.onfinish = () => {
+      animation.cancel();
+      animations = animations.filter(item => item !== animation);
+    };
+  }
+  function resetManager() {
+    $('.manager').classList.remove('manager-ready');
+    $('.manager-prompt').hidden = false;
+    $('#manager-message').hidden = true;
+    $('#open-manager').setAttribute('aria-expanded','false');
+  }
+  $('#open-manager').onclick = () => {
+    if (state !== 'complete' || !$('#manager-message').hidden) return;
+    $('.manager').classList.remove('manager-ready');
+    $('#open-manager').setAttribute('aria-expanded','true');
+    $('.manager-prompt').hidden = true;
+    $('#manager-message').hidden = false;
+    $('#manager-message').focus({preventScroll:true});
+    if (!reduced.matches) reveal($('#manager-message'),0,300);
+  };
+  function complete({notify = false} = {}) {
     stop(); state = 'complete'; intro.hidden = true; conclusion.style.opacity = 1; conclusion.inert = false;
     document.querySelectorAll('[data-reveal]').forEach(e => { e.style.opacity = 1; });
     const moveFocus = document.activeElement === $('#skip');
     $('#skip').hidden = true; $('#replay').hidden = false;
     if (moveFocus) $('#replay').focus();
-    $('#status').textContent = 'Conclusion complete. Next-step actions are available.';
+    if ($('#manager-message').hidden) {
+      $('.manager').classList.add('manager-ready');
+      if (notify) {
+        if (!reduced.matches) reveal($('.manager'),0,350);
+        cue('manager');
+      }
+    }
+    $('#status').textContent = 'Conclusion complete. A sales manager update and next-step actions are available.';
   }
   function play() {
     if (state === 'playing' || state === 'loading') return false;
-    stop(); state = 'playing'; $('dialog').close(); intro.hidden = false; conclusion.inert = true;
+    stop(); resetManager(); state = 'playing'; $('dialog').close(); intro.hidden = false; conclusion.inert = true;
     conclusion.style.opacity = 0;
     document.querySelectorAll('[data-reveal]').forEach(e => { e.style.opacity = 0; });
     const moveFocus = document.activeElement === $('#replay');
@@ -42,12 +72,13 @@
     reveal(intro,0,450); reveal($('.intro h1'),250,500); reveal($('.intro i'),500,400); reveal($('.intro p'),650,500);
     cue('whoosh');
     animate(intro,[{opacity:1},{opacity:0}],2800,500); reveal(conclusion,2800,500);
-    ['header','banner','customer','opportunity','manager','navigation'].forEach((key,i) => reveal($(`[data-reveal="${key}"]`),3000+i*600));
+    ['header','banner','customer','opportunity'].forEach((key,i) => reveal($(`[data-reveal="${key}"]`),3000+i*600));
+    reveal($('[data-reveal="navigation"]'),6000);
     reveal($('.symbol'),3800,450);
     animate($('.symbol'),[{color:'#315c59'},{color:document.body.dataset.outcome==='positive'?'#fffdf6':'#b37b32'},{color:document.body.dataset.outcome==='positive'?'#153e3b':'#783727'}],3800,650);
     animate($('.pill'),[{boxShadow:'0 0 0 0 transparent'},{boxShadow:`0 0 0 3px ${document.body.dataset.outcome==='positive'?'#79aaa5':'#efae87'}`},{boxShadow:'0 0 0 0 transparent'}],stagePulseAt,650);
     later(() => cue('stage'),stagePulseAt);
-    later(() => cue('confirmation'),3600); later(complete,6600);
+    later(() => cue('confirmation'),3600); later(() => complete({notify:true}),6600);
     return true;
   }
   $('#skip').onclick = complete; $('#replay').onclick = play;

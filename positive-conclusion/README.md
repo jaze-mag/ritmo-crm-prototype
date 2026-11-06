@@ -22,4 +22,4 @@ The opportunity pill pulse at 4.9 seconds has its own local stage.wav cue: risin
 ## Interactive manager update
 At 6.6 seconds the manager envelope appears with an optional local ding. Click or press Enter/Space to reveal the unchanged message. Skip/reduced motion shows the unopened envelope immediately without a ding. Replay closes and resets it. The envelope has a 44px minimum target and a continuous, gentle outline pulse until opened; reduced motion disables the pulse.
 
-The bottom navigation fades in together with the envelope at 6.6 seconds. The visible prompt reads OPEN UPDATE.
+The bottom navigation fades in together with the envelope at 6.6 seconds. The envelope has no adjacent text; its accessible label is Open sales manager update.

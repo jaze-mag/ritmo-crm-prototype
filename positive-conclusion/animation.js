@@ -53,9 +53,9 @@
     if (sound) cue('whoosh'); else Object.values(audio).forEach(a => {a.pause();a.currentTime=0;});
   };
   const messages = {
-    retry:'Restarting Maya’s simulation is not connected in this standalone preview. The Storyline host can connect this action when the simulation is ready.',
+    retry:'This button will direct you to Maya’s simulation.',
     customers:'Customer navigation is not connected in this standalone Web Object. Use the CRM dashboard to choose another customer.',
-    finish:'The course finish destination is not connected in this standalone preview. The Storyline host can connect this action later.'
+    finish:'This button will direct you to the Experience Complete slide.'
   };
   document.querySelectorAll('[data-action]').forEach(button => button.onclick = () => {
     if (state !== 'complete') return;

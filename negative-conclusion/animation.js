@@ -4,9 +4,11 @@
   const intro = $('.intro'), conclusion = $('.conclusion');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let state = 'loading', generation = 0, animations = [], timers = [], sound = false, navigation = null;
-  const audio = {whoosh: new Audio('assets/whoosh.wav'), confirmation: new Audio('assets/confirmation.wav')};
+  const audio = {whoosh: new Audio('assets/whoosh.wav'), confirmation: new Audio('assets/confirmation.wav'), stage: new Audio('assets/stage.wav')};
   audio.whoosh.volume = .45;
   audio.confirmation.volume = .9;
+  audio.stage.volume = .9;
+  const stagePulseAt = 4900;
   function stop() {
     generation++;
     animations.forEach(a => a.cancel()); animations = [];
@@ -43,7 +45,8 @@
     ['header','banner','customer','opportunity','manager','navigation'].forEach((key,i) => reveal($(`[data-reveal="${key}"]`),3000+i*600));
     reveal($('.symbol'),3800,450);
     animate($('.symbol'),[{color:'#315c59'},{color:document.body.dataset.outcome==='positive'?'#fffdf6':'#b37b32'},{color:document.body.dataset.outcome==='positive'?'#153e3b':'#783727'}],3800,650);
-    animate($('.pill'),[{boxShadow:'0 0 0 0 transparent'},{boxShadow:`0 0 0 3px ${document.body.dataset.outcome==='positive'?'#79aaa5':'#efae87'}`},{boxShadow:'0 0 0 0 transparent'}],4900,650);
+    animate($('.pill'),[{boxShadow:'0 0 0 0 transparent'},{boxShadow:`0 0 0 3px ${document.body.dataset.outcome==='positive'?'#79aaa5':'#efae87'}`},{boxShadow:'0 0 0 0 transparent'}],stagePulseAt,650);
+    later(() => cue('stage'),stagePulseAt);
     later(() => cue('confirmation'),3600); later(complete,6600);
     return true;
   }

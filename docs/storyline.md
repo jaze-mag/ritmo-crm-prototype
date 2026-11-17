@@ -1,6 +1,6 @@
 # Future Storyline Web Object interface
 
-Package index.html, src/, assets/ritmo-workstation.png, assets/fonts/, and all three
+Package index.html, src/, assets/ritmo-workstation.png, assets/ritmo-rectangular-reference.png, assets/fonts/, and all three
 assets/references/*-precall-approved.png files together. Keep relative paths and
 script order: customers.js, session.js, main.js. Python and test tools are not
 runtime requirements. Use a 16:9 Web Object region; the reference stage is 1280 × 720.
@@ -63,3 +63,5 @@ The manager notification dismissal is separate from customer/navigation state.
 this tab across refreshes; storage-denied contexts fall back to in-memory state.
 Returning to CRM or changing customers never resets it. A future verified host
 adapter can define a learning-attempt reset policy; none is assumed here.
+
+The original workstation PNG remains unchanged. Four 31px corner windows from the supplied square export cover only its rounded outer corner regions; no other part of that export is shown. Keep both images in the offline package.

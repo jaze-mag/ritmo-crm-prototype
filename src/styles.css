@@ -131,3 +131,7 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
   0%, 100% { box-shadow:0 0 0 0 rgb(121 170 165 / 0%); }
   50% { box-shadow:0 0 0 7px rgb(121 170 165 / 22%); }
 }
+
+/* Replace only the original PNG's rounded outer corners with the approved
+   square Figma export. Its baked-in interface and notification stay excluded. */
+.stage::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:url('../assets/ritmo-rectangular-reference.png') center / 100% 100% no-repeat; clip-path:path('M0 0H31V31H0Z M1249 0H1280V31H1249Z M0 689H31V720H0Z M1249 689H1280V720H1249Z'); }

@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = [
     'index.html', 'src/styles.css', 'src/customers.js', 'src/session.js', 'src/main.js',
     'assets/ritmo-workstation.png',
+    'assets/ritmo-rectangular-reference.png',
     'assets/references/maya-precall-approved.png',
     'assets/references/daniel-precall-approved.png',
     'assets/references/renee-precall-approved.png',

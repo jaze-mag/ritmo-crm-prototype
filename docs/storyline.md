@@ -28,18 +28,29 @@ The UI emits `ritmo:statechange` CustomEvents on its own window with that state 
 fire on selection, brief close, connection start, handoff arrival, and call reset.
 They do not signify training completion or a successful sales outcome.
 
-`renderHandoff(customer)` in main.js is the single UI boundary for replacing the
-local handoff later. The captured customer and duplicate-action guards keep the
-connection transition consistent. A future adapter can listen for `handoff` and
-relay the selected ID to Storyline. Proposed text variables: RitmoCustomerId and
-RitmoScreen. CustomEvents do not cross iframe boundaries automatically.
+## Maya cinematic exit and parent messaging
+
+Maya alone keeps the connecting view for 2 seconds, then the ready view for 1.5 seconds. Her ready view omits Return to CRM and the prototype disclaimer. A 700ms opacity fade then covers the entire viewport with #315C59, including letterboxing outside the laptop. The solid teal screen persists; refresh the standalone preview to start again. Reduced motion keeps the readable pauses but replaces the fade with an immediate teal screen.
+
+Before starting Maya's call, configure the actual trusted Storyline publishing origin in the Web Object:
+
+```js
+window.Ritmo.configureSimulationParent('https://your-actual-storyline-host.example');
+```
+
+The value above is a placeholder, not a configured origin. Replace it in deployment setup with the verified scheme/host/port of the immediate parent that will listen. The default is `null` (messaging disabled). Wildcards, opaque/file origins, credentials and paths are not accepted. Call with `null` to disable again. There is no origin inference or listener for arbitrary incoming commands. For a cross-origin hosted Web Object, set this configuration in its own startup script after main.js loads; Storyline cannot directly access its JavaScript across origins.
+
+After the fully opaque final frame, the app emits the local `ritmo:launchSimulation` CustomEvent once and, only if a trusted origin is configured and a parent frame exists, sends this payload with `window.parent.postMessage(payload, trustedOrigin)`:
+
+```js
+{ type: 'ritmo:launchSimulation', customer: 'maya', transitionComplete: true }
+```
+
+No personal information, authentication data, Devlin endpoint, or AI UI is included. The earlier `ritmo:statechange` handoff event only means the ready screen appeared; do not use it to launch the simulation. The final launch event is the completion boundary. This is a UI handoff, not a sales outcome or assessment score. Daniel and Renee retain their existing handoff/return behavior and do not send launch messages.
 
 ## Integration work still required
 
-No parent-window calls, Storyline player API, Devlin AI endpoint, credentials,
-or live conversation are implemented. Validate the chosen communication mechanism,
-iframe origins, published/LMS behavior, and official integration requirements
-before adding an adapter. Do not assume a player API or AI endpoint exists.
+Configure the actual trusted parent origin. In the Storyline host, add a message listener that verifies `event.origin` equals the actual Web Object origin and `event.source` equals its iframe's `contentWindow`, checks the exact payload, and handles it once. Then connect the listener to your separately verified Storyline variables/triggers and Maya simulation slide. For nested LMS frames, the immediate parent must receive or explicitly relay the signal. No Storyline listener, player API, or navigation triggers are implemented here. Until configured, the app independently stays on teal.
 
 Verify keyboard entry/exit, modal focus containment/restoration, local asset loads,
 reduced motion, and return navigation in the actual published player. The cursor

@@ -15,7 +15,7 @@ const expected = [
   page.on('request',r=>requests.push(r.url()));
   page.on('response',r=>{if(r.status()>=400)failed.push(r.url())});
   page.on('requestfailed',r=>failed.push(r.url()));
-  await page.goto('http://127.0.0.1:8000/');
+  await page.goto((process.env.RITMO_TEST_BASE || 'http://127.0.0.1:8000/'));
   await page.locator('#notification').waitFor();
   await page.evaluate(()=>document.fonts.ready);
   await page.waitForTimeout(650);
@@ -153,6 +153,15 @@ const expected = [
    assert.equal(await page.locator('#handoff-title').textContent(),`Ready to Speak with ${customer.name}`);
    assert.equal(await page.locator('.handoff-note').textContent(),'Your customer conversation is ready.');
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-handoff.png`});
+   if(customer.id==='maya-patel') {
+    assert.equal(await page.locator('#return-button').isVisible(),false);
+    await page.waitForFunction(()=>!document.querySelector('#simulation-exit').hidden && getComputedStyle(document.querySelector('#simulation-exit')).opacity==='1');
+    const prior=await page.evaluate(()=>events);
+    await page.reload();await page.locator('.customer').last().waitFor();
+    await page.evaluate(prior=>{window.dashboardNode=document.querySelector('#dashboard');window.events=prior;addEventListener('ritmo:statechange',e=>events.push(e.detail));},prior);
+    console.log('PASS Maya: preserved brief/controls and new automatic teal exit.');
+    continue;
+   }
    const returnButton=page.locator('#return-button');
    await page.mouse.move(0,0);await page.waitForTimeout(200);
    assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(239, 174, 135)');
@@ -175,12 +184,12 @@ const expected = [
   assert.equal(states.filter(s=>s.screen==='connecting').length,3);
   assert.equal(states.filter(s=>s.screen==='handoff').length,3);
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.locator('.customer').first().click();
+  await page.locator('.customer').nth(1).click();
   assert.equal(await page.locator('#customer-brief').evaluate(el=>getComputedStyle(el).animationName),'none');
   await page.locator('#call-prospect').click();await page.locator('#handoff').waitFor();
   await page.locator('#return-button').focus();
   await page.keyboard.press('Enter');
-  assert.equal(await page.locator('.customer').first().evaluate(el=>el===document.activeElement && el.matches(':focus-visible')),true);
+  assert.equal(await page.locator('.customer').nth(1).evaluate(el=>el===document.activeElement && el.matches(':focus-visible')),true);
   // Selection restrictions must not break future conversation fields.
   await page.evaluate(()=>{const el=document.createElement('textarea');el.id='future-input';el.style.cssText='position:absolute;top:0;left:0;z-index:20';document.querySelector('#stage').append(el)});
   await page.locator('#future-input').fill('Future conversation');
@@ -190,7 +199,7 @@ const expected = [
   await page.locator('#future-input').evaluate(el=>el.remove());
   assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
   assert.equal(requests.some(url=>url.includes('ritmo-office-background.png')),false);
-  assert.equal(requests.some(url=>!url.startsWith('http://127.0.0.1:8000/')),false);
+  assert.equal(requests.some(url=>!url.startsWith((process.env.RITMO_TEST_BASE || 'http://127.0.0.1:8000/'))),false);
   console.log('PASS shared checks: unchanged CRM, clock, notification, hover/cursors, future text input, reduced motion, request/error checks, and duplicate-action guards.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});

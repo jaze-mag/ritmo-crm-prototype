@@ -159,7 +159,7 @@ const expected = [
     const prior=await page.evaluate(()=>events);
     await page.reload();await page.locator('.customer').last().waitFor();
     await page.evaluate(prior=>{window.dashboardNode=document.querySelector('#dashboard');window.events=prior;addEventListener('ritmo:statechange',e=>events.push(e.detail));},prior);
-    console.log('PASS Maya: preserved brief/controls and new automatic teal exit.');
+    console.log('PASS Maya: preserved brief/controls and new automatic black exit.');
     continue;
    }
    const returnButton=page.locator('#return-button');

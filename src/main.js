@@ -23,7 +23,7 @@ window.Ritmo.configureSimulationParent = origin => {
   trustedParentOrigin = url.origin;
 };
 async function finishSimulationTransition(customer) {
-  await wait(1500);
+  await wait(2500);
   const overlay = byId('simulation-exit');
   overlay.hidden = false;
   document.querySelector('.viewport').inert = true;
@@ -151,6 +151,7 @@ function showBrief(visible) {
 // Only Maya exits to the configured Storyline messaging boundary; no AI connection is made.
 function renderHandoff(customer) {
   const maya = customer.id === 'maya-patel';
+  byId('handoff').classList.toggle('maya-ready', maya);
   byId('return-button').hidden = maya;
   document.querySelector('.prototype-label').hidden = maya;
   byId('handoff-title').textContent = `Ready to Speak with ${customer.name}`;
@@ -177,7 +178,7 @@ async function startCall() {
   renderHandoff(customer);
   if (customer.id === 'maya-patel') {
     await finishSimulationTransition('maya');
-    return; // Remain on teal until the host navigates; duplicate calls stay guarded.
+    return; // Remain on black until the host navigates; duplicate calls stay guarded.
   }
   joining = false;
 }

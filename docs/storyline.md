@@ -30,7 +30,7 @@ They do not signify training completion or a successful sales outcome.
 
 ## Maya cinematic exit and parent messaging
 
-Maya alone keeps the connecting view for 2 seconds, then the ready view for 1.5 seconds. Her ready view omits Return to CRM and the prototype disclaimer. A 700ms opacity fade then covers the entire viewport with #315C59, including letterboxing outside the laptop. The solid teal screen persists; refresh the standalone preview to start again. Reduced motion keeps the readable pauses but replaces the fade with an immediate teal screen.
+Maya alone keeps the connecting view for 2 seconds, then the ready view for 2.5 seconds. Her circular camera icon gently pulses with a soft glow (disabled for reduced motion). Her ready view omits Return to CRM and the prototype disclaimer. A 700ms opacity fade then covers the entire viewport with #000000, including letterboxing outside the laptop. The solid black screen persists; refresh the standalone preview to start again. Reduced motion keeps the readable pauses but replaces the fade with an immediate black screen.
 
 Before starting Maya's call, configure the actual trusted Storyline publishing origin in the Web Object:
 
@@ -50,7 +50,7 @@ No personal information, authentication data, Devlin endpoint, or AI UI is inclu
 
 ## Integration work still required
 
-Configure the actual trusted parent origin. In the Storyline host, add a message listener that verifies `event.origin` equals the actual Web Object origin and `event.source` equals its iframe's `contentWindow`, checks the exact payload, and handles it once. Then connect the listener to your separately verified Storyline variables/triggers and Maya simulation slide. For nested LMS frames, the immediate parent must receive or explicitly relay the signal. No Storyline listener, player API, or navigation triggers are implemented here. Until configured, the app independently stays on teal.
+Configure the actual trusted parent origin. In the Storyline host, add a message listener that verifies `event.origin` equals the actual Web Object origin and `event.source` equals its iframe's `contentWindow`, checks the exact payload, and handles it once. Then connect the listener to your separately verified Storyline variables/triggers and Maya simulation slide. For nested LMS frames, the immediate parent must receive or explicitly relay the signal. No Storyline listener, player API, or navigation triggers are implemented here. Until configured, the app independently stays on black.
 
 Verify keyboard entry/exit, modal focus containment/restoration, local asset loads,
 reduced motion, and return navigation in the actual published player. The cursor

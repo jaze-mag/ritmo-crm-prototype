@@ -148,12 +148,14 @@ function showBrief(visible) {
   byId('notification').inert = visible;
 }
 // Single handoff boundary for a future verified Storyline adapter.
-// Only Maya exits to the configured Storyline messaging boundary; no AI connection is made.
+// All prospects share the cinematic exit; no AI connection is made.
+const simulationCustomers = Object.freeze({
+  'maya-patel': 'maya', 'daniel-brooks': 'daniel', 'renee-alvarez': 'renee',
+});
 function renderHandoff(customer) {
-  const maya = customer.id === 'maya-patel';
-  byId('handoff').classList.toggle('maya-ready', maya);
-  byId('return-button').hidden = maya;
-  document.querySelector('.prototype-label').hidden = maya;
+  byId('handoff').classList.add('conversation-ready');
+  byId('return-button').hidden = true;
+  document.querySelector('.prototype-label').hidden = true;
   byId('handoff-title').textContent = `Ready to Speak with ${customer.name}`;
   byId('handoff-company').textContent = `${customer.company} · ${customer.role}`;
   byId('dashboard').hidden = true;
@@ -172,15 +174,11 @@ async function startCall() {
   byId('notification').hidden = true;
   byId('connection-title').textContent = `Connecting with ${customer.name}...`;
   byId('transition').focus();
-  if (customer.id === 'maya-patel') await wait(2000);
-  else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) await wait(1500);
+  await wait(2000);
   session.joinCall();
   renderHandoff(customer);
-  if (customer.id === 'maya-patel') {
-    await finishSimulationTransition('maya');
-    return; // Remain on black until the host navigates; duplicate calls stay guarded.
-  }
-  joining = false;
+  await finishSimulationTransition(simulationCustomers[customer.id]);
+  // Remain on black until the host navigates; duplicate calls stay guarded.
 }
 byId('call-prospect').addEventListener('click', startCall);
 function returnToCustomers() {

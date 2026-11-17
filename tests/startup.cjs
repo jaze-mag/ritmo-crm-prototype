@@ -40,16 +40,16 @@ const { resolve } = require('node:path');
       await app.locator('#call-prospect').click();
       await app.locator('#handoff').waitFor();
       assert.equal(await app.locator('#handoff-title').textContent(), `Ready to Speak with ${names[index]}`);
-      if(index===0){
+      {
         await app.locator('#simulation-exit').waitFor();
         await page.locator('iframe').evaluate(el=>{el.src=el.src});
         await app.locator('.customer').last().waitFor();
-      } else await app.locator('#return-button').click();
+      }
       assert.equal(await app.locator('.customer[aria-pressed="true"]').count(), 0);
     }
     assert.deepEqual(scriptFailures, []);
     assert.deepEqual(errors, []);
-    console.log('PASS: classic-script startup and all 3 selection/Join Call flows, Maya exit and other customer returns in an opaque-origin frame. Native file:// testing is separate.');
+    console.log('PASS: classic-script startup and all 3 selection/Join Call flows, automatic black exits for all customers in an opaque-origin frame. Native file:// testing is separate.');
   } finally {
     await browser.close();
   }

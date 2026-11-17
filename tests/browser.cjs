@@ -153,32 +153,12 @@ const expected = [
    assert.equal(await page.locator('#handoff-title').textContent(),`Ready to Speak with ${customer.name}`);
    assert.equal(await page.locator('.handoff-note').textContent(),'Your customer conversation is ready.');
    await page.screenshot({path:`/tmp/ritmo-${customer.image}-handoff.png`});
-   if(customer.id==='maya-patel') {
-    assert.equal(await page.locator('#return-button').isVisible(),false);
-    await page.waitForFunction(()=>!document.querySelector('#simulation-exit').hidden && getComputedStyle(document.querySelector('#simulation-exit')).opacity==='1');
-    const prior=await page.evaluate(()=>events);
-    await page.reload();await page.locator('.customer').last().waitFor();
-    await page.evaluate(prior=>{window.dashboardNode=document.querySelector('#dashboard');window.events=prior;addEventListener('ritmo:statechange',e=>events.push(e.detail));},prior);
-    console.log('PASS Maya: preserved brief/controls and new automatic black exit.');
-    continue;
-   }
-   const returnButton=page.locator('#return-button');
-   await page.mouse.move(0,0);await page.waitForTimeout(200);
-   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(239, 174, 135)');
-   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).color),'rgb(49, 92, 89)');
-   await returnButton.hover();await page.waitForTimeout(200);
-   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(121, 170, 165)');
-   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).color),'rgb(244, 231, 200)');
-   assert.ok((await returnButton.evaluate(el=>getComputedStyle(el).boxShadow)).includes('rgb(49, 92, 89)'));
-   await page.mouse.move(0,0);await page.waitForTimeout(200);
-   assert.equal(await returnButton.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(239, 174, 135)');
-   await returnButton.click();
-   assert.equal(await page.locator('#discovery-title').evaluate(el=>el===document.activeElement),true);
-   assert.equal(await page.locator('.customer[aria-pressed="true"]').count(),0);
-   assert.equal(await page.locator('.customer:focus-visible').count(),0);
-   await page.mouse.move(0,0);
-   for(const c of await page.locator('.customer').all()) assert.equal(await c.evaluate(el=>getComputedStyle(el).boxShadow),'none');
-   console.log(`PASS ${customer.name}: brief, content, portrait, layout, focus, back, Escape, connection, handoff, return.`);
+   assert.equal(await page.locator('#return-button').isVisible(),false);
+   await page.waitForFunction(()=>!document.querySelector('#simulation-exit').hidden && getComputedStyle(document.querySelector('#simulation-exit')).opacity==='1');
+   const prior=await page.evaluate(()=>events);
+   await page.reload();await page.locator('.customer').last().waitFor();
+   await page.evaluate(prior=>{window.dashboardNode=document.querySelector('#dashboard');window.events=prior;addEventListener('ritmo:statechange',e=>events.push(e.detail));},prior);
+   console.log(`PASS ${customer.name}: brief/controls, connection, ready and automatic black exit.`);
   }
   const states=await page.evaluate(()=>window.events);
   assert.equal(states.filter(s=>s.screen==='connecting').length,3);
@@ -186,8 +166,7 @@ const expected = [
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.locator('.customer').nth(1).click();
   assert.equal(await page.locator('#customer-brief').evaluate(el=>getComputedStyle(el).animationName),'none');
-  await page.locator('#call-prospect').click();await page.locator('#handoff').waitFor();
-  await page.locator('#return-button').focus();
+  await page.locator('#back-customers').focus();
   await page.keyboard.press('Enter');
   assert.equal(await page.locator('.customer').nth(1).evaluate(el=>el===document.activeElement && el.matches(':focus-visible')),true);
   // Selection restrictions must not break future conversation fields.

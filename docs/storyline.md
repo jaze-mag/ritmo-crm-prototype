@@ -28,11 +28,11 @@ The UI emits `ritmo:statechange` CustomEvents on its own window with that state 
 fire on selection, brief close, connection start, handoff arrival, and call reset.
 They do not signify training completion or a successful sales outcome.
 
-## Maya cinematic exit and parent messaging
+## Customer cinematic exit and parent messaging
 
-Maya alone keeps the connecting view for 2 seconds, then the ready view for 3 seconds. Her circular camera icon gently pulses with a soft glow (disabled for reduced motion). Her ready view omits Return to CRM and the prototype disclaimer. A 700ms opacity fade then covers the entire viewport with #000000, including letterboxing outside the laptop. The solid black screen persists; refresh the standalone preview to start again. Reduced motion keeps the readable pauses but replaces the fade with an immediate black screen.
+Each customer keeps the connecting view for 2 seconds, then the ready view for 3 seconds. The circular camera icon gently pulses with a soft glow (disabled for reduced motion). The ready view omits Return to CRM and the prototype disclaimer. A 700ms opacity fade then covers the entire viewport with #000000, including letterboxing outside the laptop. The solid black screen persists; refresh the standalone preview to start again. Reduced motion keeps the readable pauses but replaces the fade with an immediate black screen.
 
-Before starting Maya's call, configure the actual trusted Storyline publishing origin in the Web Object:
+Before starting a call, configure the actual trusted Storyline publishing origin in the Web Object:
 
 ```js
 window.Ritmo.configureSimulationParent('https://your-actual-storyline-host.example');
@@ -46,11 +46,11 @@ After the fully opaque final frame, the app emits the local `ritmo:launchSimulat
 { type: 'ritmo:launchSimulation', customer: 'maya', transitionComplete: true }
 ```
 
-No personal information, authentication data, Devlin endpoint, or AI UI is included. The earlier `ritmo:statechange` handoff event only means the ready screen appeared; do not use it to launch the simulation. The final launch event is the completion boundary. This is a UI handoff, not a sales outcome or assessment score. Daniel and Renee retain their existing handoff/return behavior and do not send launch messages.
+No personal information, authentication data, Devlin endpoint, or AI UI is included. The earlier `ritmo:statechange` handoff event only means the ready screen appeared; do not use it to launch the simulation. The final launch event is the completion boundary. This is a UI handoff, not a sales outcome or assessment score. The customer field is `maya`, `daniel`, or `renee`, matching the selected prospect. All three use the same timing and emit exactly one completion message per call.
 
 ## Integration work still required
 
-Configure the actual trusted parent origin. In the Storyline host, add a message listener that verifies `event.origin` equals the actual Web Object origin and `event.source` equals its iframe's `contentWindow`, checks the exact payload, and handles it once. Then connect the listener to your separately verified Storyline variables/triggers and Maya simulation slide. For nested LMS frames, the immediate parent must receive or explicitly relay the signal. No Storyline listener, player API, or navigation triggers are implemented here. Until configured, the app independently stays on black.
+Configure the actual trusted parent origin. In the Storyline host, add a message listener that verifies `event.origin` equals the actual Web Object origin and `event.source` equals its iframe's `contentWindow`, checks the exact payload, and handles it once. Then connect the listener to your separately verified Storyline variables/triggers and the selected customer’s simulation slide. For nested LMS frames, the immediate parent must receive or explicitly relay the signal. No Storyline listener, player API, or navigation triggers are implemented here. Until configured, the app independently stays on black.
 
 Verify keyboard entry/exit, modal focus containment/restoration, local asset loads,
 reduced motion, and return navigation in the actual published player. The cursor

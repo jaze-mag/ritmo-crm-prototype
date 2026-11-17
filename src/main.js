@@ -23,7 +23,7 @@ window.Ritmo.configureSimulationParent = origin => {
   trustedParentOrigin = url.origin;
 };
 async function finishSimulationTransition(customer) {
-  await wait(2500);
+  await wait(3000);
   const overlay = byId('simulation-exit');
   overlay.hidden = false;
   document.querySelector('.viewport').inert = true;

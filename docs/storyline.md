@@ -30,7 +30,7 @@ They do not signify training completion or a successful sales outcome.
 
 ## Maya cinematic exit and parent messaging
 
-Maya alone keeps the connecting view for 2 seconds, then the ready view for 2.5 seconds. Her circular camera icon gently pulses with a soft glow (disabled for reduced motion). Her ready view omits Return to CRM and the prototype disclaimer. A 700ms opacity fade then covers the entire viewport with #000000, including letterboxing outside the laptop. The solid black screen persists; refresh the standalone preview to start again. Reduced motion keeps the readable pauses but replaces the fade with an immediate black screen.
+Maya alone keeps the connecting view for 2 seconds, then the ready view for 3 seconds. Her circular camera icon gently pulses with a soft glow (disabled for reduced motion). Her ready view omits Return to CRM and the prototype disclaimer. A 700ms opacity fade then covers the entire viewport with #000000, including letterboxing outside the laptop. The solid black screen persists; refresh the standalone preview to start again. Reduced motion keeps the readable pauses but replaces the fade with an immediate black screen.
 
 Before starting Maya's call, configure the actual trusted Storyline publishing origin in the Web Object:
 

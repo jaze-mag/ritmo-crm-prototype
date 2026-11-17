@@ -11,6 +11,34 @@ let joining = false;
 let briefRequest = 0;
 let briefPending = false;
 let keyboardNavigation = false;
+let trustedParentOrigin = null;
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+// Explicit configuration only: never infer trust from referrer or accept '*'.
+window.Ritmo.configureSimulationParent = origin => {
+  if (origin === null) { trustedParentOrigin = null; return; }
+  const url = new URL(origin);
+  if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password || url.pathname !== '/' || url.search || url.hash) {
+    throw new TypeError('Provide an explicit HTTP(S) parent origin, without a path.');
+  }
+  trustedParentOrigin = url.origin;
+};
+async function finishSimulationTransition(customer) {
+  await wait(1500);
+  const overlay = byId('simulation-exit');
+  overlay.hidden = false;
+  document.querySelector('.viewport').inert = true;
+  overlay.focus({ preventScroll: true });
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const fade = overlay.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, easing: 'ease-in-out', fill: 'both' });
+    await fade.finished;
+    fade.cancel(); // The underlying CSS keeps the final screen fully opaque.
+  }
+  // Let the final solid frame paint before handing control to a parent.
+  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  const message = { type: 'ritmo:launchSimulation', customer, transitionComplete: true };
+  window.dispatchEvent(new CustomEvent('ritmo:launchSimulation', { detail: message }));
+  if (trustedParentOrigin && window.parent !== window) window.parent.postMessage(message, trustedParentOrigin);
+}
 // Tab-scoped persistence is optional: restricted/file origins may deny storage.
 const managerDismissalKey = 'ritmo.managerMessageDismissed.v1';
 let managerDismissed = false;
@@ -120,8 +148,11 @@ function showBrief(visible) {
   byId('notification').inert = visible;
 }
 // Single handoff boundary for a future verified Storyline adapter.
-// No external connection is made; statechange remains the host-facing event.
+// Only Maya exits to the configured Storyline messaging boundary; no AI connection is made.
 function renderHandoff(customer) {
+  const maya = customer.id === 'maya-patel';
+  byId('return-button').hidden = maya;
+  document.querySelector('.prototype-label').hidden = maya;
   byId('handoff-title').textContent = `Ready to Speak with ${customer.name}`;
   byId('handoff-company').textContent = `${customer.company} · ${customer.role}`;
   byId('dashboard').hidden = true;
@@ -140,9 +171,14 @@ async function startCall() {
   byId('notification').hidden = true;
   byId('connection-title').textContent = `Connecting with ${customer.name}...`;
   byId('transition').focus();
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) await new Promise(resolve => setTimeout(resolve, 1500));
+  if (customer.id === 'maya-patel') await wait(2000);
+  else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) await wait(1500);
   session.joinCall();
   renderHandoff(customer);
+  if (customer.id === 'maya-patel') {
+    await finishSimulationTransition('maya');
+    return; // Remain on teal until the host navigates; duplicate calls stay guarded.
+  }
   joining = false;
 }
 byId('call-prospect').addEventListener('click', startCall);

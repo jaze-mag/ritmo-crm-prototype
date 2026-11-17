@@ -121,3 +121,6 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 /* The brief is a screen within the device, not an overlay over the office. */
 .brief-open .screen { background: var(--near-white); }
 .brief-open .screen > :not(.precall) { visibility: hidden; }
+
+/* Outside the scaled laptop stage: cover the complete Web Object viewport. */
+.simulation-exit { position:fixed; inset:0; z-index:1000; background:#315C59; opacity:1; border:0; outline:0; }

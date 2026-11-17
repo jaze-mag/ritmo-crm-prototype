@@ -9,7 +9,7 @@ button:focus-visible { outline: 3px solid var(--dark-teal); outline-offset: 5px;
 [hidden] { display: none !important; }
 h1, h2, p { margin: 0; }
 .viewport { width: 100%; height: 100svh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.stage { position: relative; width: 1280px; height: 720px; overflow: hidden; border-radius: 30px; background: var(--gray); transform: scale(var(--scale, 1)); transform-origin: center; flex-shrink: 0; }
+.stage { position: relative; width: 1280px; height: 720px; overflow: hidden; border-radius: 0; background: var(--gray); transform: scale(var(--scale, 1)); transform-origin: center; flex-shrink: 0; }
 .asset-notice { position: absolute; left: 30px; top: 17px; font-size: 13px; }
 .desk { position: absolute; inset: 588px 0 0; background: linear-gradient(100deg, #f8f2de, #d5c6a8); border-top: 1px solid #e5ddca; }
 .laptop { position: absolute; left: 190px; top: 59px; width: 906px; height: 563px; padding: 16px 17px 25px; border: 2px solid #817f73; border-radius: 24px 24px 13px 13px; background: linear-gradient(120deg, #a79975, #282e2b 45%, #4f504b); box-shadow: inset 0 0 0 3px #d1c9b5, inset 0 0 0 6px #55584f, 0 5px 6px #21353330; }
@@ -131,3 +131,7 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
   0%, 100% { box-shadow:0 0 0 0 rgb(121 170 165 / 0%); }
   50% { box-shadow:0 0 0 7px rgb(121 170 165 / 22%); }
 }
+
+/* The original artwork has transparent rounded corners. Fill only those corners
+   from the supplied rectangular export; its flattened notification is excluded. */
+.stage::before { content:''; position:absolute; inset:0; pointer-events:none; background:url('../assets/ritmo-rectangular-reference.png') center / 100% 100% no-repeat; clip-path:path('M0 0H31V31H0Z M1249 0H1280V31H1249Z M0 689H31V720H0Z M1249 689H1280V720H1249Z'); }

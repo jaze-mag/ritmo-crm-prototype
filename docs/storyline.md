@@ -32,25 +32,31 @@ They do not signify training completion or a successful sales outcome.
 
 Each customer keeps the connecting view for 2 seconds, then the ready view for 3 seconds. The circular camera icon gently pulses with a soft glow (disabled for reduced motion). The ready view omits Return to CRM and the prototype disclaimer. A 700ms opacity fade then covers the entire viewport with #000000, including letterboxing outside the laptop. The solid black screen persists; refresh the standalone preview to start again. Reduced motion keeps the readable pauses but replaces the fade with an immediate black screen.
 
-Before starting a call, configure the actual trusted Storyline publishing origin in the Web Object:
+## Automatic parent connection
 
-```js
-window.Ritmo.configureSimulationParent('https://your-actual-storyline-host.example');
-```
+When embedded, the prototype sends a small `{type: 'ritmo:connect', nonce}` discovery request to **window.parent**. Only this customer-free discovery uses `'*'`. It retries once per second for up to 30 attempts. It accepts `{type: 'ritmo:ready', nonce}` only from that exact parent WindowProxy, with the matching per-load random nonce and an HTTP(S) `event.origin`. That actual responding origin becomes the target for simulation messages. Referrer, address-bar origin and guessed Review 360 domains are never used. This confirms an opt-in parent protocol listener, not the identity of Articulate as a service.
 
-The value above is a placeholder, not a configured origin. Replace it in deployment setup with the verified scheme/host/port of the immediate parent that will listen. The default is `null` (messaging disabled). Wildcards, opaque/file origins, credentials and paths are not accepted. Call with `null` to disable again. There is no origin inference or listener for arbitrary incoming commands. For a cross-origin hosted Web Object, set this configuration in its own startup script after main.js loads; Storyline cannot directly access its JavaScript across origins.
-
-After the fully opaque final frame, the app emits the local `ritmo:launchSimulation` CustomEvent once and, only if a trusted origin is configured and a parent frame exists, sends this payload with `window.parent.postMessage(payload, trustedOrigin)`:
+After the full black frame, the existing local event fires and one completion object is sent to the connected immediate parent:
 
 ```js
 { type: 'ritmo:launchSimulation', customer: 'maya', transitionComplete: true }
 ```
 
-No personal information, authentication data, Devlin endpoint, or AI UI is included. The earlier `ritmo:statechange` handoff event only means the ready screen appeared; do not use it to launch the simulation. The final launch event is the completion boundary. This is a UI handoff, not a sales outcome or assessment score. The customer field is `maya`, `daniel`, or `renee`, matching the selected prospect. All three use the same timing and emit exactly one completion message per call.
+Customer is `maya`, `daniel`, or `renee`. No simulation data is sent using a wildcard. Duplicate ready replies cannot resend completion. If the parent is unavailable at fade completion, the object stays queued and the screen stays black; a later valid handshake sends it once. A parent can send `{type: 'ritmo:requestHandshake'}` to the known prototype origin to restart discovery even after the retry period. A fresh iframe load creates a new attempt and nonce.
 
-## Integration work still required
+`Ritmo.configureSimulationParent('https://actual-parent-origin.example')` remains an explicit override for an already-known parent; it bypasses the handshake and flushes any queued completion. Calling it with `null` explicitly disables automatic discovery and sending. Invalid origins are rejected without changing configuration. Standalone use sends no parent messages and remains on black after the cinematic exit.
 
-Configure the actual trusted parent origin. In the Storyline host, add a message listener that verifies `event.origin` equals the actual Web Object origin and `event.source` equals its iframe's `contentWindow`, checks the exact payload, and handles it once. Then connect the listener to your separately verified Storyline variables/triggers and the selected customer’s simulation slide. For nested LMS frames, the immediate parent must receive or explicitly relay the signal. No Storyline listener, player API, or navigation triggers are implemented here. Until configured, the app independently stays on black.
+## Required Storyline listener change
+
+Run the code in [storyline-parent-handshake.js](storyline-parent-handshake.js) once in the **same immediate parent window as the existing working Storyline message listener**, before the cinematic transition if possible. Keep the current `SelectedCustomer` assignment and conditional-navigation handler unchanged. The adapter answers discovery and acknowledges receipt; it deliberately does not add another navigation handler or modify Storyline variables.
+
+The adapter accepts only `https://jaze-mag.github.io` messages from the exact direct-child iframe whose src belongs to `/ritmo-crm-prototype/`. Replies target that exact sender origin. The existing navigation listener should likewise check the sender origin, expected iframe source, message type, valid customer and `transitionComplete === true`, and deduplicate each completed attempt.
+
+If Review 360 puts an additional wrapper between the Web Object and the listener, installing the adapter in a higher ancestor will not work: postMessage does not bubble. Inspect the published frame tree and place/relay the handler in the immediate parent with explicit origin/source checks at each boundary. We have not verified the real Review 360 hierarchy. No automatic `window.top` broadcast or guessed host origin is implemented.
+
+Console diagnostics use `[Ritmo messaging]` and distinguish standalone mode, configured parent, unavailable connection/queued completion, completion sent, and parent acknowledgement. An acknowledgement means the listener window received the event, not proof that the Storyline navigation trigger succeeded.
+
+Browser tests cover standalone, cross-origin parent/child, correct/incorrect nonce and source, delayed connection, missing parent adapter, duplicate replies, and customer-specific completion after the fade. Native Review 360/LMS and Storyline navigation still require testing in your actual published project.
 
 Verify keyboard entry/exit, modal focus containment/restoration, local asset loads,
 reduced motion, and return navigation in the actual published player. The cursor

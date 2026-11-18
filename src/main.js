@@ -13,15 +13,73 @@ let briefPending = false;
 let keyboardNavigation = false;
 let trustedParentOrigin = null;
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-// Explicit configuration only: never infer trust from referrer or accept '*'.
-window.Ritmo.configureSimulationParent = origin => {
-  if (origin === null) { trustedParentOrigin = null; return; }
+const embedded = window.parent !== window;
+const handshakeNonce = Array.from(crypto.getRandomValues(new Uint32Array(4)), value => value.toString(16).padStart(8, '0')).join('');
+let pendingCompletion = null;
+let completionSent = false;
+let receiptLogged = false;
+let automaticMessaging = true;
+let handshakeTimer;
+let handshakeAttempts = 0;
+const messagingLog = message => console.info(`[Ritmo messaging] ${message}`);
+function validOrigin(origin) {
   const url = new URL(origin);
   if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password || url.pathname !== '/' || url.search || url.hash) {
     throw new TypeError('Provide an explicit HTTP(S) parent origin, without a path.');
   }
-  trustedParentOrigin = url.origin;
+  return url.origin;
+}
+function sendPendingCompletion() {
+  if (!embedded || !trustedParentOrigin || !pendingCompletion || completionSent) return;
+  window.parent.postMessage(pendingCompletion, trustedParentOrigin);
+  completionSent = true;
+  messagingLog(`Completion sent to immediate parent at ${trustedParentOrigin}.`);
+}
+function configureParent(origin) {
+  trustedParentOrigin = origin;
+  clearInterval(handshakeTimer);
+  messagingLog(`Configured immediate parent origin: ${origin}.`);
+  sendPendingCompletion();
+}
+function requestParentHandshake() {
+  if (!embedded || !automaticMessaging || trustedParentOrigin) return;
+  // Discovery contains only protocol metadata, never simulation/customer data.
+  window.parent.postMessage({ type: 'ritmo:connect', nonce: handshakeNonce }, '*');
+}
+window.addEventListener('message', event => {
+  if (!embedded || event.source !== window.parent) return;
+  const data = event.data;
+  if (!data || typeof data !== 'object') return;
+  if (data.type === 'ritmo:requestHandshake') { requestParentHandshake(); return; }
+  if (data.nonce !== handshakeNonce) return;
+  if (data.type === 'ritmo:ready' && automaticMessaging && !trustedParentOrigin) {
+    try { configureParent(validOrigin(event.origin)); } catch { messagingLog('Parent connection rejected: origin must be HTTP(S).'); }
+  } else if (data.type === 'ritmo:simulationReceived' && completionSent && !receiptLogged && event.origin === trustedParentOrigin) {
+    receiptLogged = true;
+    messagingLog('Parent listener acknowledged completion.');
+  }
+});
+// Preserve explicit configuration for known hosts; null explicitly disables auto-discovery.
+window.Ritmo.configureSimulationParent = origin => {
+  const checked = origin === null ? null : validOrigin(origin);
+  automaticMessaging = false;
+  clearInterval(handshakeTimer);
+  if (checked === null) { trustedParentOrigin = null; messagingLog('Parent messaging explicitly disabled.'); }
+  else configureParent(checked);
 };
+if (embedded) {
+  requestParentHandshake();
+  handshakeTimer = setInterval(() => {
+    if (++handshakeAttempts >= 30) {
+      clearInterval(handshakeTimer);
+      messagingLog('Parent connection unavailable: install the Storyline handshake listener in the immediate parent.');
+      return;
+    }
+    requestParentHandshake();
+  }, 1000);
+} else messagingLog('Standalone mode: no parent connection required.');
+window.addEventListener('pagehide', () => clearInterval(handshakeTimer));
+window.addEventListener('pageshow', event => { if (event.persisted) requestParentHandshake(); });
 async function finishSimulationTransition(customer) {
   await wait(3000);
   const overlay = byId('simulation-exit');
@@ -37,7 +95,12 @@ async function finishSimulationTransition(customer) {
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   const message = { type: 'ritmo:launchSimulation', customer, transitionComplete: true };
   window.dispatchEvent(new CustomEvent('ritmo:launchSimulation', { detail: message }));
-  if (trustedParentOrigin && window.parent !== window) window.parent.postMessage(message, trustedParentOrigin);
+  pendingCompletion = message;
+  if (embedded && !trustedParentOrigin) {
+    messagingLog('Fade complete; parent connection unavailable. Completion is queued until a valid handshake.');
+    requestParentHandshake();
+  }
+  sendPendingCompletion();
 }
 // Tab-scoped persistence is optional: restricted/file origins may deny storage.
 const managerDismissalKey = 'ritmo.managerMessageDismissed.v1';

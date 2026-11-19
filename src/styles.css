@@ -135,3 +135,37 @@ h2 { font-family: Montserrat, sans-serif; font-weight: 700; }
 /* Replace only the original PNG's rounded outer corners with the approved
    square Figma export. Its baked-in interface and notification stay excluded. */
 .stage::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:url('../assets/ritmo-rectangular-reference.png') center / 100% 100% no-repeat; clip-path:path('M0 0H31V31H0Z M1249 0H1280V31H1249Z M0 689H31V720H0Z M1249 689H1280V720H1249Z'); }
+
+/* Required overview: additions confined to the pipeline bar and in-screen page. */
+.pipeline { height:94px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.pipeline-copy { flex:1; min-width:0; }
+.pipeline-copy p { white-space:nowrap; }
+.overview-entry { flex:0 0 310px; text-align:right; }
+#open-overview { color:var(--dark-teal); width:100%; min-height:36px; padding:9px 12px; font-size:14px; white-space:nowrap; }
+.pipeline .overview-entry p { margin-top:5px; font-size:11px; line-height:1.35; color:var(--near-white); text-align:left; }
+.overview-required { animation:overview-glow 2s ease-in-out infinite; }
+@keyframes overview-glow { 0%,100% {box-shadow:0 0 0 1px rgb(239 174 135 / 25%);} 50% {box-shadow:0 0 0 5px rgb(239 174 135 / 35%);} }
+.customer:disabled { filter:saturate(.7); background:#f2f1e9; cursor:not-allowed; }
+.customer:disabled:hover { transform:none; box-shadow:none; background:#f2f1e9; }
+.customer-lock { position:absolute; bottom:10px; right:10px; width:15px; height:15px; color:var(--dark-teal); pointer-events:none; }
+.customer-lock svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:1.7; }
+.role-overview { height:449px; background:var(--near-white); padding:16px 18px; animation:brief-fade 260ms ease backwards; }
+.overview-scroll { height:100%; overflow-y:auto; overscroll-behavior:contain; scrollbar-gutter:stable; padding:8px 18px 12px 10px; font-size:16px; line-height:1.55; }
+.overview-scroll h2 { font-size:25px; line-height:1.25; margin:0 0 10px; }
+.overview-lead { color:#426b68; margin-bottom:22px; }
+.overview-block { margin:0 0 22px; }
+.overview-block h3 { font:700 19px/1.3 Montserrat,sans-serif; margin:0 0 9px; }
+.capability { padding:16px; margin-top:12px; border:1px solid #abc2bc; border-radius:12px; background:#fff9ef; }
+.capability h4 { font:600 17px/1.4 Inter,sans-serif; margin:0 0 6px; }
+.why-it-matters { margin-top:12px; padding:10px 12px; border-left:3px solid var(--light-teal); background:#eaf1ed; border-radius:0 6px 6px 0; }
+.overview-block blockquote { margin:12px 0 0; padding:16px; background:var(--cream); border-radius:12px; }
+.example-caption { font-size:14px; color:#426b68; }
+.overview-block ol { padding-left:24px; margin:10px 0 0; }
+.overview-block li + li { margin-top:9px; }
+.overview-reminder { border-top:1px solid #abc2bc; padding-top:18px; margin-bottom:20px; }
+.overview-scroll:focus-visible { outline:2px solid var(--dark-teal); outline-offset:1px; }
+#overview-title:focus { outline:none; }
+.brief-review-status { position:absolute; bottom:6px; left:24px; right:24px; text-align:center; font-size:11px; color:var(--dark-teal); }
+.call-hotspot[aria-disabled="true"] { cursor:not-allowed; }
+.call-hotspot[aria-disabled="true"]::after { background:#e6e3d6; color:var(--dark-teal); border-color:#829f95; }
+@media(prefers-reduced-motion:reduce) { .overview-required { animation:none; box-shadow:0 0 0 2px var(--peach); } }

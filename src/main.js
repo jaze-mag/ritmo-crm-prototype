@@ -11,6 +11,66 @@ let joining = false;
 let briefRequest = 0;
 let briefPending = false;
 let keyboardNavigation = false;
+// One onboarding attempt per browser tab, with an in-memory fallback when storage is denied.
+const onboardingKey = 'ritmo.onboarding.v1';
+let overviewCompleted = false;
+const reviewedBriefs = new Set();
+try {
+  const saved = JSON.parse(sessionStorage.getItem(onboardingKey) || 'null');
+  overviewCompleted = saved?.overviewCompleted === true;
+  if (overviewCompleted && Array.isArray(saved?.reviewedBriefs)) {
+    saved.reviewedBriefs.forEach(id => { if (customers.some(customer => customer.id === id)) reviewedBriefs.add(id); });
+  }
+} catch {}
+function saveOnboarding() {
+  try { sessionStorage.setItem(onboardingKey, JSON.stringify({overviewCompleted, reviewedBriefs:[...reviewedBriefs]})); } catch {}
+}
+function canStartCall() { return overviewCompleted && customers.every(customer => reviewedBriefs.has(customer.id)); }
+function updateOnboarding() {
+  document.querySelectorAll('.customer').forEach(card => {
+    card.disabled = !overviewCompleted;
+    card.querySelector('.customer-lock').hidden = overviewCompleted;
+  });
+  byId('open-overview').classList.toggle('overview-required', !overviewCompleted);
+  byId('overview-instruction').hidden = overviewCompleted;
+  byId('open-overview').toggleAttribute('aria-describedby', !overviewCompleted);
+  if (!overviewCompleted) byId('open-overview').setAttribute('aria-describedby','overview-instruction');
+  byId('call-prospect').setAttribute('aria-disabled', String(!canStartCall()));
+  byId('brief-review-status').textContent = canStartCall()
+    ? 'All 3 pre-call briefs reviewed · Choose a prospect to call.'
+    : `Review all 3 pre-call briefs before calling · ${reviewedBriefs.size} of 3 reviewed.`;
+}
+function scheduleManagerMessage() {
+  clearTimeout(managerTimer);
+  if (!overviewCompleted || managerDismissed) return;
+  managerTimer = setTimeout(() => {
+    if (overviewCompleted && !managerDismissed && session.getState().screen === 'crm' && !joining && byId('role-overview').hidden) {
+      byId('notification').hidden = false;
+      byId('announcement').textContent = 'Message from your manager: Three qualified prospects are ready to talk. Choose one and find out what their team needs.';
+    }
+  }, 900);
+}
+function openOverview() {
+  if (joining || briefPending || session.getState().screen !== 'crm') return;
+  clearTimeout(managerTimer);
+  byId('notification').hidden = true;
+  byId('dashboard').hidden = true;
+  byId('role-overview').hidden = false;
+  byId('overview-scroll').scrollTop = 0;
+  byId('overview-title').focus({preventScroll:true});
+}
+function completeOverview() {
+  if (joining || byId('role-overview').hidden) return;
+  overviewCompleted = true;
+  saveOnboarding();
+  byId('role-overview').hidden = true;
+  byId('dashboard').hidden = false;
+  updateOnboarding();
+  byId('open-overview').focus({preventScroll:true});
+  byId('announcement').textContent = 'Overview complete. Discovery calls unlocked. Review all three pre-call briefs before choosing a prospect to call.';
+  scheduleManagerMessage();
+}
+
 let trustedParentOrigin = null;
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const embedded = window.parent !== window;
@@ -150,6 +210,7 @@ const accents = ['var(--light-teal)', 'var(--peach)', 'var(--dark-teal)'];
 customers.forEach((customer, index) => {
   const button = document.createElement('button');
   button.type = 'button';
+  button.disabled = !overviewCompleted;
   button.className = 'customer';
   button.dataset.customer = customer.id;
   button.style.setProperty('--accent', accents[index]);
@@ -162,6 +223,11 @@ customers.forEach((customer, index) => {
     span.textContent = customer[field];
     button.append(span);
   }
+  const lock = document.createElement('span');
+  lock.className = 'customer-lock';
+  lock.setAttribute('aria-hidden','true');
+  lock.innerHTML = '<svg viewBox="0 0 20 20"><rect x="4" y="8" width="12" height="10" rx="2"/><path d="M6 8V5a4 4 0 0 1 8 0v3"/><path d="M10 12v3"/></svg>';
+  button.append(lock);
   button.addEventListener('click', () => openBrief(customer, button));
   byId('customers').append(button);
 });
@@ -172,7 +238,7 @@ for (let i = 0; i < 56; i++) {
 }
 
 async function openBrief(customer, button) {
-  if (joining || !session.selectCustomer(customer.id)) return;
+  if (!overviewCompleted || !byId('role-overview').hidden || joining || !session.selectCustomer(customer.id)) return;
   dismissManagerMessage();
   lastCard = button;
   const request = ++briefRequest;
@@ -202,6 +268,9 @@ async function openBrief(customer, button) {
   ].join(' ');
   byId('brief-image').replaceWith(artwork);
   showBrief(true);
+  reviewedBriefs.add(customer.id);
+  saveOnboarding();
+  updateOnboarding();
   byId('brief-title').focus();
 }
 function showBrief(visible) {
@@ -228,6 +297,10 @@ function renderHandoff(customer) {
 }
 async function startCall() {
   if (joining || briefPending || brief.hidden || session.getState().screen !== 'brief') return;
+  if (!canStartCall()) {
+    byId('announcement').textContent = byId('brief-review-status').textContent;
+    return;
+  }
   joining = true;
   const customer = customers.find(item => item.id === session.getState().customerId);
   showBrief(false);
@@ -280,11 +353,9 @@ brief.addEventListener('keydown', event => {
     }
   }
 });
-managerTimer = setTimeout(() => {
-  if (!managerDismissed && session.getState().screen === 'crm' && !joining) {
-    byId('notification').hidden = false;
-    byId('announcement').textContent = 'Message from your manager: Three qualified prospects are ready to talk. Choose one and find out what their team needs.';
-  }
-}, 900);
+byId('open-overview').addEventListener('click', openOverview);
+byId('complete-overview').addEventListener('click', completeOverview);
+updateOnboarding();
+scheduleManagerMessage();
 
 })();

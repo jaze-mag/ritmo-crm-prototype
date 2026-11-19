@@ -1,3 +1,4 @@
+const {completeOverview,reviewAllBriefs}=require('./onboarding-helper.cjs');
 const {chromium}=require('playwright');const assert=require('node:assert/strict');
 const base=process.env.RITMO_TEST_BASE||'http://127.0.0.1:8013/';
 (async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--no-proxy-server','--disable-dev-shm-usage'],env:{...process.env,XDG_CACHE_HOME:'/tmp/ritmo-cache',XDG_CONFIG_HOME:'/tmp/ritmo-config'}});try{
@@ -6,7 +7,7 @@ async function run(customer,{embedded=false,wrong=false,reduced=false,width=1280
  const page=await browser.newPage({viewport:{width,height},reducedMotion:reduced?'reduce':'no-preference'});const errors=[];page.on('pageerror',e=>errors.push(e.message));
  let app=page;
  if(embedded){await page.route('**/maya-host',r=>r.fulfill({contentType:'text/html',body:`<script>window.received=[];addEventListener('message',e=>{if(e.data?.type==='ritmo:launchSimulation')received.push({data:e.data,origin:e.origin,fromFrame:e.source===document.querySelector('iframe').contentWindow})})</script><iframe title="Storyline stand-in" src="${base}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`}));await page.goto(new URL('maya-host',base).href);await page.frameLocator('iframe').locator('.customer').last().waitFor();app=page.frames()[1];}else await page.goto(base);
- await app.locator('.customer').last().waitFor();assert.equal(await app.locator('.customer').count(),3);await app.locator('#notification').waitFor();
+ await app.locator('.customer').last().waitFor();assert.equal(await app.locator('.customer').count(),3);await completeOverview(app);await app.locator('#notification').waitFor();await reviewAllBriefs(app);
  await app.evaluate(origin=>{window.events=[];window.states=[];addEventListener('ritmo:statechange',e=>states.push({state:e.detail,t:performance.now()}));addEventListener('ritmo:launchSimulation',e=>events.push({data:e.detail,t:performance.now(),opacity:getComputedStyle(document.querySelector('#simulation-exit')).opacity,animations:document.querySelector('#simulation-exit').getAnimations().length}));if(origin)Ritmo.configureSimulationParent(origin);},embedded?(wrong?'https://untrusted.example':new URL(base).origin):null);
  assert.equal(await app.evaluate(()=>{try{Ritmo.configureSimulationParent('*');return false}catch{return true}}),true);
  await app.locator(`[data-customer="${id}"]`).click();await app.locator('#call-prospect').click();await app.evaluate(()=>{document.querySelector('#call-prospect').click();document.querySelector('[data-customer="daniel-brooks"]').click();});

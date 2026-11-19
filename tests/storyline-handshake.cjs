@@ -1,5 +1,6 @@
+const {completeOverview,reviewAllBriefs}=require('./onboarding-helper.cjs');
 const {chromium}=require('playwright');const assert=require('node:assert/strict');const fs=require('node:fs');
-const child='http://127.0.0.1:8020';const parent='http://127.0.0.1:8021';
+const child=(process.env.RITMO_TEST_BASE||'http://127.0.0.1:8020/').replace(/\/$/,'');const parent='http://127.0.0.1:8021';
 const adapter=fs.readFileSync('docs/storyline-parent-handshake.js','utf8').replace("'https://jaze-mag.github.io'",JSON.stringify(child)).replace("url.pathname.startsWith('/ritmo-crm-prototype/')","url.pathname === '/'");
 const server=require('node:http').createServer((req,res)=>{const mode=new URL(req.url,parent).searchParams.get('mode');res.setHeader('Content-Type','text/html');res.end(`<script>window.received=[];window.hello=null;addEventListener('message',e=>{if(e.data?.type==='ritmo:connect')hello=e.data;if(e.data?.type==='ritmo:launchSimulation')received.push({data:e.data,sourceOK:e.source===document.querySelector('iframe').contentWindow,origin:e.origin});});</script><iframe src="${child}/" style="width:1280px;height:720px"></iframe>${mode==='normal'?'<script>'+adapter+'</script>':''}`);});
 (async()=>{await new Promise(resolve=>server.listen(8021,'127.0.0.1',resolve));const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--no-proxy-server','--disable-dev-shm-usage'],env:{...process.env,XDG_CACHE_HOME:'/tmp/ritmo-cache',XDG_CONFIG_HOME:'/tmp/ritmo-config'}});try{await Promise.all([
@@ -13,6 +14,7 @@ if(mode==='invalid'){
  const nonce=await page.evaluate(()=>hello.nonce);
  await app.evaluate(nonce=>window.postMessage({type:'ritmo:ready',nonce},location.origin),nonce); // Correct token, WRONG source (self).
 }
+await completeOverview(app);await reviewAllBriefs(app);
 await app.locator(`[data-customer="${id}"]`).click();await app.locator('#call-prospect').click();await app.waitForFunction(()=>completed.length===1);await page.waitForTimeout(150);
 const completed=await app.evaluate(()=>window.completed);assert.deepEqual(completed[0],{data:{type:'ritmo:launchSimulation',customer:key,transitionComplete:true},opacity:'1',animations:0});
 if(mode==='late'){assert.equal(await page.evaluate(()=>received.length),0);await page.evaluate(adapter=>{(0,eval)(adapter)},adapter);await page.waitForFunction(()=>received.length===1);}

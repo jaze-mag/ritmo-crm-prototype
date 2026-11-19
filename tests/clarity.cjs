@@ -1,3 +1,4 @@
+const {completeOverview,reviewAllBriefs}=require('./onboarding-helper.cjs');
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 (async () => {
@@ -9,7 +10,7 @@ const assert = require('node:assert/strict');
   try {
     for (const deviceScaleFactor of [1, 2]) {
       const page = await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor});
-      await page.goto('http://127.0.0.1:8000/');
+      await page.goto('http://127.0.0.1:8000/');await completeOverview(page);await reviewAllBriefs(page);
       await page.evaluate(() => document.fonts.ready);
       const art = page.locator('.brief-artwork');
       const snapshots = new Map();

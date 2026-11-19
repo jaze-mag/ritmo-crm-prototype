@@ -1,3 +1,4 @@
+const {completeOverview,reviewAllBriefs}=require('./onboarding-helper.cjs');
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
@@ -34,6 +35,7 @@ const { resolve } = require('node:path');
     assert.equal(await app.locator('.customer').count(), 3);
     const names = ['Maya Patel', 'Daniel Brooks', 'Renee Alvarez'];
     for (let index = 0; index < names.length; index++) {
+      await completeOverview(app);await reviewAllBriefs(app);
       await app.locator('.customer').nth(index).click();
       await app.locator('#customer-brief').waitFor();
       assert.equal(await app.locator('#brief-title').textContent(), `Pre-Call Brief: ${names[index]}`);

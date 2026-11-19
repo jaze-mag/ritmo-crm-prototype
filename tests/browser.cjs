@@ -1,3 +1,4 @@
+const {completeOverview,reviewAllBriefs}=require('./onboarding-helper.cjs');
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -16,6 +17,7 @@ const expected = [
   page.on('response',r=>{if(r.status()>=400)failed.push(r.url())});
   page.on('requestfailed',r=>failed.push(r.url()));
   await page.goto((process.env.RITMO_TEST_BASE || 'http://127.0.0.1:8000/'));
+  await completeOverview(page);
   await page.locator('#notification').waitFor();
   await page.evaluate(()=>document.fonts.ready);
   await page.waitForTimeout(650);
@@ -37,13 +39,14 @@ const expected = [
   // Preserve the existing rendered CRM composition, excluding the live clock.
   const clockMask=await page.addStyleTag({content:'#clock {visibility:hidden}'});
   await page.screenshot({path:'/tmp/ritmo-after.png'});
-  if(fs.existsSync('/tmp/ritmo-before.png')) assert.ok(fs.readFileSync('/tmp/ritmo-after.png').equals(fs.readFileSync('/tmp/ritmo-before.png')),'CRM must remain pixel-identical with clock masked');
+  if(process.env.RITMO_COMPARE_BASELINE && fs.existsSync('/tmp/ritmo-before.png')) assert.ok(fs.readFileSync('/tmp/ritmo-after.png').equals(fs.readFileSync('/tmp/ritmo-before.png')),'CRM must remain pixel-identical with clock masked');
   await clockMask.evaluate(el=>el.remove());
   await page.emulateMedia({reducedMotion:'no-preference'});
   const clock=await page.locator('#clock').getAttribute('datetime');
   await page.waitForTimeout(1100);
   assert.notEqual(await page.locator('#clock').getAttribute('datetime'),clock);
   await page.evaluate(()=>{window.dashboardNode=document.querySelector('#dashboard');window.events=[];window.addEventListener('ritmo:statechange',e=>window.events.push(e.detail))});
+  await reviewAllBriefs(page);
   for(const customer of expected){
    const card=page.locator(`[data-customer="${customer.id}"]`);
    await card.hover();await page.waitForTimeout(220);

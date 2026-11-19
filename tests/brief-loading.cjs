@@ -1,3 +1,4 @@
+const {completeOverview,reviewAllBriefs}=require('./onboarding-helper.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 (async()=>{
@@ -24,12 +25,12 @@ const assert=require('node:assert/strict');
   }
   requestAnimationFrame(sample);
  });
- await page.goto('http://127.0.0.1:8000/');
+ await page.goto('http://127.0.0.1:8000/');await completeOverview(page);
  const open=async name=>{await page.locator(`[data-customer^="${name}"]`).click();await page.locator('#customer-brief').waitFor();await page.waitForTimeout(40)};
  for(let repeat=0;repeat<2;repeat++){
   for(const [from,to,call] of [['maya','daniel',false],['daniel','renee',false],['renee','maya',false],['maya','renee',true],['daniel','maya',true],['renee','daniel',true]]){
    await open(from);
-   if(call){await page.locator('#call-prospect').click();await page.locator('#return-button').click();}
+   if(call){await page.keyboard.press('Escape');}
    else await page.locator('#back-customers').click();
    await open(to);await page.locator('#back-customers').click();
   }

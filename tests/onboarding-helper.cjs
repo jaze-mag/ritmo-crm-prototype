@@ -1,6 +1,8 @@
 async function completeOverview(app) {
   if (await app.locator('.customer').first().isDisabled()) {
     await app.locator('#open-overview').click();
+    await app.locator('#overview-tab-benefits').click();
+    await app.locator('#overview-tab-goal').click();
     await app.locator('#complete-overview').click();
   }
 }

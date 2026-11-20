@@ -18,6 +18,8 @@ const reviewedBriefs = new Set();
 const overviewTabIds = ['role', 'benefits', 'goal'];
 const reviewedOverviewTabs = new Set();
 let activeOverviewTab = 'role';
+// Cached pre-tab HTML can temporarily load the latest script during a Pages rollout.
+const hasOverviewTabs = overviewTabIds.every(id => byId(`overview-tab-${id}`) && byId(`overview-panel-${id}`));
 try {
   const saved = JSON.parse(sessionStorage.getItem(onboardingKey) || 'null');
   overviewCompleted = saved?.overviewCompleted === true;
@@ -58,7 +60,7 @@ function scheduleManagerMessage() {
     }
   }, 900);
 }
-function allOverviewTabsReviewed() { return overviewCompleted || overviewTabIds.every(id => reviewedOverviewTabs.has(id)); }
+function allOverviewTabsReviewed() { return !hasOverviewTabs || overviewCompleted || overviewTabIds.every(id => reviewedOverviewTabs.has(id)); }
 function showOverviewTab(id, moveFocus = false) {
   if (!overviewTabIds.includes(id) || byId('role-overview').hidden) return;
   activeOverviewTab = id;
@@ -81,6 +83,7 @@ function showOverviewTab(id, moveFocus = false) {
 }
 overviewTabIds.forEach((id,index) => {
   const tab = byId(`overview-tab-${id}`);
+  if (!hasOverviewTabs) return;
   tab.addEventListener('click', () => showOverviewTab(id));
   tab.addEventListener('keydown', event => {
     let next;
@@ -99,7 +102,12 @@ function openOverview() {
   byId('notification').hidden = true;
   byId('dashboard').hidden = true;
   byId('role-overview').hidden = false;
-  showOverviewTab(activeOverviewTab, true);
+  if (hasOverviewTabs) showOverviewTab(activeOverviewTab, true);
+  else {
+    const scroll = byId('overview-scroll');
+    if (scroll) scroll.scrollTop = 0;
+    byId('overview-title')?.focus({preventScroll:true});
+  }
 }
 function completeOverview() {
   if (joining || byId('role-overview').hidden || !allOverviewTabsReviewed()) return;

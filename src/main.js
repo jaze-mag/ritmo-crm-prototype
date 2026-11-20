@@ -15,15 +15,23 @@ let keyboardNavigation = false;
 const onboardingKey = 'ritmo.onboarding.v1';
 let overviewCompleted = false;
 const reviewedBriefs = new Set();
+const overviewTabIds = ['role', 'benefits', 'goal'];
+const reviewedOverviewTabs = new Set();
+let activeOverviewTab = 'role';
 try {
   const saved = JSON.parse(sessionStorage.getItem(onboardingKey) || 'null');
   overviewCompleted = saved?.overviewCompleted === true;
+  // Existing completed attempts stay completed when migrating to the tabbed overview.
+  if (overviewCompleted) overviewTabIds.forEach(id => reviewedOverviewTabs.add(id));
+  else if (Array.isArray(saved?.reviewedOverviewTabs)) {
+    saved.reviewedOverviewTabs.forEach(id => { if (overviewTabIds.includes(id)) reviewedOverviewTabs.add(id); });
+  }
   if (overviewCompleted && Array.isArray(saved?.reviewedBriefs)) {
     saved.reviewedBriefs.forEach(id => { if (customers.some(customer => customer.id === id)) reviewedBriefs.add(id); });
   }
 } catch {}
 function saveOnboarding() {
-  try { sessionStorage.setItem(onboardingKey, JSON.stringify({overviewCompleted, reviewedBriefs:[...reviewedBriefs]})); } catch {}
+  try { sessionStorage.setItem(onboardingKey, JSON.stringify({overviewCompleted, reviewedBriefs:[...reviewedBriefs], reviewedOverviewTabs:[...reviewedOverviewTabs]})); } catch {}
 }
 function canStartCall() { return overviewCompleted && customers.every(customer => reviewedBriefs.has(customer.id)); }
 function updateOnboarding() {
@@ -50,17 +58,51 @@ function scheduleManagerMessage() {
     }
   }, 900);
 }
+function allOverviewTabsReviewed() { return overviewCompleted || overviewTabIds.every(id => reviewedOverviewTabs.has(id)); }
+function showOverviewTab(id, moveFocus = false) {
+  if (!overviewTabIds.includes(id) || byId('role-overview').hidden) return;
+  activeOverviewTab = id;
+  reviewedOverviewTabs.add(id);
+  saveOnboarding();
+  overviewTabIds.forEach(tabId => {
+    const tab = byId(`overview-tab-${tabId}`);
+    const selected = tabId === id;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    tab.dataset.reviewed = String(reviewedOverviewTabs.has(tabId));
+    tab.setAttribute('aria-description', reviewedOverviewTabs.has(tabId) ? 'Reviewed' : 'Not yet reviewed');
+    byId(`overview-panel-${tabId}`).hidden = !selected;
+  });
+  byId('complete-overview').disabled = !allOverviewTabsReviewed();
+  byId('overview-progress').textContent = allOverviewTabsReviewed()
+    ? 'All 3 sections reviewed. You can return to the dashboard.'
+    : `${reviewedOverviewTabs.size} of 3 sections reviewed. Visit each tab to continue.`;
+  if (moveFocus) byId(`overview-tab-${id}`).focus({preventScroll:true});
+}
+overviewTabIds.forEach((id,index) => {
+  const tab = byId(`overview-tab-${id}`);
+  tab.addEventListener('click', () => showOverviewTab(id));
+  tab.addEventListener('keydown', event => {
+    let next;
+    if (event.key === 'ArrowRight') next = (index + 1) % overviewTabIds.length;
+    else if (event.key === 'ArrowLeft') next = (index + overviewTabIds.length - 1) % overviewTabIds.length;
+    else if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = overviewTabIds.length - 1;
+    else return;
+    event.preventDefault();
+    showOverviewTab(overviewTabIds[next], true);
+  });
+});
 function openOverview() {
   if (joining || briefPending || session.getState().screen !== 'crm') return;
   clearTimeout(managerTimer);
   byId('notification').hidden = true;
   byId('dashboard').hidden = true;
   byId('role-overview').hidden = false;
-  byId('overview-scroll').scrollTop = 0;
-  byId('overview-title').focus({preventScroll:true});
+  showOverviewTab(activeOverviewTab, true);
 }
 function completeOverview() {
-  if (joining || byId('role-overview').hidden) return;
+  if (joining || byId('role-overview').hidden || !allOverviewTabsReviewed()) return;
   overviewCompleted = true;
   saveOnboarding();
   byId('role-overview').hidden = true;

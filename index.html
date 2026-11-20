@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#315c59">
   <title>Ritmo — Account Executive Dashboard</title>
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="./src/styles.css?v=role-overview-1">
+  <link rel="stylesheet" href="./src/styles.css?v=overview-tabs-1">
 </head>
 <body>
   <main class="viewport" aria-label="Ritmo sales training prototype">
@@ -30,25 +30,41 @@
             </section>
             <section class="pipeline" aria-label="Pipeline status">
               <div class="pipeline-copy"><h2>PIPELINE STATUS</h2><p>3 qualified leads <span aria-hidden="true">•</span> <span id="pipeline-status">Next step not scheduled</span></p></div>
-              <div class="overview-entry"><button id="open-overview" class="action overview-required" aria-controls="role-overview" aria-describedby="overview-instruction">Your Role &amp; Ritmo Overview</button><p id="overview-instruction">Review your role and the Ritmo solution to unlock your discovery calls.</p></div>
+              <div class="overview-entry"><button id="open-overview" class="action overview-required" aria-controls="role-overview" aria-describedby="overview-instruction">Your Role &amp; Ritmo Overview</button><p id="overview-instruction">Review the Ritmo overview to unlock your calls.</p></div>
             </section>
           </div>
-          <section id="role-overview" class="role-overview" aria-labelledby="overview-title" hidden>
-            <div class="overview-scroll" id="overview-scroll" role="region" aria-label="Your role and Ritmo overview content" tabindex="0">
-              <h2 id="overview-title" tabindex="-1">Your Role &amp; Ritmo Overview</h2>
-              <p class="overview-lead">Before your discovery calls, get familiar with your role and the solution you're representing.</p>
-              <section class="overview-block"><h3>Your Role</h3><p>You're an account executive at Ritmo. You'll meet with qualified prospective customers to explore their needs, address concerns, and determine whether a follow-up demonstration is worth scheduling.</p></section>
-              <section class="overview-block"><h3>What Is Ritmo?</h3><p>Ritmo is a B2B workflow-management software platform designed to help growing teams organize, coordinate, and track their work in one place.</p></section>
-              <section class="overview-block"><h3>What Ritmo Offers</h3>
-                <article class="capability"><h4>Centralized Work Management</h4><p>Keep tasks, deadlines, project updates, and responsibilities organized in one shared workspace.</p><p class="why-it-matters"><strong>Why it matters:</strong> Teams spend less time searching through emails and spreadsheets to figure out what's happening.</p></article>
-                <article class="capability"><h4>Standardized Workflows</h4><p>Create consistent processes so everyone knows which steps to follow and what happens next.</p><p class="why-it-matters"><strong>Why it matters:</strong> Teams can reduce confusion, missed steps, and inconsistent ways of working.</p></article>
-                <article class="capability"><h4>Automated Task Assignments</h4><p>Assign responsibilities as work progresses, helping teams coordinate handoffs without constantly following up manually.</p><p class="why-it-matters"><strong>Why it matters:</strong> Work is less likely to get stuck because someone doesn't know they're responsible for the next step.</p></article>
-              </section>
-              <section class="overview-block"><h3>Ritmo in 30 Seconds</h3><p class="example-caption">An example explanation—not a script to memorize.</p><blockquote>“Ritmo helps growing teams organize their work in one place. Instead of juggling spreadsheets, emails, and manual follow-ups, teams can track progress, coordinate responsibilities, and keep projects moving with clearer workflows.”</blockquote></section>
-              <section class="overview-block"><h3>Your Discovery Call Goal</h3><p>During your customer conversation:</p><ol><li>Explore the customer's current situation and identify their needs.</li><li>Acknowledge and clarify their concerns, then connect a relevant Ritmo benefit to those needs.</li><li>Propose and confirm a specific follow-up meeting.</li></ol></section>
-              <p class="overview-reminder"><strong>Remember:</strong> You're not expected to close the sale during this call. Your goal is to determine whether a tailored Ritmo workflow demonstration is worth scheduling.</p>
-              <button class="action" id="complete-overview">Return to Dashboard</button>
+          <section id="role-overview" class="role-overview" aria-label="Your Role &amp; Ritmo Overview" hidden>
+            <div class="overview-tabs" role="tablist" aria-label="Overview sections">
+              <button id="overview-tab-role" role="tab" aria-controls="overview-panel-role" aria-selected="true" tabindex="0" data-overview-tab="role">Your Role<span class="tab-reviewed" aria-hidden="true">✓</span></button>
+              <button id="overview-tab-benefits" role="tab" aria-controls="overview-panel-benefits" aria-selected="false" tabindex="-1" data-overview-tab="benefits">Ritmo Benefits<span class="tab-reviewed" aria-hidden="true">✓</span></button>
+              <button id="overview-tab-goal" role="tab" aria-controls="overview-panel-goal" aria-selected="false" tabindex="-1" data-overview-tab="goal">Call Goal<span class="tab-reviewed" aria-hidden="true">✓</span></button>
             </div>
+            <section id="overview-panel-role" class="overview-panel" role="tabpanel" aria-labelledby="overview-tab-role" tabindex="0">
+              <h2>Your Role &amp; What Ritmo Does</h2>
+              <div class="role-columns">
+                <section><h3>Your Role</h3><p>You're an account executive at Ritmo. You'll meet with qualified prospective customers to explore their needs, address concerns, and determine whether a follow-up demonstration is worth scheduling.</p></section>
+                <section><h3>What Is Ritmo?</h3><p>Ritmo is a B2B workflow-management software platform designed to help growing teams organize, coordinate, and track their work in one place.</p></section>
+              </div>
+              <section class="ritmo-example"><h3>Ritmo in 30 Seconds</h3><blockquote>“Ritmo helps growing teams organize their work in one place. Instead of juggling spreadsheets, emails, and manual follow-ups, teams can track progress, coordinate responsibilities, and keep projects moving with clearer workflows.”</blockquote><p class="example-caption">An example explanation — not a script to memorize.</p></section>
+            </section>
+            <section id="overview-panel-benefits" class="overview-panel" role="tabpanel" aria-labelledby="overview-tab-benefits" tabindex="0" hidden>
+              <h2>What Ritmo Offers</h2>
+              <div class="benefits-grid">
+                <article class="capability"><h3>Centralized Work Management</h3><p>Keep tasks, deadlines, project updates, and responsibilities organized in one shared workspace.</p><p class="why-it-matters"><strong>Why it matters:</strong> Teams spend less time searching through emails and spreadsheets to figure out what's happening.</p></article>
+                <article class="capability"><h3>Standardized Workflows</h3><p>Create consistent processes so everyone knows which steps to follow and what happens next.</p><p class="why-it-matters"><strong>Why it matters:</strong> Teams can reduce confusion, missed steps, and inconsistent ways of working.</p></article>
+                <article class="capability"><h3>Automated Task Assignments</h3><p>Assign responsibilities as work progresses, helping teams coordinate handoffs without constantly following up manually.</p><p class="why-it-matters"><strong>Why it matters:</strong> Work is less likely to get stuck because someone doesn't know they're responsible for the next step.</p></article>
+              </div>
+            </section>
+            <section id="overview-panel-goal" class="overview-panel" role="tabpanel" aria-labelledby="overview-tab-goal" tabindex="0" hidden>
+              <h2>Your Discovery Call Goal</h2>
+              <ol class="call-goals">
+                <li><h3>Explore the customer's needs</h3><p>Ask questions to understand the customer's current situation, challenges, and priorities.</p></li>
+                <li><h3>Address concerns with relevant benefits</h3><p>Acknowledge and clarify the customer's concern before connecting a Ritmo capability to their needs.</p></li>
+                <li><h3>Confirm a specific next step</h3><p>Propose and confirm a follow-up meeting with a clear purpose.</p></li>
+              </ol>
+              <p class="overview-reminder"><strong>Remember:</strong> You're not expected to close the sale during this call. Your goal is to determine whether a tailored Ritmo workflow demonstration is worth scheduling.</p>
+            </section>
+            <div class="overview-footer"><p id="overview-progress" role="status">Review all three tabs to return to the dashboard.</p><button class="action" id="complete-overview" disabled aria-describedby="overview-progress">Return to Dashboard</button></div>
           </section>
           <section class="handoff" id="handoff" aria-labelledby="handoff-title" hidden>
             <span class="eyebrow">DISCOVERY CALL</span>
@@ -87,6 +103,6 @@
   <!-- Classic scripts load in dependency order, including when opened via file://. -->
   <script src="./src/customers.js"></script>
   <script src="./src/session.js"></script>
-  <script src="./src/main.js?v=role-overview-1"></script>
+  <script src="./src/main.js?v=overview-tabs-1"></script>
 </body>
 </html>

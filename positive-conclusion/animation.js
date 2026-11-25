@@ -3,7 +3,7 @@
   const $ = selector => document.querySelector(selector);
   const intro = $('.intro'), conclusion = $('.conclusion');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let state = 'loading', generation = 0, animations = [], timers = [], sound = false, navigation = null;
+  let state = 'loading', generation = 0, animations = [], timers = [], sound = true, navigation = null;
   const audio = {whoosh: new Audio('assets/whoosh.wav'), confirmation: new Audio('assets/confirmation.wav'), stage: new Audio('assets/stage.wav'), manager: new Audio('assets/manager.wav')};
   audio.whoosh.volume = .45;
   audio.confirmation.volume = .9;
@@ -48,9 +48,6 @@
   function complete({notify = false} = {}) {
     stop(); state = 'complete'; intro.hidden = true; conclusion.style.opacity = 1; conclusion.inert = false;
     document.querySelectorAll('[data-reveal]').forEach(e => { e.style.opacity = 1; });
-    const moveFocus = document.activeElement === $('#skip');
-    $('#skip').hidden = true; $('#replay').hidden = false;
-    if (moveFocus) $('#replay').focus();
     if ($('#manager-message').hidden) {
       $('.manager').classList.add('manager-ready');
       if (notify) {
@@ -68,9 +65,6 @@
     stop(); resetManager(); state = 'playing'; $('dialog').close(); intro.hidden = false; conclusion.inert = true;
     conclusion.style.opacity = 0;
     document.querySelectorAll('[data-reveal]').forEach(e => { e.style.opacity = 0; });
-    const moveFocus = document.activeElement === $('#replay');
-    $('#skip').hidden = false; $('#replay').hidden = true;
-    if (moveFocus) $('#skip').focus();
     if (reduced.matches) { complete(); return true; }
     reveal(intro,0,450); reveal($('.intro h1'),250,500); reveal($('.intro i'),500,400); reveal($('.intro p'),650,500);
     cue('whoosh');
@@ -83,24 +77,28 @@
     later(() => cue('confirmation'),3600); later(() => complete({notify:true}),6600);
     return true;
   }
-  $('#skip').onclick = complete; $('#replay').onclick = play;
-  $('#sound').onclick = () => {
-    sound = !sound; $('#sound').textContent = sound ? 'Sound On' : 'Sound Off'; $('#sound').setAttribute('aria-pressed',String(sound));
-    if (sound) cue('whoosh'); else Object.values(audio).forEach(a => {a.pause();a.currentTime=0;});
-  };
-  const messages = {
-    retry:'This button will direct you to Maya’s simulation.',
-    customers:'Customer navigation is not connected in this standalone Web Object. Use the CRM dashboard to choose another customer.',
-    finish:'This button will direct you to the Experience Complete slide.'
-  };
+  // Attempt normal autoplay; browser policy may require a gesture in this frame.
+  // Unlock quietly without replaying missed cues or changing sequence timing.
+  let audioUnlocked = false;
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    Object.values(audio).forEach(a => {
+      if (!a.paused) return;
+      a.muted = true;
+      a.play().then(() => { a.pause(); a.currentTime = 0; a.muted = false; })
+        .catch(() => { a.muted = false; });
+    });
+  }
+  document.addEventListener('pointerdown', unlockAudio, {once:true});
+  document.addEventListener('keydown', unlockAudio, {once:true});
   document.querySelectorAll('[data-action]').forEach(button => button.onclick = () => {
     if (state !== 'complete') return;
     const action = button.dataset.action, detail = {action, customerId:'maya-patel', outcome:document.body.dataset.outcome};
     const event = new CustomEvent('ritmo:conclusion-navigation',{detail,cancelable:true});
     if (!window.dispatchEvent(event)) return;
     if (navigation) { navigation(detail); return; }
-    if (action === 'customers' && location.hostname === 'jaze-mag.github.io' && location.pathname.startsWith('/ritmo-crm-prototype/')) { location.assign('/ritmo-crm-prototype/'); return; }
-    $('#destination').textContent = messages[action]; $('dialog').showModal();
+    window.RitmoConclusionNavigation.send(action);
   });
   $('#dismiss').onclick = () => $('dialog').close();
   window.RitmoConclusion = Object.freeze({play,replay:play,skip:complete,getState:()=>state,setNavigation(handler){if(handler!==null && typeof handler!=='function')throw new TypeError('Expected a function or null');navigation=handler;}});

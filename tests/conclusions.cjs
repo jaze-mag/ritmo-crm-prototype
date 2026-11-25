@@ -10,13 +10,14 @@ for(const outcome of ['positive','negative']){
  await page.waitForTimeout(400);
  assert.equal(await page.evaluate(()=>document.getAnimations().filter(a=>a.effect?.target!==document.querySelector('#open-manager')).length),0);
  await page.screenshot({path:'/tmp/'+outcome+'-conclusion.png'});
- for(const action of ['retry','customers','finish']){await page.locator(`[data-action=${action}]`).click();assert.equal(await page.locator('dialog').evaluate(e=>e.open),true);await page.locator('#dismiss').click();}
+ assert.equal(await page.locator('#skip,#replay,#sound').count(),0);
+ for(const action of ['retry','finish']){await page.locator(`[data-action=${action}]`).click();assert.equal(await page.locator('dialog').evaluate(e=>e.open),true);await page.locator('#dismiss').click();}
  await page.evaluate(()=>{window.nav=[];RitmoConclusion.setNavigation(d=>window.nav.push(d));});await page.locator('[data-action=retry]').click();assert.equal(await page.evaluate(()=>window.nav[0].customerId),'maya-patel');
- await page.locator('#replay').click();await page.locator('#sound').click();assert.equal(await page.locator('#sound').getAttribute('aria-pressed'),'true');await page.locator('#sound').click();await page.locator('#skip').click();await page.waitForTimeout(700);assert.equal(await page.evaluate(()=>RitmoConclusion.getState()),'complete');
+ await page.evaluate(()=>{RitmoConclusion.replay();RitmoConclusion.skip()});
  for(const viewport of [{width:640,height:360},{width:390,height:844},{width:1920,height:1080}]){await page.setViewportSize(viewport);assert.equal(await page.locator('.scene').evaluate(e=>{let s=e.getBoundingClientRect();return [...e.querySelectorAll('nav button,.panel')].every(x=>{let r=x.getBoundingClientRect();return r.left>=s.left && r.right<=s.right+1 && r.bottom<=s.bottom+1;});}),true);}
- await page.emulateMedia({reducedMotion:'reduce'});await page.locator('#replay').click();assert.equal(await page.evaluate(()=>RitmoConclusion.getState()),'complete');
+ await page.emulateMedia({reducedMotion:'reduce'});await page.evaluate(()=>RitmoConclusion.replay());assert.equal(await page.evaluate(()=>RitmoConclusion.getState()),'complete');
  if(process.env.RITMO_TEST_FILE==='1'){await page.goto('file:///workspace/ritmo-crm-prototype/'+outcome+'-conclusion/index.html');await page.waitForFunction(()=>RitmoConclusion.getState()==='complete');assert.equal(await page.locator('.avatar').count(),2);}
  await page.route('**/iframe-host.html',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><html><body></body></html>'}));await page.goto(new URL('/iframe-host.html',url).href);await page.evaluate(url=>{document.body.innerHTML='<iframe title="Web Object" style="width:960px;height:540px;border:0"></iframe>';document.querySelector('iframe').src=url;},url);let frame=page.frames().find(f=>f!==page.mainFrame());await page.waitForTimeout(500);frame=page.frames().find(f=>f!==page.mainFrame());await frame.waitForFunction(()=>window.RitmoConclusion?.getState()==='complete');assert.equal(await frame.locator('.scene').evaluate(e=>Math.round(e.getBoundingClientRect().width)),960);
- assert.deepEqual(errors,[]);await page.close();console.log(outcome+': natural completion, skip, replay, sound toggle, navigation, responsive, reduced motion, iframe passed');
+ assert.deepEqual(errors,[]);await page.close();console.log(outcome+': natural completion, host replay, hidden controls, navigation, responsive, reduced motion, iframe passed');
 }
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exit(1)});

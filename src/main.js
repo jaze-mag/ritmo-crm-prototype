@@ -35,6 +35,17 @@ try {
 function saveOnboarding() {
   try { sessionStorage.setItem(onboardingKey, JSON.stringify({overviewCompleted, reviewedBriefs:[...reviewedBriefs], reviewedOverviewTabs:[...reviewedOverviewTabs]})); } catch {}
 }
+// Explicit return navigation restores access, never scenario completion or brief reviews.
+function restoreCustomerAccess() {
+  overviewCompleted = true;
+  overviewTabIds.forEach(id => reviewedOverviewTabs.add(id));
+  saveOnboarding();
+}
+if (new URLSearchParams(location.search).get('ritmoReturn') === 'customers' && window.parent === window) {
+  restoreCustomerAccess();
+  const url = new URL(location.href); url.searchParams.delete('ritmoReturn');
+  try { history.replaceState(null,'',url); } catch {}
+}
 function canStartCall() { return overviewCompleted && customers.every(customer => reviewedBriefs.has(customer.id)); }
 function updateOnboarding() {
   document.querySelectorAll('.customer').forEach(card => {
@@ -164,6 +175,10 @@ window.addEventListener('message', event => {
   if (data.nonce !== handshakeNonce) return;
   if (data.type === 'ritmo:ready' && automaticMessaging && !trustedParentOrigin) {
     try { configureParent(validOrigin(event.origin)); } catch { messagingLog('Parent connection rejected: origin must be HTTP(S).'); }
+  } else if (data.type === 'ritmo:resumeCustomers' && event.origin === trustedParentOrigin) {
+    restoreCustomerAccess();
+    updateOnboarding();
+    scheduleManagerMessage();
   } else if (data.type === 'ritmo:simulationReceived' && completionSent && !receiptLogged && event.origin === trustedParentOrigin) {
     receiptLogged = true;
     messagingLog('Parent listener acknowledged completion.');

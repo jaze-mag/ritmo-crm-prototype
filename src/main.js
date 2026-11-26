@@ -14,6 +14,7 @@ let keyboardNavigation = false;
 // One onboarding attempt per browser tab, with an in-memory fallback when storage is denied.
 const onboardingKey = 'ritmo.onboarding.v1';
 let overviewCompleted = false;
+let returningFromConclusion = false;
 const reviewedBriefs = new Set();
 const overviewTabIds = ['role', 'benefits', 'goal'];
 const reviewedOverviewTabs = new Set();
@@ -23,6 +24,7 @@ const hasOverviewTabs = overviewTabIds.every(id => byId(`overview-tab-${id}`) &&
 try {
   const saved = JSON.parse(sessionStorage.getItem(onboardingKey) || 'null');
   overviewCompleted = saved?.overviewCompleted === true;
+  returningFromConclusion = overviewCompleted && saved?.returningFromConclusion === true;
   // Existing completed attempts stay completed when migrating to the tabbed overview.
   if (overviewCompleted) overviewTabIds.forEach(id => reviewedOverviewTabs.add(id));
   else if (Array.isArray(saved?.reviewedOverviewTabs)) {
@@ -33,11 +35,13 @@ try {
   }
 } catch {}
 function saveOnboarding() {
-  try { sessionStorage.setItem(onboardingKey, JSON.stringify({overviewCompleted, reviewedBriefs:[...reviewedBriefs], reviewedOverviewTabs:[...reviewedOverviewTabs]})); } catch {}
+  try { sessionStorage.setItem(onboardingKey, JSON.stringify({overviewCompleted, returningFromConclusion, reviewedBriefs:[...reviewedBriefs], reviewedOverviewTabs:[...reviewedOverviewTabs]})); } catch {}
 }
 // Explicit return navigation restores access, never scenario completion or brief reviews.
 function restoreCustomerAccess() {
   overviewCompleted = true;
+  returningFromConclusion = true;
+  byId('notification').hidden = true;
   overviewTabIds.forEach(id => reviewedOverviewTabs.add(id));
   saveOnboarding();
 }
@@ -46,7 +50,7 @@ if (new URLSearchParams(location.search).get('ritmoReturn') === 'customers' && w
   const url = new URL(location.href); url.searchParams.delete('ritmoReturn');
   try { history.replaceState(null,'',url); } catch {}
 }
-function canStartCall() { return overviewCompleted && customers.every(customer => reviewedBriefs.has(customer.id)); }
+function canStartCall() { return overviewCompleted && (returningFromConclusion || customers.every(customer => reviewedBriefs.has(customer.id))); }
 function updateOnboarding() {
   document.querySelectorAll('.customer').forEach(card => {
     card.disabled = !overviewCompleted;
@@ -57,15 +61,17 @@ function updateOnboarding() {
   byId('open-overview').toggleAttribute('aria-describedby', !overviewCompleted);
   if (!overviewCompleted) byId('open-overview').setAttribute('aria-describedby','overview-instruction');
   byId('call-prospect').setAttribute('aria-disabled', String(!canStartCall()));
-  byId('brief-review-status').textContent = canStartCall()
+  byId('brief-review-status').textContent = returningFromConclusion
+    ? 'Choose any prospect to call.'
+    : canStartCall()
     ? 'All 3 pre-call briefs reviewed · Choose a prospect to call.'
     : `Review all 3 pre-call briefs before calling · ${reviewedBriefs.size} of 3 reviewed.`;
 }
 function scheduleManagerMessage() {
   clearTimeout(managerTimer);
-  if (!overviewCompleted || managerDismissed) return;
+  if (!overviewCompleted || managerDismissed || returningFromConclusion) return;
   managerTimer = setTimeout(() => {
-    if (overviewCompleted && !managerDismissed && session.getState().screen === 'crm' && !joining && byId('role-overview').hidden) {
+    if (overviewCompleted && !managerDismissed && !returningFromConclusion && session.getState().screen === 'crm' && !joining && byId('role-overview').hidden) {
       byId('notification').hidden = false;
       byId('announcement').textContent = 'Message from your manager: Three qualified prospects are ready to talk. Choose one and find out what their team needs.';
     }

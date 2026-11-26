@@ -10,14 +10,8 @@
   audio.stage.volume = .9;
   audio.manager.volume = .9;
   const stagePulseAt = 4900;
-  // Tolerate an older cached HTML document during a Pages rollout.
-  if (!$('#audio-start')) {
-    const panel = document.createElement('div'); panel.id = 'audio-start'; panel.hidden = true;
-    panel.innerHTML = '<p id="audio-explanation"></p><button id="start-conclusion" aria-describedby="audio-explanation">Play conclusion</button>';
-    $('.scene').append(panel);
-  }
-  const startPanel = $('#audio-start'), startButton = $('#start-conclusion');
-  let starting = false, mediaUnavailable = false;
+  // Remove the retired prompt if an older HTML document is cached.
+  $('#audio-start')?.remove();
   function prepareAudio(a) {
     a.preload = 'auto';
     return new Promise((resolve, reject) => {
@@ -30,46 +24,6 @@
       if (a.readyState === 4) ready();
     });
   }
-  function offerStart(unavailable = false) {
-    mediaUnavailable = unavailable; state = 'waiting'; starting = false;
-    startPanel.hidden = false;
-    $('#audio-explanation').textContent = unavailable
-      ? 'Sound could not load. You can continue without sound.'
-      : 'Select Play conclusion to begin with sound.';
-    startButton.textContent = unavailable ? 'Continue without sound' : 'Play conclusion';
-  }
-  async function startWithAudio() {
-    if (starting || state === 'playing' || state === 'loading') return false;
-    if (reduced.matches || !sound) { startPanel.hidden = true; return play(); }
-    starting = true;
-    const token = generation;
-    try {
-      // Probe with the actual first cue: muted playback cannot prove audible autoplay is allowed.
-      audio.whoosh.currentTime = 0;
-      await audio.whoosh.play();
-      if (token !== generation) { audio.whoosh.pause(); starting = false; return false; }
-      starting = false; startPanel.hidden = true;
-      return play(true);
-    } catch (error) {
-      if (token !== generation) { starting = false; return false; }
-      console.info('[Ritmo audio]',error.name,'— waiting for learner activation.');
-      offerStart(error.name !== 'NotAllowedError'); return false;
-    }
-  }
-  startButton.onclick = async () => {
-    if (starting) return;
-    if (mediaUnavailable) { sound = false; startPanel.hidden = true; state = 'idle'; play(); return; }
-    starting = true;
-    // Prime each element during this gesture, BEFORE the animation starts. No running cue is touched.
-    const primes = Object.values(audio).map(a => {
-      const volume = a.volume; a.volume = 0;
-      return a.play().then(() => { a.pause(); a.currentTime = 0; }).finally(() => { a.volume = volume; });
-    });
-    const results = await Promise.allSettled(primes);
-    starting = false;
-    if (results.some(r => r.status === 'rejected')) { offerStart(true); return; }
-    await startWithAudio();
-  };
   function stop(preserveWhoosh = false) {
     generation++;
     animations.forEach(a => a.cancel()); animations = [];
@@ -122,7 +76,7 @@
   }
   function play(whooshStarted = false) {
     if (state === 'playing' || state === 'loading') return false;
-    stop(whooshStarted); startPanel.hidden = true; resetManager(); state = 'playing'; $('dialog').close(); intro.hidden = false; conclusion.inert = true;
+    stop(whooshStarted); resetManager(); state = 'playing'; $('dialog').close(); intro.hidden = false; conclusion.inert = true;
     conclusion.style.opacity = 0;
     document.querySelectorAll('[data-reveal]').forEach(e => { e.style.opacity = 0; });
     if (reduced.matches) { complete(); return true; }
@@ -146,15 +100,15 @@
     window.RitmoConclusionNavigation.send(action);
   });
   $('#dismiss').onclick = () => $('dialog').close();
-  window.RitmoConclusion = Object.freeze({play:()=>state === 'playing' || state === 'loading' ? false : startWithAudio(),replay:()=>startWithAudio(),skip:complete,getState:()=>state,setNavigation(handler){if(handler!==null && typeof handler!=='function')throw new TypeError('Expected a function or null');navigation=handler;}});
+  window.RitmoConclusion = Object.freeze({play,replay:play,skip:complete,getState:()=>state,setNavigation(handler){if(handler!==null && typeof handler!=='function')throw new TypeError('Expected a function or null');navigation=handler;}});
   reduced.addEventListener('change',() => {if(reduced.matches && state==='playing')complete();});
   window.addEventListener('pagehide',stop);
-  window.addEventListener('pageshow',event=>{if(event.persisted){state='idle';startWithAudio();}});
+  window.addEventListener('pageshow',event=>{if(event.persisted){state='idle';play();}});
   const audioReady = Promise.all(Object.values(audio).map(prepareAudio)).then(()=>true,()=>false);
   Promise.all([document.fonts.ready,...['assets/conclusion.png','assets/later-that-week.png'].map(src=>{const img=new Image();img.src=src;return img.decode();}),audioReady]).then(results=>{
     if(state !== 'loading') return;
     state='idle';
-    if (!results[results.length-1] && !reduced.matches) offerStart(true);
-    else startWithAudio();
+    // Autoplay policy may silence audio, but never blocks the cinematic sequence.
+    play();
   }).catch(()=>{complete();$('#status').textContent='Artwork could not load. Check the assets folder.';});
 })();

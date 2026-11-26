@@ -1,5 +1,5 @@
 const {chromium}=require('playwright');const assert=require('node:assert/strict');
-(async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--no-proxy-server','--disable-dev-shm-usage'],env:{...process.env,XDG_CACHE_HOME:'/tmp/ritmo-cache',XDG_CONFIG_HOME:'/tmp/ritmo-config'}});try{
+(async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--autoplay-policy=no-user-gesture-required','--no-sandbox','--no-proxy-server','--disable-dev-shm-usage'],env:{...process.env,XDG_CACHE_HOME:'/tmp/ritmo-cache',XDG_CONFIG_HOME:'/tmp/ritmo-config'}});try{
 for(const outcome of ['positive','negative']){
  const page=await browser.newPage({viewport:{width:1280,height:720}});const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(r.url())});
  const url=(process.env.RITMO_TEST_BASE||'http://127.0.0.1:8010/')+outcome+'-conclusion/';await page.goto(url);await page.waitForFunction(()=>RitmoConclusion.getState()==='playing');
@@ -13,7 +13,7 @@ for(const outcome of ['positive','negative']){
  assert.equal(await page.locator('#skip,#replay,#sound').count(),0);
  for(const action of ['retry','finish']){await page.locator(`[data-action=${action}]`).click();assert.equal(await page.locator('dialog').evaluate(e=>e.open),true);await page.locator('#dismiss').click();}
  await page.evaluate(()=>{window.nav=[];RitmoConclusion.setNavigation(d=>window.nav.push(d));});await page.locator('[data-action=retry]').click();assert.equal(await page.evaluate(()=>window.nav[0].customerId),'maya-patel');
- await page.evaluate(()=>{RitmoConclusion.replay();RitmoConclusion.skip()});
+ await page.evaluate(async()=>{await RitmoConclusion.replay();RitmoConclusion.skip()});
  for(const viewport of [{width:640,height:360},{width:390,height:844},{width:1920,height:1080}]){await page.setViewportSize(viewport);assert.equal(await page.locator('.scene').evaluate(e=>{let s=e.getBoundingClientRect();return [...e.querySelectorAll('nav button,.panel')].every(x=>{let r=x.getBoundingClientRect();return r.left>=s.left && r.right<=s.right+1 && r.bottom<=s.bottom+1;});}),true);}
  await page.emulateMedia({reducedMotion:'reduce'});await page.evaluate(()=>RitmoConclusion.replay());assert.equal(await page.evaluate(()=>RitmoConclusion.getState()),'complete');
  if(process.env.RITMO_TEST_FILE==='1'){await page.goto('file:///workspace/ritmo-crm-prototype/'+outcome+'-conclusion/index.html');await page.waitForFunction(()=>RitmoConclusion.getState()==='complete');assert.equal(await page.locator('.avatar').count(),2);}

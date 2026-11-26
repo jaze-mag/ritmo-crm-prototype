@@ -41,7 +41,7 @@
   window.RitmoConclusionNavigation = Object.freeze({send(action) {
     if (!['retry','customers','finish'].includes(action) || pending) return;
     if (!embedded) {
-      if (action === 'customers') { location.assign(new URL('../index.html?ritmoReturn=customers',location.href)); return; }
+      if (action === 'customers') { location.assign(new URL('../index.html?ritmoReturn=customers&v=conclusion-return-2',location.href)); return; }
       explain(action === 'retry' ? 'Maya retry requires the published Storyline project. A fresh Devlin session reset has not yet been configured.' : 'Finish Experience requires Storyline to open the Ritmo Experience Complete slide.');
       return;
     }

@@ -20,10 +20,20 @@ for(const outcome of ['positive','negative'])for(const action of ['retry','custo
  if(action==='customers'){
    await p.evaluate(url=>document.querySelector('iframe').src=url,base+'ritmo-crm-prototype/');
    await f.locator('.customer:not(:disabled)').last().waitFor();assert.equal(await f.locator('.customer:not(:disabled)').count(),3);
-   assert.equal(await f.locator('#brief-review-status').textContent(),'Review all 3 pre-call briefs before calling · 0 of 3 reviewed.');
+   assert.equal(await f.locator('#brief-review-status').textContent(),'Choose any prospect to call.');
+   await p.waitForTimeout(1200);assert.equal(await f.locator('#notification').isVisible(),false);
+   for(let i=0;i<3;i++){
+     if(i){await p.evaluate(()=>{const el=document.querySelector('iframe');el.src=el.src;});await f.locator('.customer:not(:disabled)').last().waitFor();}
+     await f.locator('.customer').nth(i).click();await f.locator('#customer-brief').waitFor();
+     assert.equal(await f.locator('#call-prospect').getAttribute('aria-disabled'),'false');
+     await f.locator('#call-prospect').click();await f.locator('#handoff').waitFor();
+   }
  }
  assert.deepEqual(errors,[]);await p.close();console.log('PASS cross-origin host adapter '+outcome+' '+action+' (mock Storyline variables, not Review 360)');
 }
 const p=await browser.newPage({reducedMotion:'reduce'});await p.goto(base);await p.locator('.customer').last().waitFor();assert.equal(await p.locator('.customer:disabled').count(),3);
-await p.goto(base+'positive-conclusion/');await p.locator('[data-action=customers]').click();await p.locator('.customer:not(:disabled)').last().waitFor();assert.equal(await p.locator('.customer:not(:disabled)').count(),3);assert.ok(!p.url().includes('ritmoReturn'));await p.close();console.log('PASS standalone return and first-time locks');
+await p.goto(base+'positive-conclusion/');await p.locator('[data-action=customers]').click();await p.locator('.customer:not(:disabled)').last().waitFor();assert.equal(await p.locator('.customer:not(:disabled)').count(),3);assert.ok(!p.url().includes('ritmoReturn'));
+await p.reload();await p.locator('.customer:not(:disabled)').last().waitFor();await p.waitForTimeout(1200);assert.equal(await p.locator('#notification').isVisible(),false);
+const stored=await p.evaluate(()=>JSON.parse(sessionStorage.getItem('ritmo.onboarding.v1')));assert.deepEqual(stored.reviewedBriefs,[]);
+await p.locator('.customer').first().click();await p.locator('#customer-brief').waitFor();assert.equal(await p.locator('#call-prospect').getAttribute('aria-disabled'),'false');await p.close();console.log('PASS standalone return and first-time locks');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

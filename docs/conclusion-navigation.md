@@ -34,7 +34,7 @@ Conclusions use the existing `ritmo:connect` / `ritmo:ready` nonce handshake wit
 
 The host acknowledges with `ritmo:conclusionNavigationReceived`, same nonce/requestId, and accepted true/false. Requests queue until connected and retry up to 30 seconds; the host deduplicates by frame/nonce/requestId. Acknowledgement confirms host receipt, not slide arrival or a Devlin reset. Repeated clicks cannot issue competing actions. A late-installed listener can restart discovery and flush the pending request with the existing `ritmo:requestHandshake` message.
 
-On CRM readiness, the added listener sends `{type:'ritmo:resumeCustomers', nonce}` when the Storyline return flag is True. CRM accepts this only from its configured parent with its current nonce. It completes only overview access, preserving existing brief review IDs and never marking a scenario finished. The all-three-brief review gate is unchanged. This does not rely on cross-slide Web Object sessionStorage sharing.
+On CRM readiness, the added listener sends `{type:'ritmo:resumeCustomers', nonce}` when the Storyline return flag is True. CRM accepts this only from its configured parent with its current nonce. It completes only overview access, preserving existing brief review IDs and never marking a scenario finished. On this explicit return path only, a separate returningFromConclusion flag bypasses the all-three-brief review gate and suppresses the dashboard manager notification. It persists with onboarding state when storage is available; the host restores it when storage is blocked. Reviewed brief IDs and scenario completion are not fabricated. First-time onboarding and brief-review requirements remain unchanged. This does not rely on cross-slide Web Object sessionStorage sharing.
 
 Standalone Choose Another Customer uses `../index.html?ritmoReturn=customers`; the explicit return parameter restores overview access and is removed from the URL. Direct first-time visits remain locked. Standalone Retry/Finish explain that Storyline is required. Embedded buttons never navigate the iframe to a CRM route in place of a Storyline slide.
 
@@ -42,7 +42,7 @@ Standalone Choose Another Customer uses `../index.html?ritmoReturn=customers`; t
 
 - New course: CRM cards locked; complete onboarding and review briefs normally.
 - Both outcomes: Later That Week and all four sound cues play (test published autoplay policy), no prototype controls, email pulses until opened with mouse/Enter/Space.
-- Choose Another Customer: Slide 1.3 opens; all three cards selectable even with isolated/denied child storage; no scenario marked completed. Brief-review prerequisites remain in effect.
+- Choose Another Customer: Slide 1.3 opens; all three cards selectable even with isolated/denied child storage; no scenario marked completed. Call This Prospect is enabled on the first opened brief for each customer; the dashboard manager notification stays hidden.
 - Finish: the existing Experience Complete slide opens once, with no web ending.
 - Retry routing-only: verify five variables and Slide 1.4 destination. Fresh conversation is NOT a passing test until Devlin confirms a new session, clears old transcript/evaluation, and old events cannot overwrite state.
 - Test delayed listener readiness, double clicks, revisit/replay, reduced motion, and mobile. Inspect immediate-parent origin/source if there are nested Review wrappers; postMessage does not bubble.
